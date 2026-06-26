@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../../core/widgets/kala_search_bar.dart';
 
 class OpportunitiesListScreen extends StatefulWidget {
   const OpportunitiesListScreen({super.key});
@@ -117,31 +118,8 @@ class _OpportunitiesListScreenState extends State<OpportunitiesListScreen> {
                     const SizedBox(height: 24),
 
                     // Search input
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search for auditions, gigs, events...',
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: KalaColors.mediumGrey,
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(
-                            color: KalaColors.softBeige,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(
-                            color: KalaColors.softBeige,
-                          ),
-                        ),
-                      ),
+                    const KalaSearchBar(
+                      hintText: 'Search for auditions, gigs, events...',
                     ),
                     const SizedBox(height: 20),
 
@@ -637,27 +615,10 @@ class _OpportunitiesListScreenState extends State<OpportunitiesListScreen> {
               ),
 
               // Search
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search for auditions, gigs, events...',
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: KalaColors.mediumGrey,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(color: KalaColors.softBeige),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(color: KalaColors.softBeige),
-                    ),
-                  ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: KalaSearchBar(
+                  hintText: 'Search for auditions, gigs, events...',
                 ),
               ),
 

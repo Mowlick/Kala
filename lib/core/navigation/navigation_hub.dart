@@ -158,7 +158,7 @@ class _NavigationHubState extends State<NavigationHub> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Create / Post',
+                                  _currentIndex == 3 ? 'New Group' : 'Create / Post',
                                   style: GoogleFonts.inter(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -167,7 +167,9 @@ class _NavigationHubState extends State<NavigationHub> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'Share your talent or an opportunity',
+                                  _currentIndex == 3
+                                      ? 'Create a group chat and\ncollaborate easily.'
+                                      : 'Share your talent or an\nopportunity',
                                   style: TextStyle(
                                     fontSize: 9,
                                     color: KalaColors.charcoal.withValues(
