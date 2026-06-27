@@ -8,6 +8,7 @@ import '../../features/onboarding/presentation/screens/success_screen.dart';
 import '../../features/opportunities/presentation/screens/opportunity_detail_screen.dart';
 import '../../features/opportunities/presentation/screens/create_opportunity_screen.dart';
 import '../../features/chat/presentation/screens/chat_room_screen.dart';
+import '../../features/auth/presentation/screens/auth_screen.dart';
 import 'navigation_hub.dart';
 
 class AppRouter {
@@ -25,6 +26,8 @@ class AppRouter {
       '/opportunity-detail': (context) => const OpportunityDetailScreen(),
       '/create-opportunity': (context) => const CreateOpportunityScreen(),
       '/chat-room': (context) => const ChatRoomScreen(),
+      '/auth': (context) => const AuthScreen(isLogin: false),
+      '/auth-login': (context) => const AuthScreen(isLogin: true),
     };
   }
 }

@@ -1,5 +1,5 @@
 class CreatorOnboardingModel {
-  String? role; // Singer, Dancer, Actor, etc.
+  List<String> roles = []; // Singer, Dancer, Actor, etc.
   String? name;
   String? city;
   String? experienceLevel; // Beginner, Intermediate, Experienced
@@ -16,7 +16,7 @@ class CreatorOnboardingModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'role': role,
+      'roles': roles,
       'name': name,
       'city': city,
       'experience_level': experienceLevel,

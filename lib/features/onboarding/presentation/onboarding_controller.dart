@@ -32,8 +32,8 @@ class OnboardingController extends ChangeNotifier {
   }
 
   // Setters for each step
-  void setRole(String role) {
-    _model.role = role;
+  void setRoles(List<String> roles) {
+    _model.roles = roles;
     notifyListeners();
   }
 

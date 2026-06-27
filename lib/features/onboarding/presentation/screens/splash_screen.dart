@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
-import '../onboarding_controller.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -87,14 +85,13 @@ class SplashScreen extends StatelessWidget {
                                 ),
                           ),
                         ),
-                        const SizedBox(height: 32), // Reduced from 48
+                        const SizedBox(height: 32),
                         SizedBox(
-                          width: 240, // Reduced from 300
-                          height: 48, // Reduced from 56
+                          width: 240,
+                          height: 48,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.read<OnboardingController>().resetSteps();
-                              Navigator.pushNamed(context, '/role-select');
+                              Navigator.pushNamed(context, '/auth');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: KalaColors.burntOrange,
@@ -109,28 +106,28 @@ class SplashScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16), // Reduced from 24
-                        Row(
-                          children: [
-                            Text(
-                              'Already have an account? ',
+                        const SizedBox(height: 16),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/auth-login');
+                          },
+                          child: RichText(
+                            text: TextSpan(
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: KalaColors.mediumGrey,
                                   ),
+                              children: const [
+                                TextSpan(text: 'Already have an account? '),
+                                TextSpan(
+                                  text: 'Log In',
+                                  style: TextStyle(
+                                    color: KalaColors.burntOrange,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushReplacementNamed(context, '/home');
-                              },
-                              child: Text(
-                                'Log In',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: KalaColors.burntOrange,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -148,26 +145,6 @@ class SplashScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            'Already have an account? ',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: KalaColors.charcoal,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacementNamed(context, '/home');
-                            },
-                            child: Text(
-                              'Log In',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: KalaColors.burntOrange,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ),
-                          const SizedBox(width: 24),
                           Container(
                             decoration: BoxDecoration(
                               border: Border.all(color: KalaColors.softBeige, width: 1.5),
@@ -175,7 +152,7 @@ class SplashScreen extends StatelessWidget {
                             ),
                             child: TextButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(context, '/home');
+                                Navigator.pushNamed(context, '/auth');
                               },
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -318,7 +295,7 @@ class SplashScreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/home');
+                  Navigator.pushReplacementNamed(context, '/auth');
                 },
                 child: Text(
                   'Skip',
@@ -437,8 +414,7 @@ class SplashScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    context.read<OnboardingController>().resetSteps();
-                    Navigator.pushNamed(context, '/role-select');
+                    Navigator.pushNamed(context, '/auth');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: KalaColors.burntOrange,
@@ -454,29 +430,28 @@ class SplashScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Already have an account? ',
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/auth-login');
+                },
+                child: RichText(
+                  text: TextSpan(
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: KalaColors.mediumGrey,
                           fontWeight: FontWeight.w500,
                         ),
+                    children: [
+                      const TextSpan(text: 'Already have an account? '),
+                      TextSpan(
+                        text: 'Log In',
+                        style: const TextStyle(
+                          color: KalaColors.burntOrange,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/home');
-                    },
-                    child: Text(
-                      'Log In',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: KalaColors.burntOrange,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
