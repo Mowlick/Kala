@@ -15,6 +15,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _phoneController = TextEditingController();
+  String? _selectedRole;
 
   // Dynamic copy based on mode
   String get _title =>
@@ -108,6 +109,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     height: 1.5,
                   ),
             ),
+            const SizedBox(height: 32),
+            _buildRoleSelector(),
             const SizedBox(height: 32),
             _buildAuthButtons(context),
             const SizedBox(height: 24),
@@ -243,6 +246,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ),
                           ),
                           const SizedBox(height: 24),
+                          _buildRoleSelector(),
+                          const SizedBox(height: 24),
                           _buildAuthButtons(context),
                           const SizedBox(height: 16),
                           Center(child: _buildBottomSwitch(context)),
@@ -377,33 +382,201 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
-  // ─── AUTH BUTTONS ────────────────────────────────────────────────────────
+  // ─── ROLE SELECTOR ────────────────────────────────────────────────────────
 
-  Widget _buildAuthButtons(BuildContext context) {
+  Widget _buildRoleSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSocialButton(
-          label: 'Continue with Google',
-          onPressed: () => Navigator.pushNamed(
-              context, widget.isLogin ? '/home' : '/role-select'),
-          icon: _googleIcon(),
+        Text(
+          'I am joining as',
+          style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
         ),
-        const SizedBox(height: 12),
-        _buildSocialButton(
-          label: 'Continue with Apple',
-          onPressed: () => Navigator.pushNamed(
-              context, widget.isLogin ? '/home' : '/role-select'),
-          icon: const Icon(Icons.apple, color: KalaColors.charcoal, size: 24),
+        const SizedBox(height: 16),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => setState(() => _selectedRole = 'artist'),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeInOut,
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: _selectedRole == 'artist' ? const Color(0xFFFFF7ED) : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _selectedRole == 'artist' ? const Color(0xFFEA580C) : KalaColors.lightGrey,
+                        width: _selectedRole == 'artist' ? 1.5 : 1,
+                      ),
+                      boxShadow: _selectedRole == 'artist'
+                          ? [BoxShadow(color: const Color(0xFFEA580C).withValues(alpha: 0.12), blurRadius: 12, offset: const Offset(0, 4))]
+                          : [],
+                    ),
+                    child: Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 220),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: _selectedRole == 'artist' ? const Color(0xFFFFEDD5) : const Color(0xFFF5F5F5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.theater_comedy, color: _selectedRole == 'artist' ? const Color(0xFFEA580C) : KalaColors.mediumGrey, size: 28),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Performer / Artist',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: KalaColors.charcoal,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Showcase your talent\nand get discovered.',
+                              style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: _selectedRole == 'artist'
+                              ? const Icon(Icons.check_circle, key: ValueKey('checked_a'), color: Color(0xFFEA580C), size: 20)
+                              : const Icon(Icons.radio_button_unchecked, key: ValueKey('unchecked_a'), color: KalaColors.lightGrey, size: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => setState(() => _selectedRole = 'organization'),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeInOut,
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: _selectedRole == 'organization' ? const Color(0xFFFFF7ED) : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _selectedRole == 'organization' ? const Color(0xFFEA580C) : KalaColors.lightGrey,
+                        width: _selectedRole == 'organization' ? 1.5 : 1,
+                      ),
+                      boxShadow: _selectedRole == 'organization'
+                          ? [BoxShadow(color: const Color(0xFFEA580C).withValues(alpha: 0.12), blurRadius: 12, offset: const Offset(0, 4))]
+                          : [],
+                    ),
+                    child: Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 220),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: _selectedRole == 'organization' ? const Color(0xFFFFEDD5) : const Color(0xFFF5F5F5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.domain, color: _selectedRole == 'organization' ? const Color(0xFFEA580C) : KalaColors.mediumGrey, size: 28),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Organisation',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: KalaColors.charcoal,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Manage events and\nconnect with artists.',
+                              style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: _selectedRole == 'organization'
+                              ? const Icon(Icons.check_circle, key: ValueKey('checked_o'), color: Color(0xFFEA580C), size: 20)
+                              : const Icon(Icons.radio_button_unchecked, key: ValueKey('unchecked_o'), color: KalaColors.lightGrey, size: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        _buildSocialButton(
-          label: 'Continue with Email',
-          onPressed: () => Navigator.pushNamed(
-              context, widget.isLogin ? '/home' : '/role-select'),
-          icon: const Icon(Icons.mail_outline_rounded,
-              color: KalaColors.charcoal, size: 22),
-        ),
+      ],
+    );
+  }
+
+  // ─── AUTH BUTTONS ────────────────────────────────────────────────────────
+
+  void _handleAuthSubmit(BuildContext context) {
+    if (_selectedRole == null) return;
+    
+    if (widget.isLogin) {
+      if (_selectedRole == 'organization') {
+        Navigator.pushNamed(context, '/organizer-home');
+      } else {
+        Navigator.pushNamed(context, '/home');
+      }
+    } else {
+      if (_selectedRole == 'organization') {
+        Navigator.pushNamed(context, '/organizer-onboarding');
+      } else {
+        Navigator.pushNamed(context, '/student-onboarding');
+      }
+    }
+  }
+
+  Widget _buildAuthButtons(BuildContext context) {
+    final bool isEnabled = _selectedRole != null;
+
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: isEnabled ? 1.0 : 0.38,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSocialButton(
+            label: 'Continue with Google',
+            onPressed: isEnabled ? () => _handleAuthSubmit(context) : null,
+            icon: _googleIcon(),
+          ),
+          const SizedBox(height: 12),
+          _buildSocialButton(
+            label: 'Continue with Apple',
+            onPressed: isEnabled ? () => _handleAuthSubmit(context) : null,
+            icon: const Icon(Icons.apple, color: KalaColors.charcoal, size: 24),
+          ),
+          const SizedBox(height: 12),
+          _buildSocialButton(
+            label: 'Continue with Email',
+            onPressed: isEnabled ? () => _handleAuthSubmit(context) : null,
+            icon: const Icon(Icons.mail_outline_rounded, color: KalaColors.charcoal, size: 22),
+          ),
         
         // Show phone input ONLY for Sign Up (isLogin == false)
         if (!widget.isLogin) ...[
@@ -448,63 +621,53 @@ class _AuthScreenState extends State<AuthScreen> {
               border: Border.all(
                   color: KalaColors.charcoal.withValues(alpha: 0.15),
                   width: 1.5),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
                       Text('+91',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: KalaColors.charcoal,
-                                fontSize: 15,
-                              )),
+                          style: GoogleFonts.inter(
+                              fontSize: 15,
+                              color: KalaColors.charcoal,
+                              fontWeight: FontWeight.w600)),
                       const SizedBox(width: 4),
-                      Icon(Icons.keyboard_arrow_down,
-                          color: KalaColors.charcoal.withValues(alpha: 0.6),
-                          size: 18),
+                      const Icon(Icons.keyboard_arrow_down,
+                          color: KalaColors.charcoal, size: 20),
                     ],
                   ),
                 ),
                 Container(
                     width: 1,
-                    height: 22,
+                    height: 24,
                     color: KalaColors.charcoal.withValues(alpha: 0.15)),
                 Expanded(
                   child: TextField(
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: KalaColors.charcoal,
-                          fontSize: 15,
-                        ),
                     decoration: InputDecoration(
                       hintText: 'Enter your mobile number',
-                      hintStyle: TextStyle(
-                          color: KalaColors.charcoal.withValues(alpha: 0.35),
-                          fontSize: 14),
+                      hintStyle: GoogleFonts.inter(
+                        color: KalaColors.charcoal.withValues(alpha: 0.3),
+                        fontSize: 15,
+                      ),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
-            height: 46,
             child: ElevatedButton(
-              onPressed: () => Navigator.pushNamed(
-                  context, widget.isLogin ? '/home' : '/role-select'),
+              onPressed: isEnabled ? () => _handleAuthSubmit(context) : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: KalaColors.burntOrange,
                 foregroundColor: Colors.white,
@@ -549,8 +712,9 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
   /// Bottom switch link
   Widget _buildBottomSwitch(BuildContext context) {
@@ -592,7 +756,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _buildSocialButton({
     required String label,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
     required Widget icon,
   }) {
     return SizedBox(

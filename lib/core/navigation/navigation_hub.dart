@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/kala_colors.dart';
-import '../../features/feed/presentation/screens/home_feed_screen.dart';
-import '../../features/opportunities/presentation/screens/opportunities_list_screen.dart';
-import '../../features/chat/presentation/screens/inbox_screen.dart';
+import '../../features/feed/presentation/screens/career_dashboard_screen.dart';
+import '../../features/opportunities/presentation/screens/discover_marketplace_screen.dart';
+import '../../features/opportunities/presentation/screens/applications_tracker_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/hub/presentation/screens/hub_menu_overlay.dart';
 
@@ -23,14 +23,14 @@ class _NavigationHubState extends State<NavigationHub> {
   void initState() {
     super.initState();
     _screens = [
-      const HomeFeedScreen(),
-      const OpportunitiesListScreen(),
+      const CareerDashboardScreen(),
+      const DiscoverMarketplaceScreen(),
       HubMenuOverlay(onClose: () {
         setState(() {
           _currentIndex = 0;
         });
       }),
-      const InboxScreen(),
+      const ApplicationsTrackerScreen(),
       const ProfileScreen(),
     ];
   }
@@ -53,13 +53,7 @@ class _NavigationHubState extends State<NavigationHub> {
   }
 
   void _showHubOverlay() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) => const HubMenuOverlay(),
-      ),
-    );
+    HubMenuOverlay.show(context);
   }
 
   @override
@@ -111,9 +105,9 @@ class _NavigationHubState extends State<NavigationHub> {
                   const SizedBox(height: 8),
                   _buildSidebarItem(
                     3,
-                    Icons.chat_bubble_outline,
-                    Icons.chat_bubble,
-                    'Messages',
+                    Icons.assignment_outlined,
+                    Icons.assignment,
+                    'Applications',
                   ),
                   const SizedBox(height: 8),
                   _buildSidebarItem(
@@ -158,7 +152,7 @@ class _NavigationHubState extends State<NavigationHub> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _currentIndex == 3 ? 'New Group' : 'Create / Post',
+                                  'Create / Post',
                                   style: GoogleFonts.inter(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -167,9 +161,7 @@ class _NavigationHubState extends State<NavigationHub> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  _currentIndex == 3
-                                      ? 'Create a group chat and\ncollaborate easily.'
-                                      : 'Share your talent or an\nopportunity',
+                                  'Share your talent or an\nopportunity',
                                   style: TextStyle(
                                     fontSize: 9,
                                     color: KalaColors.charcoal.withValues(
@@ -266,60 +258,79 @@ class _NavigationHubState extends State<NavigationHub> {
     // Standard Mobile Layout
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _screens),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: Color(0xFF2C2C2E), width: 0.5)),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTabTapped,
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: KalaColors.charcoal,
-          selectedItemColor: const Color(0xFFF4925A),
-          unselectedItemColor: Colors.white.withValues(alpha: 0.5),
-          selectedLabelStyle: GoogleFonts.inter(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(top: BorderSide(color: KalaColors.lightGrey, width: 0.5)),
           ),
-          unselectedLabelStyle: GoogleFonts.inter(fontSize: 10),
-          items: [
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.business_center_outlined),
-              activeIcon: Icon(Icons.business_center),
-              label: 'Opportunities',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                width: 48,
-                height: 48,
-                margin: const EdgeInsets.only(top: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF4925A),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(
-                  Icons.add,
-                  color: KalaColors.charcoal,
-                  size: 24,
-                ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildBottomNavItem(0, Icons.home_outlined, Icons.home, 'Home'),
+              _buildBottomNavItem(1, Icons.explore_outlined, Icons.explore, 'Discover'),
+              _buildCenterNavItem(),
+              _buildBottomNavItem(3, Icons.description_outlined, Icons.description, 'Applications'),
+              _buildBottomNavItem(4, Icons.person_outline, Icons.person, 'Profile'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavItem(int index, IconData outlineIcon, IconData filledIcon, String label) {
+    final isSelected = _currentIndex == index;
+    final color = isSelected ? KalaColors.burntOrange : KalaColors.charcoal;
+
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _onTabTapped(index),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(isSelected ? filledIcon : outlineIcon, color: color, size: 24),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                color: color,
               ),
-              label: '',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble_outline),
-              activeIcon: Icon(Icons.chat_bubble),
-              label: 'Messages',
+            const SizedBox(height: 4),
+            Container(
+              height: 2,
+              width: 32,
+              color: isSelected ? KalaColors.burntOrange : Colors.transparent,
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: 'Profile',
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCenterNavItem() {
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _onTabTapped(2),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: const BoxDecoration(
+                color: KalaColors.burntOrange,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 24),
             ),
+            const SizedBox(height: 22),
           ],
         ),
       ),

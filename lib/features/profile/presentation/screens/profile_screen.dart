@@ -9,89 +9,228 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  String _selectedSection = 'Portfolio';
-  final List<String> _sections = ['Portfolio', 'Projects', 'Achievements', 'Skills', 'Reviews'];
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
 
-  final List<Map<String, String>> _videos = [
-    {
-      'title': 'Dil Ke Sheher',
-      'category': 'Original Song',
-      'duration': '0:58',
-      'imageUrl': 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
-    },
-    {
-      'title': 'Live Session',
-      'category': 'Acoustic Cover',
-      'duration': '1:12',
-      'imageUrl': 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
-    },
-    {
-      'title': 'Behind The Song',
-      'category': 'Studio Diaries',
-      'duration': '0:45',
-      'imageUrl': 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
-    },
-    {
-      'title': 'Woh Baarish',
-      'category': 'Unplugged',
-      'duration': '1:03',
-      'imageUrl': 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 5, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bool isLaptop = MediaQuery.of(context).size.width >= 1000;
     return Scaffold(
       backgroundColor: KalaColors.ivory,
       body: SafeArea(
-        child: isLaptop ? _buildLaptopLayout() : _buildMobileLayout(),
+        child: CustomScrollView(
+          slivers: [
+            _buildSliverAppBar(),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildProfileHeader(),
+                    const SizedBox(height: 16),
+                    _buildRoleTags(),
+                    const SizedBox(height: 16),
+                    _buildAvailableForTags(),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Passionate musician blending soulful vocals with meaningful lyrics. Performing across genres and creating music that connects.',
+                      style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal, height: 1.5),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSocialLinks(),
+                    const SizedBox(height: 24),
+                    _buildStatsRow(),
+                    const SizedBox(height: 24),
+                    _buildProfileCompletionBox(),
+                    const SizedBox(height: 24),
+                    _buildTabBar(),
+                  ],
+                ),
+              ),
+            ),
+            SliverFillRemaining(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildPortfolioTab(),
+                    const Center(child: Text('Applications Tab Content')),
+                    const Center(child: Text('Timeline Tab Content')),
+                    const Center(child: Text('Skills Tab Content')),
+                    const Center(child: Text('About Tab Content')),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildLaptopLayout() {
+  Widget _buildSliverAppBar() {
+    return SliverAppBar(
+      backgroundColor: KalaColors.ivory,
+      elevation: 0,
+      pinned: true,
+      leading: IconButton(
+        icon: const Icon(Icons.chevron_left, color: KalaColors.charcoal, size: 28),
+        onPressed: () {},
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.edit_outlined, color: KalaColors.charcoal, size: 20),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.more_horiz, color: KalaColors.charcoal, size: 24),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfileHeader() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTopBar(),
-                _buildProfileDetails(),
-                _buildBiography(),
-                _buildCategoryPills(),
-                const SizedBox(height: 16),
-                _buildStatistics(),
-                const SizedBox(height: 20),
-                _buildActionButtons(),
-                const SizedBox(height: 20),
-                _buildAvailableForWork(),
-                const SizedBox(height: 24),
-                _buildTabs(),
-                const SizedBox(height: 16),
-                _buildPortfolioSection(),
-                const SizedBox(height: 48),
-              ],
+        Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFFDE6D8), width: 3),
+                image: const DecorationImage(
+                  image: NetworkImage('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.check_circle, size: 18, color: KalaColors.accentGreen),
+            ),
+          ],
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Aarav Mehta',
+                    style: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.verified, size: 18, color: Color(0xFFEA580C)),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Singer • Songwriter • Guitarist',
+                style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.location_on_outlined, size: 14, color: KalaColors.mediumGrey),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Delhi, India',
+                    style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                  ),
+                  const SizedBox(width: 12),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: KalaColors.accentGreen.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      'Available',
+                      style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        Container(
-          width: 340,
-          color: KalaColors.ivory,
-          padding: const EdgeInsets.only(top: 12, right: 24, bottom: 24),
+      ],
+    );
+  }
+
+  Widget _buildRoleTags() {
+    final roles = ['Singer', 'Guitarist', 'Songwriter', '+2'];
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: roles.map((role) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFAF6F3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFF5EBE0)),
+          ),
+          child: Text(
+            role,
+            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w500, color: KalaColors.charcoal),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildAvailableForTags() {
+    final tags = ['Auditions', 'Paid Gigs', 'Collaborations', '+2'];
+    return Row(
+      children: [
+        Text(
+          'Available For',
+          style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildAboutSection(),
-                const SizedBox(height: 24),
-                _buildLowerBlocksGrid(),
-                const SizedBox(height: 48),
-              ],
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: tags.map((tag) {
+                return Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: KalaColors.accentGreen.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    tag,
+                    style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
@@ -99,782 +238,489 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMobileLayout() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildTopBar(),
-          _buildProfileDetails(),
-          _buildBiography(),
-          _buildCategoryPills(),
-          const SizedBox(height: 16),
-          _buildStatistics(),
-          const SizedBox(height: 20),
-          _buildActionButtons(),
-          const SizedBox(height: 20),
-          _buildAvailableForWork(),
-          const SizedBox(height: 24),
-          _buildTabs(),
-          const SizedBox(height: 16),
-          _buildPortfolioSection(),
-          const SizedBox(height: 24),
-          _buildAboutSection(),
-          const SizedBox(height: 24),
-          _buildLowerBlocksGrid(),
-          const SizedBox(height: 48),
-        ],
-      ),
+  Widget _buildSocialLinks() {
+    return Row(
+      children: [
+        const Icon(Icons.link, size: 18, color: KalaColors.charcoal),
+        const SizedBox(width: 16),
+        const Icon(Icons.camera_alt_outlined, size: 18, color: KalaColors.charcoal),
+        const SizedBox(width: 16),
+        const Icon(Icons.play_circle_outline, size: 18, color: Colors.red),
+        const SizedBox(width: 16),
+        const Icon(Icons.headphones_outlined, size: 18, color: Colors.green),
+        const SizedBox(width: 24),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            border: Border.all(color: KalaColors.lightGrey),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.mail_outline, size: 14, color: KalaColors.charcoal),
+              const SizedBox(width: 6),
+              Text(
+                'Show Contact',
+                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildTopBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      child: Row(
-        children: [
-          _buildCircularBarButton(Icons.settings_outlined),
-          const Spacer(),
-          _buildCircularBarButton(Icons.ios_share_outlined),
-          const SizedBox(width: 12),
-          _buildCircularBarButton(Icons.menu),
-        ],
-      ),
+  Widget _buildStatsRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildStatItem('32', 'Applications', Icons.description_outlined, const Color(0xFFEA580C)),
+        _buildStatItem('14', 'Shortlisted', Icons.visibility_outlined, const Color(0xFFEA580C)),
+        _buildStatItem('8', 'Projects', Icons.star_border, const Color(0xFFEA580C)),
+        _buildStatItem('3.2K', 'Views', Icons.trending_up, const Color(0xFFEA580C)),
+        _buildProfileStrengthStat(),
+      ],
     );
   }
 
-  Widget _buildProfileDetails() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+  Widget _buildStatItem(String count, String label, IconData icon, Color iconColor) {
+    return Column(
+      children: [
+        Icon(icon, size: 20, color: iconColor),
+        const SizedBox(height: 8),
+        Text(
+          count,
+          style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfileStrengthStat() {
+    return Column(
+      children: [
+        SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            value: 0.92,
+            strokeWidth: 3,
+            backgroundColor: KalaColors.accentGreen.withValues(alpha: 0.2),
+            valueColor: const AlwaysStoppedAnimation<Color>(KalaColors.accentGreen),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '92%',
+          style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Profile Strength',
+          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfileCompletionBox() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF7ED),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFFFEDD5)),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 3),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.06),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Complete your profile',
+                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '(82%)',
+                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFFEA580C)),
                     ),
                   ],
-                  image: const DecorationImage(
-                    image: NetworkImage('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'),
-                    fit: BoxFit.cover,
+                ),
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: const LinearProgressIndicator(
+                    value: 0.82,
+                    backgroundColor: Color(0xFFFFEDD5),
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFEA580C)),
+                    minHeight: 6,
                   ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          _buildCheckItem('Add Resume', true),
+                          const SizedBox(height: 8),
+                          _buildCheckItem('Upload Showreel', true),
+                          const SizedBox(height: 8),
+                          _buildCheckItem('Verify College', true),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          _buildCheckItem('Add Languages', true),
+                          const SizedBox(height: 8),
+                          _buildCheckItem('Upload Certificates', false),
+                          const SizedBox(height: 24), // alignment spacer
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          // Illustration Placeholder
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                width: 60,
+                height: 70,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFFFEDD5), width: 2),
+                ),
+                child: Column(
+                  children: [
+                    Container(height: 8, color: const Color(0xFFFDBA74)),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xFFFFEDD5)),
+                      ),
+                      child: const Icon(Icons.person, size: 16, color: Color(0xFFFDBA74)),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(height: 4, width: 40, color: const Color(0xFFFFEDD5)),
+                    const SizedBox(height: 4),
+                    Container(height: 4, width: 30, color: const Color(0xFFFFEDD5)),
+                  ],
                 ),
               ),
               Positioned(
-                bottom: 0,
-                right: 0,
+                right: -4,
+                bottom: -4,
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(
+                    color: Color(0xFFFDBA74),
                     shape: BoxShape.circle,
-                    color: KalaColors.burntOrange,
                   ),
-                  child: const Icon(
-                    Icons.shield_outlined,
-                    color: Colors.white,
-                    size: 14,
-                  ),
+                  child: const Icon(Icons.star, size: 12, color: Colors.white),
                 ),
               ),
             ],
           ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'Aarav Mehta',
-                      style: GoogleFonts.cormorantGaramond(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: KalaColors.charcoal,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    const Icon(
-                      Icons.verified,
-                      color: KalaColors.burntOrange,
-                      size: 18,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Singer • Songwriter • Performer',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: KalaColors.mediumGrey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on_outlined,
-                      color: KalaColors.mediumGrey,
-                      size: 14,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Mumbai, India',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: KalaColors.mediumGrey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Icon(
-                      Icons.link_outlined,
-                      color: KalaColors.mediumGrey,
-                      size: 14,
-                    ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        'linktr.ee/aaravmehta',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: KalaColors.mediumGrey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildBiography() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-      child: Text(
-        'I create, write and perform songs that come from real stories and emotions. Let\'s create magic together.',
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: KalaColors.charcoal.withValues(alpha: 0.8),
-              height: 1.4,
-            ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryPills() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: ['Hindi', 'English', 'Indie', 'Pop', 'Acoustic'].map((tag) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5EBE0),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              tag,
-              style: TextStyle(
-                color: KalaColors.charcoal.withValues(alpha: 0.7),
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildStatistics() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Color(0xFFEAE2B7), width: 0.5),
-            bottom: BorderSide(color: Color(0xFFEAE2B7), width: 0.5),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildStatColumn('128', 'Posts'),
-            _buildStatColumn('12.4K', 'Followers'),
-            _buildStatColumn('782', 'Following'),
-            _buildStatColumn('56', 'Projects'),
-            _buildStatColumn('98%', 'Response Rate', isOrange: true),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                backgroundColor: const Color(0xFFF5EBE0),
-                side: BorderSide.none,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.edit_outlined, size: 16, color: KalaColors.charcoal),
-                  const SizedBox(width: 6),
-                  Text(
-                    'Edit Profile',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: KalaColors.charcoal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: KalaColors.burntOrange,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-              child: Text(
-                'View Analytics',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAvailableForWork() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF2ECE4),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFF38B000),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Available for Work',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: const Color(0xFF38B000),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Open to projects, collaborations and live shows',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: KalaColors.charcoal.withValues(alpha: 0.6),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              'Edit Availability',
-              style: GoogleFonts.inter(
-                color: const Color(0xFF38B000),
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTabs() {
-    return Container(
-      height: 44,
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Color(0xFFEAE2B7), width: 0.5),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: _sections.length,
-        itemBuilder: (context, index) {
-          final sec = _sections[index];
-          final isSelected = _selectedSection == sec;
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedSection = sec;
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: isSelected ? KalaColors.burntOrange : Colors.transparent,
-                    width: 2,
-                  ),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  sec,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    color: isSelected ? KalaColors.burntOrange : KalaColors.mediumGrey,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildPortfolioSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: 190,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: _videos.length,
-            itemBuilder: (context, index) {
-              final item = _videos[index];
-              return Container(
-                width: 140,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: KalaColors.softBeige),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          ),
-                          image: DecorationImage(
-                            image: NetworkImage(item['imageUrl']!),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              bottom: 8,
-                              left: 8,
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.white,
-                                    size: 14,
-                                  ),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    item['duration']!,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['title']!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item['category']!,
-                            style: TextStyle(
-                              fontSize: 8,
-                              color: KalaColors.charcoal.withValues(alpha: 0.5),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
-        Center(
-          child: TextButton(
-            onPressed: () {},
-            child: Text(
-              'View all videos',
-              style: GoogleFonts.inter(
-                color: KalaColors.burntOrange,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAboutSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: KalaColors.softBeige),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'About',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Text(
-                  'See more',
-                  style: GoogleFonts.inter(
-                    color: KalaColors.burntOrange,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Independent artist and songwriter based in Mumbai. I believe in authentic music and meaningful connections.',
-              style: TextStyle(
-                fontSize: 11,
-                color: KalaColors.charcoal.withValues(alpha: 0.7),
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(height: 0.5, color: KalaColors.softBeige),
-            const SizedBox(height: 16),
-            _buildAboutMetaRow(Icons.cake_outlined, '22 Years'),
-            const SizedBox(height: 8),
-            _buildAboutMetaRow(Icons.location_on_outlined, 'Mumbai, India'),
-            const SizedBox(height: 8),
-            _buildAboutMetaRow(Icons.email_outlined, 'aaravmehta.music@gmail.com'),
-            const SizedBox(height: 8),
-            _buildAboutMetaRow(Icons.phone_outlined, '+91 98765 43210'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLowerBlocksGrid() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: GridView.count(
-        crossAxisCount: 2,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.2, 
-        children: [
-          _buildGridCard(
-            context,
-            icon: Icons.star_outline,
-            title: 'Open to',
-            content: 'Collaborations, Live Shows, Music Projects',
-          ),
-          _buildGridCard(
-            context,
-            icon: Icons.work_outline,
-            title: 'Rates',
-            content: 'Live Show: ₹15K+\nProject: ₹10K+\n(Open to discuss)',
-          ),
-          _buildGridCard(
-            context,
-            icon: Icons.access_time,
-            title: 'Response Time',
-            content: 'Usually replies within a few hours',
-          ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: KalaColors.softBeige),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Top Supporters',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 52,
-                      height: 24,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Positioned(
-                            left: 0,
-                            child: _buildCollageAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb'),
-                          ),
-                          Positioned(
-                            left: 14,
-                            child: _buildCollageAvatar('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7'),
-                          ),
-                          Positioned(
-                            left: 28,
-                            child: _buildCollageAvatar('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: KalaColors.softBeige,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        '+32',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                          color: KalaColors.burntOrange,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCircularBarButton(IconData icon) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
-        border: Border.all(color: KalaColors.softBeige),
-      ),
-      child: Center(
-        child: Icon(icon, color: KalaColors.charcoal, size: 20),
-      ),
-    );
-  }
-
-  Widget _buildStatColumn(String value, String label, {bool isOrange = false}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: isOrange ? KalaColors.burntOrange : KalaColors.charcoal,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 10,
-            color: KalaColors.mediumGrey,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAboutMetaRow(IconData icon, String value) {
+  Widget _buildCheckItem(String label, bool isChecked) {
     return Row(
       children: [
-        Icon(icon, size: 14, color: KalaColors.mediumGrey),
+        Icon(
+          isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
+          size: 14,
+          color: isChecked ? KalaColors.accentGreen : KalaColors.lightGrey,
+        ),
         const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            value,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 10, color: KalaColors.mediumGrey, fontWeight: FontWeight.w500),
-          ),
+        Text(
+          label,
+          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal),
         ),
       ],
     );
   }
 
-  Widget _buildGridCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String content,
-  }) {
+  Widget _buildTabBar() {
     return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: KalaColors.softBeige),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: KalaColors.lightGrey)),
       ),
+      child: TabBar(
+        controller: _tabController,
+        isScrollable: true,
+        labelColor: const Color(0xFFEA580C),
+        unselectedLabelColor: KalaColors.mediumGrey,
+        indicatorColor: const Color(0xFFEA580C),
+        indicatorWeight: 2,
+        labelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+        tabs: const [
+          Tab(text: 'Portfolio'),
+          Tab(text: 'Applications'),
+          Tab(text: 'Timeline'),
+          Tab(text: 'Skills'),
+          Tab(text: 'About'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPortfolioTab() {
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 24),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Featured Work',
+                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+              ),
+              Text(
+                'View All',
+                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            child: Row(
+              children: [
+                _buildFeaturedWorkCard(
+                  'Original Song – Dil Se',
+                  '3.2K views • Music',
+                  '3:45',
+                  'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=300',
+                ),
+                const SizedBox(width: 12),
+                _buildFeaturedWorkCard(
+                  'Short Film – Raaste',
+                  '1.8K views • Film',
+                  '12:30',
+                  'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=300',
+                ),
+                const SizedBox(width: 12),
+                _buildFeaturedWorkCard(
+                  'Dance Performance – Nritya 2025',
+                  '2.6K views • Dance',
+                  '2:18',
+                  'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80&w=300',
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'My Applications',
+                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+              ),
+              Text(
+                'View All',
+                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _buildAppStatBox('3', 'Under\nReview', const Color(0xFFEA580C))),
+                const SizedBox(width: 6),
+                Expanded(child: _buildAppStatBox('2', 'Short-\nlisted', KalaColors.accentGreen)),
+                const SizedBox(width: 6),
+                Expanded(child: _buildAppStatBox('1', 'Inter-\nview', const Color(0xFFEA580C))),
+                const SizedBox(width: 6),
+                Expanded(child: _buildAppStatBox('0', 'Selected', KalaColors.accentGreen)),
+                const SizedBox(width: 6),
+                Expanded(child: _buildAppStatBox('1', 'Rejected', Colors.red)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Career Timeline',
+                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+              ),
+              Text(
+                'View All',
+                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildCareerTimelineItem('2025', 'Won Inter College Singing Competition', 'March 2025', isLast: false),
+          _buildCareerTimelineItem('2025', 'Accepted into Delhi Music Fest', 'April 2025', isLast: false),
+          _buildCareerTimelineItem('2025', 'Performed at IIT Cultural Fest', 'May 2025', isLast: true),
+          const SizedBox(height: 32),
+          _buildBottomProfileActions(),
+          const SizedBox(height: 40), // Extra padding at bottom
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeaturedWorkCard(String title, String subtitle, String duration, String imageUrl) {
+    return SizedBox(
+      width: 160,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: Alignment.bottomRight,
             children: [
               Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFF5EBE0),
+                height: 90,
+                width: 160,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                child: Icon(icon, size: 14, color: KalaColors.burntOrange),
               ),
-              const SizedBox(width: 8),
-              Expanded(
+              Container(
+                margin: const EdgeInsets.all(6),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(4),
+                ),
                 child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  duration,
+                  style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Expanded(
-            child: Text(
-              content,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 10,
-                color: KalaColors.charcoal.withValues(alpha: 0.7),
-                height: 1.3,
+          Text(
+            title,
+            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 2),
+          Text(
+            subtitle,
+            style: GoogleFonts.inter(fontSize: 9, color: KalaColors.mediumGrey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppStatBox(String count, String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            count,
+            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w600, color: color, height: 1.1),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCareerTimelineItem(String year, String title, String date, {required bool isLast}) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
+            children: [
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFEA580C), width: 2),
+                ),
               ),
+              if (!isLast)
+                Expanded(
+                  child: Container(
+                    width: 2,
+                    color: const Color(0xFFEA580C),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                year,
+                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+              ),
+            ],
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  date,
+                  style: GoogleFonts.inter(fontSize: 9, color: KalaColors.mediumGrey),
+                ),
+                if (!isLast) const SizedBox(height: 24),
+              ],
             ),
           ),
         ],
@@ -882,18 +728,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildCollageAvatar(String imageUrl) {
-    return Container(
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 1.5),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
+  Widget _buildBottomProfileActions() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildActionIcon(Icons.edit_outlined, 'Edit Portfolio'),
+        _buildActionIcon(Icons.cloud_upload_outlined, 'Upload Work'),
+        _buildActionIcon(Icons.share_outlined, 'Share Profile'),
+        _buildActionIcon(Icons.bar_chart_outlined, 'Analytics'),
+      ],
+    );
+  }
+  
+  Widget _buildActionIcon(IconData icon, String label) {
+    return Column(
+      children: [
+        Icon(icon, size: 24, color: KalaColors.charcoal),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal),
         ),
-      ),
+      ],
     );
   }
 }

@@ -1,0 +1,480 @@
+HOME PAGE:-
+Based on the direction KALĀ is now taking, I would redesign the **student Home page** to become a **career dashboard with creative inspiration**, rather than a social feed. Every section should answer one question: *"What should I do next to grow my creative career?"* instead of *"What are people posting today?"*
+
+At the very top, the greeting should remain because it makes the app feel personal, but the space beside it should only contain Search and Notifications. Since chat and stories are being removed, the top of the screen becomes much cleaner. Under the greeting, instead of story circles, add a horizontally scrollable **Quick Actions** section with rounded cards such as **Find Auditions**, **Continue Application**, **Build Portfolio**, **Upcoming Events**, **My Calendar**, and **Saved Opportunities**. These become shortcuts to the most-used parts of the app.
+
+The hero section should become a **Career Progress Card** instead of a featured social post. This card summarizes the user's journey with information like Profile Completion (82%), Portfolio Strength, Applications Submitted, Interviews Scheduled, and Profile Views this week. A primary CTA such as **Complete Profile** or **Improve Portfolio** encourages users to increase their visibility. This gives immediate value every time they open the app.
+
+Instead of "Featured Opportunities," the next section should be **Recommended For You**, powered by the user's selected skills, city, experience level, and interests collected during onboarding. Each opportunity card should be richer than before, showing the organization logo, verification badge, stipend or payment, deadline, number of applicants, location, required skills, and a confidence label like **92% Match**. The Apply button should always remain visible so users never need multiple taps.
+
+Immediately below that should be the most important addition missing from the earlier design: **My Applications**. This is a horizontal carousel displaying every active application with visual progress chips such as **Applied**, **Under Review**, **Shortlisted**, **Interview**, **Selected**, or **Rejected**. Each card should also display when it was last updated and provide a single tap to open the detailed application timeline. This section makes students feel that the platform is actively working for them.
+
+The next section should become **Upcoming Deadlines & Events**. Instead of showing random content, this widget reminds users that an audition closes tomorrow, an interview is scheduled on Friday, a workshop begins next week, or additional documents are required. A timeline layout with small colored indicators makes this much easier to scan than notifications.
+
+After productivity comes inspiration. Rather than a traditional Instagram-style feed, introduce **Featured Creators**. These cards highlight exceptional portfolios from verified students, alumni, or professionals. The focus is on finished work instead of everyday social updates. Each card contains a large cover image or video thumbnail, project title, creator role, awards earned, and a single CTA like **View Portfolio** instead of Like and Comment.
+
+The following section should showcase **Campus & Community**. Here students discover competitions, hackathons, college festivals, workshops, jam sessions, open mics, exhibitions, and networking events happening nearby or online. This section keeps the platform lively without depending on social content.
+
+A **Trending Skills** module can then recommend what employers are currently searching for. For example, "Playback Singing," "Video Editing," "Street Photography," "Content Writing," or "Classical Dance." Each skill card can display the number of active opportunities and a button to browse them, encouraging students to continually improve.
+
+Another valuable addition would be a **Learning & Growth** section. Rather than pushing users back to social media, KALĀ can recommend short resources such as portfolio tips, resume templates, audition preparation guides, branding advice, interview techniques, or copyright basics. These don't need to be lengthy courses—small educational cards are enough to increase engagement.
+
+Near the bottom, include a **Recently Viewed & Saved** section so students can quickly return to opportunities they were considering. This removes the frustration of searching again after accidentally closing a listing.
+
+Finally, the bottom navigation becomes much more focused:
+
+* **Home** – Career dashboard
+* **Discover** – Opportunities, organizations, creators, search
+* **+** – Upload portfolio, post project, create resume, QR profile
+* **Applications** – All submissions, statuses, interviews, documents
+* **Profile** – Portfolio, achievements, settings
+
+The overall visual language should also become calmer than the previous version. Use the **Ivory** background throughout the page with **Card Background** cards that float subtly using soft shadows. Reserve **Burnt Orange** only for important actions, progress indicators, and selected states so it retains its visual impact. **Soft Beige** should be used for chips, tags, and secondary containers, while **Muted Gold** highlights featured opportunities and premium achievements. **Accent Green** should appear only for verified organizations, successful applications, and completed tasks. Large editorial typography paired with generous whitespace will make the interface feel premium and reduce cognitive load.
+
+Overall, the redesigned Home page should feel less like Instagram and more like a personalized creative career command center. Every section should either help users discover opportunities, manage their progress, improve their portfolio, or prepare for their next creative milestone. That focus aligns much more closely with KALĀ's purpose than a traditional social feed.
+
+
+2.DISCOVER PAGE:-
+The **Discover** page should become the **actual marketplace** of KALĀ rather than another feed. Unlike Home, which inspires users with activity and recommendations, Discover should be where users intentionally search for opportunities, people, organizations, and creative projects. Every section should help the user answer one question: *"What can I apply to or work on next?"*
+
+At the top of the page, keep a large universal search bar with intelligent search suggestions. Users should be able to search by opportunity title, organization, artist name, college, location, skill, event, or project. Beside the search bar, include a filter button that opens advanced filters such as domain (Music, Dance, Theatre, Film, Photography, Design, Writing), location, paid/unpaid, online/offline, application deadline, experience level, and verification status. This immediately makes the page feel like a professional discovery platform instead of social media.
+
+Right below the search area, replace the old category icons with modern filter chips. These chips should include "Trending", "Near You", "Paid", "Remote", "College Events", "Competitions", "Casting Calls", "Workshops", "Collaborations", and "Internships". Users should be able to select multiple chips simultaneously so the content below updates dynamically.
+
+The first major section should be **Recommended Opportunities**. Instead of showing only one horizontal card, present two or three premium opportunity cards based on the user's profile. Each card should display the organizer logo, event type, location, payment, deadline countdown, number of applicants, verification badge, and a clear Apply button. A small AI explanation such as "Recommended because you are a singer from Mumbai" would make recommendations feel much smarter.
+
+The next section should be **Trending Opportunities**. These are opportunities currently receiving the highest engagement across India. Each card should include metrics such as "1.2K applicants", "Trending #3", or "Applications closing today" to create urgency and help users prioritize what is popular.
+
+Instead of jumping directly into more opportunity cards, introduce a **Discover Organizations** section. Display verified production houses, colleges, event companies, studios, music labels, NGOs, and cultural societies as elegant horizontal cards. Each organization card should show their logo, verification badge, number of active opportunities, previous events conducted, response rate, and average hiring time. This gives users confidence before applying.
+
+After organizations, include a **Find Creators** section. Rather than functioning like Instagram profiles, these cards should focus on collaboration potential. Every creator card should highlight primary skill, location, collaboration interests, featured project, availability status, and common interests. A "Connect" button should only appear when collaboration is relevant instead of encouraging unnecessary social networking.
+
+One section that would make KALĀ stand out is **Creative Projects Looking for Team Members**. Here students can discover independent short films, music videos, theatre productions, hackathon cultural teams, podcasts, photography exhibitions, or college fest organizing committees that are actively recruiting collaborators. Each project card should clearly show what roles are still needed, the expected timeline, whether it is paid, and the project owner.
+
+Another valuable section is **Competitions & Festivals**. Instead of mixing these with auditions, dedicate a separate area for national competitions, college fests, workshops, hackathons, open mic events, and showcases. Every card should prominently display registration deadlines, prizes, participation mode, and organizer credibility.
+
+Introduce a **Recently Posted** feed where opportunities appear chronologically. This helps users who frequently visit the platform avoid missing fresh opportunities. Small "Posted 30 minutes ago" indicators make the marketplace feel alive.
+
+One missing feature from your current design is a **Saved Collection** shortcut. Users often save opportunities to apply later. Instead of burying saved opportunities inside the profile, include a compact section that reminds users they have "12 Saved Opportunities" with deadlines approaching. This encourages action and reduces forgotten applications.
+
+A section called **Continue Your Applications** should also appear when relevant. If a user has started filling an application but hasn't submitted it, this section should surface unfinished forms with a progress indicator such as "70% Complete" and a Continue button. This dramatically improves usability.
+
+Near the bottom, include **Learning & Career Resources**. Short cards can recommend resume tips, portfolio guides, audition preparation, interview advice, grant opportunities, or industry articles. These resources add long-term value even when users are not actively applying.
+
+Instead of infinite scrolling through identical opportunity cards, periodically insert **Featured Collections** such as "Summer Internships", "Music Festivals 2026", "Dance Competitions", "Women Creators", "Remote Creative Work", or "Top College Opportunities". These curated collections make browsing feel organized.
+
+Finally, add a compact **Application Insights** banner if the user has active submissions. Rather than making users visit another page, show a quick summary like "2 Under Review • 1 Shortlisted • 1 Action Required." Tapping the banner opens the full Applications screen. This reinforces that KALĀ is a career platform where opportunities progress toward outcomes, not just another app for endlessly browsing content.
+
+With these changes, the Discover page transforms from a simple opportunity listing into a structured creative marketplace. It becomes the place where students search, compare, evaluate, save, apply, resume applications, discover collaborators, explore organizations, and ultimately build their creative careers—all from one thoughtfully organized screen.
+
+
+3. '+' page
+After the redesign, I would completely rethink the "+" page. It should no longer feel like a miscellaneous menu with many unrelated actions. Instead, it should become the Creative Hub—the place where users add to and manage their professional presence. Every option should contribute to one of two goals: building their portfolio or advancing their career.
+
+The page should open as a modern bottom sheet or full-screen modal with a clean ivory background, rounded top corners, and large, elegant action cards instead of small icons. At the top, display the heading "What would you like to do today?" followed by a short subtitle such as "Build your portfolio or take the next step in your creative journey." This makes the page feel purposeful rather than just another menu.
+
+The first section should be Portfolio, as this is the heart of every creative profile. Large action cards allow users to Upload a Project, Add a Performance, Upload Photos, Upload Videos, Upload Audio, or Add Certificates & Awards. Every upload becomes part of the user's professional portfolio instead of a temporary social post.
+
+The second section should be Create, where users can publish meaningful content related to their creative work. Instead of everyday social posts, this area lets them create a Project Update, Behind the Scenes, Achievement, Event Participation, or Project Completion. These updates appear within their portfolio activity and can also be surfaced in the community showcase if relevant.
+
+Next comes Career Tools, containing practical actions such as Generate Resume, Update Skills, Manage Availability, Edit Portfolio, Add Experience, and Update Education. These options encourage users to continuously improve their profile rather than simply upload content.
+
+A fourth section called Networking can include features like Share Profile QR, Copy Portfolio Link, Invite Collaborators, and Share Digital Portfolio. This supports professional networking without turning the platform into another social media app.
+
+At the bottom of the page, include a small Drafts section that reminds users about unfinished uploads or incomplete portfolio updates, allowing them to continue where they left off.
+
+Where is the user's work stored?
+
+This is one area where KALĀ should differ from Instagram.
+
+A user's work should not disappear into a feed.
+
+Instead, every uploaded item becomes part of their Portfolio, which acts as their permanent digital creative resume.
+
+For example, if a student uploads a dance performance, it automatically appears under Profile → Portfolio → Dance. If they upload a short film, it is added under Projects, while a photography collection appears under Photography. Certificates go into Achievements, and audio recordings appear under Music. Nothing is temporary unless the user chooses to archive or delete it.
+
+At the same time, users can optionally mark selected works as Featured Showcase. These featured projects become eligible to appear in the Home page's Featured Creators, Trending Showcase, or Recommended Talent sections, allowing organizers to discover them without turning the entire platform into a traditional social feed.
+
+In other words, think of KALĀ as having two layers:
+
+Portfolio (Permanent): The user's complete professional body of work, organized by categories, always accessible from their profile and used by organizers during recruitment.
+Showcase (Discoverable): A curated selection of portfolio items that the user chooses to make public for discovery. These can appear in recommendation feeds, category showcases, and search results, helping users gain visibility while keeping the platform focused on careers rather than endless content consumption.
+
+This approach makes every upload meaningful. Users aren't posting for short-lived engagement—they're building a portfolio that grows throughout their creative journey and directly supports applications, recruitment, and professional discovery
+
+4.Applications Page:-
+The **Applications** page should become one of the most important pages in KALĀ because it represents the user's entire career journey on the platform. Instead of simply displaying a list of submitted forms, it should function like an **Application Tracker**, similar to tracking an order on Amazon or a task on Linear. Every update should reassure students that their application is progressing.
+
+At the top of the screen, maintain the same clean layout as the Home page with a large title **"My Applications"** and a short subtitle such as *"Track every opportunity you've applied for."* On the right side, include a search icon and a filter button. Users should be able to search applications by event name, organization, or category, while filters allow sorting by status, application date, deadline, or organization.
+
+Directly below the header, display a row of rounded status chips that act as filters. These should include **All**, **Applied**, **Under Review**, **Shortlisted**, **Interview**, **Selected**, **Completed**, and **Rejected**. Each chip should display the number of applications within that stage, giving students an instant overview of their progress.
+
+Instead of simple list tiles, every application should appear as a premium card using the KALĀ design language. Each card should include the organization logo, opportunity title, organization name, location, application date, and deadline. A colored status badge immediately communicates the current stage—for example, Burnt Orange for **Under Review**, Accent Green for **Selected**, Muted Gold for **Interview Scheduled**, and Medium Grey for **Completed**. A small percentage or progress bar beneath the card can visually represent how far the application has progressed.
+
+The most important addition is a **visual application timeline** inside every card or on the detailed page. Rather than simply saying "Shortlisted," the user should see the complete journey: **Applied → Profile Reviewed → Under Review → Shortlisted → Interview → Selected**. Completed stages use green checkmarks, the current stage is highlighted in Burnt Orange, and upcoming stages remain outlined in Soft Beige. This immediately reduces uncertainty and gives students confidence that their application is actively moving forward.
+
+Tapping an application should open a dedicated **Application Details** page. The top of the page displays the opportunity banner, organization information, and current status. Below it, the full application timeline is shown, followed by the exact form the student submitted, uploaded documents, portfolio links, organizer instructions, interview details, and important deadlines. Everything related to that opportunity exists in one place instead of being spread across multiple screens.
+
+Below the timeline, include an **Organizer Updates** section where official updates appear chronologically. Instead of general chat, organizers can post structured updates such as *"Your portfolio has been reviewed,"* *"Interview scheduled for 16 July at 2 PM,"* or *"Please upload your identity proof before the interview."* These updates feel professional and keep communication contextual.
+
+Another useful section is **Required Actions**. If the organizer requests additional documents, asks the student to confirm attendance, upload another portfolio piece, or accept an offer, those tasks appear as action cards with clear deadlines. This transforms the page from a passive tracker into an interactive workspace.
+
+Towards the bottom, include a **Documents & Submission** section where users can revisit everything they submitted. Resume, portfolio, videos, certificates, cover letter, and additional attachments are all neatly organized. Students should also be able to download or update files if the organizer allows revisions before the deadline.
+
+A compact **Similar Opportunities** section can appear below completed or rejected applications. If a student is rejected from one acting audition, KALĀ can recommend similar casting calls or events requiring the same skills. This encourages continuous engagement instead of disappointment.
+
+The page should also provide **Application Insights** for each submission. Small indicators such as **Profile Match (92%)**, **Application Strength (88%)**, **Portfolio Viewed**, or **Organizer Viewed Your Profile** help students understand how competitive they are and motivate them to improve their profiles before applying elsewhere.
+
+Visually, the page should remain calm and professional. Use the **Ivory** background throughout, with elevated **Card Background** cards separated by generous whitespace. **Burnt Orange** should highlight active stages and primary actions, **Accent Green** should represent successful progress, **Muted Gold** should emphasize interview stages or featured opportunities, and **Soft Beige** should be used for chips, inactive timeline steps, and secondary containers. This consistent color hierarchy makes the application journey easy to understand at a glance.
+
+Overall, the Applications page should not feel like a mailbox or a list of submitted forms. It should feel like a **career progress tracker**—a place where students can clearly see every opportunity they have pursued, understand exactly where they stand, know what action is required next, and confidently follow their journey from application to successful selection. This shift makes Applications one of the core experiences of KALĀ rather than just another supporting screen.
+
+
+5. The **Profile** page should no longer feel like an Instagram profile where the main goal is collecting followers and likes. After reviewing the overall purpose of KALĀ, the profile should instead function as a **living creative portfolio + professional resume** that instantly answers one question:
+
+> **"Can I hire or collaborate with this person?"**
+
+Every section on the page should help answer that question.
+
+---
+
+## Hero Section
+
+The top of the page should remain visually premium with the profile picture, name, verified badge (if applicable), creative role, city and availability, but instead of emphasizing follower count, the first thing users should see is their **professional identity**.
+
+Below the name should be small chips displaying their primary disciplines such as Singer, Guitarist, Music Producer, Actor, Dancer, Filmmaker, Photographer etc. Alongside this, include an "Available For" indicator such as:
+
+* Auditions
+* Paid Gigs
+* Collaborations
+* Events
+* Freelance Projects
+
+using soft green chips whenever they are actively looking for work.
+
+The bio should remain concise (2–3 lines) with portfolio links and social links underneath.
+
+---
+
+## Professional Stats (Replace Social Stats)
+
+Instead of displaying followers as the most important metric, the statistics should communicate credibility.
+
+Example cards:
+
+* Applications Submitted
+* Opportunities Shortlisted
+* Projects Completed
+* Portfolio Views
+* Profile Strength
+* Response Rate
+
+These numbers actually help organizers judge reliability.
+
+For example:
+
+```
+32
+Applications
+
+14
+Shortlisted
+
+8
+Completed Projects
+
+3.2K
+Portfolio Views
+
+92%
+Profile Strength
+```
+
+This immediately feels like LinkedIn mixed with Behance instead of Instagram.
+
+---
+
+## Resume Completion Card
+
+Just beneath the statistics, place a colored card encouraging users to build a stronger portfolio.
+
+Example:
+
+**Complete your profile (82%)**
+
+✔ Add Resume
+
+✔ Upload Showreel
+
+✔ Verify College
+
+○ Add Languages
+
+○ Upload Certificates
+
+This becomes a progress tracker that motivates new users.
+
+---
+
+## Portfolio Section (Main Attraction)
+
+This should occupy the largest part of the screen because it is what organizers actually visit.
+
+Instead of only videos, organize the portfolio into tabs.
+
+```
+Featured
+
+Videos
+
+Photos
+
+Audio
+
+Documents
+
+Projects
+```
+
+Each item should appear as premium cards.
+
+For videos:
+
+* Thumbnail
+* Duration
+* Title
+* Views
+* Category
+
+For audio:
+
+* Cover artwork
+* Waveform
+* Duration
+
+For documents:
+
+* Resume PDF
+* Script
+* Photography Portfolio
+
+For projects:
+
+* Banner
+* Team members
+* Role
+* Status
+
+This instantly makes KALĀ much richer than Instagram.
+
+---
+
+## Featured Work
+
+At the top of the portfolio should be a pinned section called
+
+**Featured Work**
+
+Users choose 3–5 works that always appear first.
+
+These are the first things recruiters see.
+
+Examples:
+
+* Original Song
+* Short Film
+* Dance Reel
+* Photography Collection
+* Theatre Performance
+
+Think of it like Behance's featured projects.
+
+---
+
+## Career Timeline
+
+One feature that many creative platforms miss is showing growth.
+
+A vertical timeline could display:
+
+```
+2025
+
+Won Inter College Singing Competition
+
+Accepted into Delhi Music Fest
+
+Performed at IIT Cultural Fest
+
+Released First Original Song
+
+Completed 10 Live Shows
+```
+
+This tells a story instead of simply listing posts.
+
+---
+
+## Applications & Activity
+
+Since your application revolves around opportunities, users should be able to see their own progress.
+
+Include a section showing:
+
+Recent Applications
+
+* Under Review
+* Shortlisted
+* Interview Scheduled
+* Selected
+* Rejected
+
+Each status uses different accent colors.
+
+This saves users from switching to another page just to remember what they've applied for.
+
+---
+
+## Skills & Experience
+
+Instead of only tags, create elegant grouped cards.
+
+**Primary Skills**
+
+* Singing
+* Songwriting
+* Guitar
+
+**Secondary Skills**
+
+* Piano
+* Music Production
+
+**Languages**
+
+* Hindi
+* English
+* Marathi
+
+**Experience**
+
+Intermediate
+
+4 years
+
+18 live performances
+
+This helps organizers evaluate talent within seconds.
+
+---
+
+## Achievements & Certifications
+
+Dedicate a section to verified accomplishments.
+
+Examples:
+
+🏆 Winner – Battle of Bands 2025
+
+🎭 Best Actor – XYZ College
+
+🎓 Trinity Grade 6 Guitar
+
+📜 NSD Workshop Certified
+
+Each achievement can have a verification badge if approved by KALĀ.
+
+---
+
+## Reviews & Recommendations
+
+Instead of likes, showcase professional credibility.
+
+Allow organizers, collaborators and mentors to leave recommendations.
+
+Example:
+
+⭐⭐⭐⭐⭐
+
+*"Very professional, punctual and delivered beyond expectations."*
+
+— Delhi Theatre Society
+
+This is far more valuable than social engagement.
+
+---
+
+## Availability & Preferences
+
+A collapsible section should define the kind of opportunities the user is seeking.
+
+Examples:
+
+Available for
+
+✔ Paid Gigs
+
+✔ Live Events
+
+✔ Short Films
+
+✔ Collaborations
+
+Preferred Cities
+
+Mumbai
+
+Delhi
+
+Bangalore
+
+Remote
+
+Travel
+
+Available
+
+This helps recommendation algorithms and organizers filter candidates.
+
+---
+
+## About Section
+
+The About card should become richer than a simple paragraph.
+
+Include:
+
+* Education
+* College
+* Graduation Year
+* Experience
+* Website
+* Email
+* Contact Number (optional)
+* Languages
+* Preferred Work Locations
+
+Everything should remain clean and minimal.
+
+---
+
+## Bottom Quick Actions
+
+Instead of ending the page abruptly, include actionable shortcuts.
+
+Examples:
+
+* Edit Portfolio
+* Upload New Work
+* Download Resume
+* Share Profile
+* View Public Profile
+* Analytics
+
+These make profile management effortless.
+
+---
+
+## Overall Experience
+
+The redesigned Profile page should feel less like a social media account and more like a **professional creative identity**. Every section should reinforce trust, showcase talent, and help organizers make hiring decisions quickly. Rather than focusing on followers or popularity, the page emphasizes portfolio quality, verified achievements, application progress, skills, availability, and professional reputation. This aligns much more closely with KALĀ's core mission: helping emerging artists build careers through real opportunities, not just social engagement.
