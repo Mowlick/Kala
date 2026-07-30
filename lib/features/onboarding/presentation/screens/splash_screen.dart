@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -39,7 +39,7 @@ class SplashScreen extends StatelessWidget {
                       children: [
                         Text(
                           'kalā',
-                          style: GoogleFonts.cormorantGaramond(
+                          style: TextStyle(fontFamily: 'ZT_Nature', 
                             fontSize: 36, // Reduced from 48
                             fontWeight: FontWeight.bold,
                             color: KalaColors.charcoal,
@@ -286,7 +286,7 @@ class SplashScreen extends StatelessWidget {
             children: [
               Text(
                 'kalā',
-                style: GoogleFonts.cormorantGaramond(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,

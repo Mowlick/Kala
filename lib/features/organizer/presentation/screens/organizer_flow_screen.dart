@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../applications/domain/models/application_status.dart';
 
 class OrganizerFlowScreen extends StatelessWidget {
   const OrganizerFlowScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final eventController = context.watch<EventController>();
+    final submissions = eventController.submissions;
+
     return Scaffold(
       backgroundColor: KalaColors.ivory,
       body: SafeArea(
@@ -16,7 +21,7 @@ class OrganizerFlowScreen extends StatelessWidget {
             children: [
               _buildHeader(),
               _buildProjectDropdown(),
-              _buildKanbanBoard(),
+              _buildKanbanBoard(context, eventController, submissions),
               _buildUpcomingInterviews(),
               _buildQuickActions(),
               _buildRecentActivity(),
@@ -40,11 +45,11 @@ class OrganizerFlowScreen extends StatelessWidget {
               children: [
                 Text(
                   'Flow',
-                  style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 28, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                 ),
                 Text(
                   'Manage applicants from discovery to selection.',
-                  style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
                 ),
               ],
             ),
@@ -100,7 +105,7 @@ class OrganizerFlowScreen extends StatelessWidget {
               child: Text(
                 'Music Fest 2026',
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               ),
             ),
             Container(
@@ -114,7 +119,7 @@ class OrganizerFlowScreen extends StatelessWidget {
                 children: [
                   Container(width: 6, height: 6, decoration: const BoxDecoration(color: KalaColors.accentGreen, shape: BoxShape.circle)),
                   const SizedBox(width: 4),
-                  Text('Active', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
+                  Text('Active', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
                 ],
               ),
             ),
@@ -127,7 +132,7 @@ class OrganizerFlowScreen extends StatelessWidget {
   }
 
   // ─── KANBAN BOARD ─────────────────────────────────────────────────────────
-  Widget _buildKanbanBoard() {
+  Widget _buildKanbanBoard(BuildContext context, EventController controller, List submissions) {
     return Column(
       children: [
         // Stage headers
@@ -152,21 +157,58 @@ class OrganizerFlowScreen extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 1. Applied Column
               _kanbanColumn([
+                ...submissions.where((s) => s.status == ApplicationStatus.applied).map((sub) => _kanbanCard(
+                      sub.studentName,
+                      sub.studentRole,
+                      '95%',
+                      sub.studentAvatar.isNotEmpty ? sub.studentAvatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
+                      onTap: () => _showStatusChangeModal(context, controller, sub),
+                    )),
                 _kanbanCard('Aarav Mehta', 'Vocalist', '78%', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100'),
                 _kanbanCard('Diya Sharma', 'Dancer', '72%', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100'),
               ]),
+
+              // 2. Reviewed Column
               _kanbanColumn([
+                ...submissions.where((s) => s.status == ApplicationStatus.underReview).map((sub) => _kanbanCard(
+                      sub.studentName,
+                      sub.studentRole,
+                      '92%',
+                      sub.studentAvatar.isNotEmpty ? sub.studentAvatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
+                      onTap: () => _showStatusChangeModal(context, controller, sub),
+                    )),
                 _kanbanCard('Kabir Malhotra', 'Cinematographer', '82%', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=100'),
                 _kanbanVideoCard(),
               ]),
+
+              // 3. Shortlisted Column
               _kanbanColumn([
+                ...submissions.where((s) => s.status == ApplicationStatus.selected).map((sub) => _kanbanCard(
+                      sub.studentName,
+                      sub.studentRole,
+                      '98%',
+                      sub.studentAvatar.isNotEmpty ? sub.studentAvatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
+                      onTap: () => _showStatusChangeModal(context, controller, sub),
+                    )),
                 _kanbanCard('Nitika Rao', 'Dancer', '88%', 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80&w=100'),
                 _kanbanPhotoGrid(),
               ]),
+
+              // 4. Interview Column
               _kanbanColumn([
+                ...submissions.where((s) => s.status == ApplicationStatus.interview).map((sub) => _kanbanCard(
+                      sub.studentName,
+                      sub.studentRole,
+                      '94%',
+                      sub.studentAvatar.isNotEmpty ? sub.studentAvatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
+                      onTap: () => _showStatusChangeModal(context, controller, sub),
+                    )),
                 _kanbanScheduledCard('Ishita Rao', 'Actor', '90%', 'Tomorrow\n11:00 AM'),
               ]),
+
+              // 5. Selected / Offer Column
               _kanbanColumn([
                 _kanbanOfferCard('Aarav Iyer', 'Vocalist', '92%'),
               ]),
@@ -186,9 +228,9 @@ class OrganizerFlowScreen extends StatelessWidget {
         children: [
           Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 6),
-          Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
+          Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
           const SizedBox(width: 4),
-          Text(count, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey)),
+          Text(count, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
         ],
       ),
     );
@@ -215,7 +257,7 @@ class OrganizerFlowScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.add, size: 14, color: KalaColors.mediumGrey),
                 const SizedBox(width: 4),
-                Text('Add', style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey)),
+                Text('Add', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
               ],
             ),
           ),
@@ -224,34 +266,37 @@ class OrganizerFlowScreen extends StatelessWidget {
     );
   }
 
-  Widget _kanbanCard(String name, String role, String match, String imgUrl) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: KalaColors.lightGrey),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundImage: NetworkImage(imgUrl),
-            onBackgroundImageError: (_, __) {},
-            backgroundColor: KalaColors.softBeige,
-          ),
-          const SizedBox(height: 8),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
-          const SizedBox(height: 6),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-            decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
-            child: Text('$match Match', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
-          ),
-        ],
+  Widget _kanbanCard(String name, String role, String match, String imgUrl, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: KalaColors.lightGrey),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 22,
+              backgroundImage: NetworkImage(imgUrl),
+              onBackgroundImageError: (_, __) {},
+              backgroundColor: KalaColors.softBeige,
+            ),
+            const SizedBox(height: 8),
+            Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+              decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
+              child: Text('$match Match', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -311,8 +356,8 @@ class OrganizerFlowScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.all(8),
@@ -321,7 +366,7 @@ class OrganizerFlowScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.calendar_today_outlined, size: 12, color: KalaColors.burntOrange),
                 const SizedBox(width: 4),
-                Flexible(child: Text(schedule, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal))),
+                Flexible(child: Text(schedule, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal))),
               ],
             ),
           ),
@@ -329,7 +374,7 @@ class OrganizerFlowScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
-            child: Text('$match Match', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text('$match Match', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
           ),
         ],
       ),
@@ -348,21 +393,21 @@ class OrganizerFlowScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
           const SizedBox(height: 6),
           Row(
             children: [
               const Icon(Icons.check_circle, size: 12, color: KalaColors.accentGreen),
               const SizedBox(width: 4),
-              Flexible(child: Text('Offer Sent', overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.accentGreen))),
+              Flexible(child: Text('Offer Sent', overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.accentGreen))),
             ],
           ),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
-            child: Text('$match Match', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text('$match Match', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
           ),
         ],
       ),
@@ -419,20 +464,20 @@ class OrganizerFlowScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                 const SizedBox(height: 2),
                 Row(
                   children: [
                     const Icon(Icons.calendar_today_outlined, size: 10, color: KalaColors.mediumGrey),
                     const SizedBox(width: 3),
-                    Flexible(child: Text(time, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey))),
+                    Flexible(child: Text(time, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey))),
                   ],
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          Text(status, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: statusColor)),
+          Text(status, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: statusColor)),
           const SizedBox(width: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -441,7 +486,7 @@ class OrganizerFlowScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: KalaColors.lightGrey),
             ),
-            child: Text(action, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            child: Text(action, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
           ),
         ],
       ),
@@ -486,7 +531,7 @@ class OrganizerFlowScreen extends StatelessWidget {
         children: [
           Icon(icon, color: KalaColors.burntOrange, size: 22),
           const SizedBox(height: 6),
-          Text(label, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal)),
+          Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal)),
         ],
       ),
     );
@@ -524,20 +569,49 @@ class OrganizerFlowScreen extends StatelessWidget {
 
   Widget _activityRow(IconData icon, String text, String time) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.all(14),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.08), shape: BoxShape.circle),
-            child: Icon(icon, size: 14, color: KalaColors.burntOrange),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: KalaColors.softBeige, borderRadius: BorderRadius.circular(8)),
+            child: Icon(icon, size: 16, color: KalaColors.burntOrange),
           ),
           const SizedBox(width: 12),
-          Expanded(child: Text(text, style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal, height: 1.4))),
-          const SizedBox(width: 8),
-          Text(time, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+          Expanded(
+            child: Text(text, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal)),
+          ),
+          Text(time, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
         ],
+      ),
+    );
+  }
+
+  void _showStatusChangeModal(BuildContext context, EventController controller, dynamic submission) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Update Status: ${submission.studentName}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            const SizedBox(height: 4),
+            Text('Current Stage: ${submission.status.label}', style: const TextStyle(fontSize: 12, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+
+            ...ApplicationStatus.values.map((status) => ListTile(
+                  title: Text(status.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                  trailing: submission.status == status ? const Icon(Icons.check_circle, color: KalaColors.burntOrange) : null,
+                  onTap: () {
+                    controller.updateApplicationStatus(submission.submissionId, status);
+                    Navigator.pop(ctx);
+                  },
+                )),
+          ],
+        ),
       ),
     );
   }
@@ -547,11 +621,11 @@ class OrganizerFlowScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
+        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
         if (showViewAll)
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text('View all', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text('View all', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
           ),
       ],
     );

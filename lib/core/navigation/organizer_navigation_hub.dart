@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../theme/kala_colors.dart';
 import '../../features/organizer/presentation/screens/organizer_hub_screen.dart';
 import '../../features/organizer/presentation/screens/organizer_talent_screen.dart';
@@ -110,7 +110,7 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
     required String label,
   }) {
     final bool isSelected = _navIndex == navIndex;
-    final Color color = isSelected ? KalaColors.burntOrange : KalaColors.charcoal.withValues(alpha: 0.45);
+    final Color color = isSelected ? KalaColors.burntOrange : KalaColors.charcoal;
 
     return Expanded(
       child: GestureDetector(
@@ -137,7 +137,7 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
             const SizedBox(height: 4),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: color,
@@ -149,9 +149,9 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeOut,
               height: 2,
-              width: isSelected ? 28 : 0,
+              width: isSelected ? 32 : 0,
               decoration: BoxDecoration(
-                color: KalaColors.burntOrange,
+                color: isSelected ? KalaColors.burntOrange : Colors.transparent,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -213,7 +213,7 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
                   padding: const EdgeInsets.only(left: 12.0, bottom: 28.0),
                   child: Text(
                     'kalā',
-                    style: GoogleFonts.cormorantGaramond(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: KalaColors.charcoal,
@@ -254,7 +254,7 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Create / Post',
-                                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                               const SizedBox(height: 2),
                               Text(
                                 'Post a new opportunity',
@@ -311,7 +311,7 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
             const SizedBox(width: 14),
             Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 color: isSelected ? KalaColors.charcoal : KalaColors.charcoal.withValues(alpha: 0.7),

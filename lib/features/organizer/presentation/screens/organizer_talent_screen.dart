@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class OrganizerTalentScreen extends StatelessWidget {
@@ -43,11 +43,11 @@ class OrganizerTalentScreen extends StatelessWidget {
               children: [
                 Text(
                   'Talent',
-                  style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 28, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                 ),
                 Text(
                   'Discover the right creators for your next project.',
-                  style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
                 ),
               ],
             ),
@@ -94,7 +94,7 @@ class OrganizerTalentScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 'Search talent naturally... e.g. "Female singer from Delhi under 24"',
-                style: GoogleFonts.inter(fontSize: 13, color: KalaColors.mediumGrey),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, color: KalaColors.mediumGrey),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -116,8 +116,8 @@ class OrganizerTalentScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Quick Filters', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-              Text('See All', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              Text('Quick Filters', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+              Text('See All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
             ],
           ),
         ),
@@ -156,7 +156,7 @@ class OrganizerTalentScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: selected ? Colors.white : KalaColors.charcoal,
@@ -187,7 +187,7 @@ class OrganizerTalentScreen extends StatelessWidget {
                 children: [
                   const Icon(Icons.tune, size: 14, color: KalaColors.charcoal),
                   const SizedBox(width: 4),
-                  Text('All Filters', style: GoogleFonts.inter(fontSize: 11, color: KalaColors.charcoal)),
+                  Text('All Filters', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal)),
                 ],
               ),
             ),
@@ -215,7 +215,7 @@ class OrganizerTalentScreen extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.charcoal)),
+          Text(label, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal)),
           const SizedBox(width: 4),
           const Icon(Icons.close, size: 12, color: KalaColors.mediumGrey),
         ],
@@ -326,7 +326,7 @@ class OrganizerTalentScreen extends StatelessWidget {
                           child: Text(
                             name,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -334,13 +334,13 @@ class OrganizerTalentScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 2),
-                    Text(roles, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey)),
+                    Text(roles, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
                     const SizedBox(height: 4),
                     Row(
                       children: [
                         const Icon(Icons.location_on_outlined, size: 11, color: KalaColors.mediumGrey),
                         const SizedBox(width: 2),
-                        Flexible(child: Text(location, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey))),
+                        Flexible(child: Text(location, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey))),
                         const SizedBox(width: 6),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -352,7 +352,7 @@ class OrganizerTalentScreen extends StatelessWidget {
                           ),
                           child: Text(
                             available ? '● Available Now' : '● Available Tomorrow',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color: available ? KalaColors.accentGreen : Colors.orange,
@@ -366,11 +366,11 @@ class OrganizerTalentScreen extends StatelessWidget {
                       children: [
                         const Icon(Icons.star, size: 11, color: Colors.amber),
                         const SizedBox(width: 2),
-                        Text(rating, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+                        Text(rating, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
                         const SizedBox(width: 8),
                         const Icon(Icons.bolt, size: 11, color: KalaColors.mediumGrey),
                         const SizedBox(width: 2),
-                        Flexible(child: Text(response, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey))),
+                        Flexible(child: Text(response, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey))),
                       ],
                     ),
                   ],
@@ -380,7 +380,7 @@ class OrganizerTalentScreen extends StatelessWidget {
               // Match %
               Text(
                 match,
-                style: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.burntOrange),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.burntOrange),
               ),
             ],
           ),
@@ -396,7 +396,7 @@ class OrganizerTalentScreen extends StatelessWidget {
                   color: KalaColors.softBeige,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(t, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal)),
+                child: Text(t, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal)),
               )).toList(),
             ),
           ),
@@ -421,7 +421,7 @@ class OrganizerTalentScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.send, size: 14, color: Colors.white),
                       const SizedBox(width: 4),
-                      Text('Invite', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text('Invite', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
                     ],
                   ),
                 ),
@@ -450,7 +450,7 @@ class OrganizerTalentScreen extends StatelessWidget {
             child: Text(
               label,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
             ),
           ),
         ],
@@ -502,11 +502,11 @@ class OrganizerTalentScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
-          Text('$match Match', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+          Text('$match Match', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
           const SizedBox(height: 4),
-          Text(badge, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 9, color: KalaColors.charcoal)),
+          Text(badge, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.charcoal)),
         ],
       ),
     );
@@ -557,15 +557,15 @@ class OrganizerTalentScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                     decoration: BoxDecoration(color: KalaColors.burntOrange, borderRadius: BorderRadius.circular(6)),
-                    child: Text('NEW', style: GoogleFonts.inter(fontSize: 7, fontWeight: FontWeight.bold, color: Colors.white)),
+                    child: Text('NEW', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 7, fontWeight: FontWeight.bold, color: Colors.white)),
                   ),
                 ),
             ],
           ),
           const SizedBox(height: 6),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 9, color: KalaColors.mediumGrey)),
-          Text(status, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 9, color: KalaColors.accentGreen)),
+          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey)),
+          Text(status, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.accentGreen)),
         ],
       ),
     );
@@ -609,9 +609,9 @@ class OrganizerTalentScreen extends StatelessWidget {
         children: [
           Icon(Icons.folder_outlined, color: KalaColors.burntOrange, size: 28),
           const SizedBox(height: 8),
-          Text(title, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(title, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
           const SizedBox(height: 4),
-          Text(count, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(count, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
         ],
       ),
     );
@@ -621,11 +621,11 @@ class OrganizerTalentScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
+        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
         if (showViewAll)
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text('View All', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
           ),
       ],
     );

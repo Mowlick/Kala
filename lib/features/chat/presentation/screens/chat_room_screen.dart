@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/kala_colors.dart';
 import '../../../../core/widgets/kala_search_bar.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../domain/models/chat_message.dart';
 import '../../domain/models/chat_contact.dart';
 import '../widgets/chat_message_bubble.dart';
@@ -77,7 +77,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   children: [
                     Text(
                       name,
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700, color: KalaColors.charcoal),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.w700, color: KalaColors.charcoal),
                     ),
                     if (isVerified) ...[
                       const SizedBox(width: 3),
@@ -87,7 +87,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 ),
                 Text(
                   '$role • $city',
-                  style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
                 ),
               ],
             ),
@@ -121,7 +121,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text('Today',
-                            style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey, fontWeight: FontWeight.w600)),
+                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey, fontWeight: FontWeight.w600)),
                       ),
                     ),
                   );

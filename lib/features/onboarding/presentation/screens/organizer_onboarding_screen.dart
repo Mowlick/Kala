@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class OrganizerOnboardingScreen extends StatefulWidget {
@@ -38,7 +38,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: KalaColors.ivory,
       body: SafeArea(
         child: Column(
           children: [
@@ -82,7 +82,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
           Expanded(
             child: Text(
               'Create Organizer Account',
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: KalaColors.charcoal,
@@ -125,7 +125,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
                         child: Center(
                           child: Text(
                             '${index + 1}',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: (_currentPage >= index) ? Colors.white : KalaColors.mediumGrey,
@@ -136,7 +136,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
                       const SizedBox(height: 8),
                       Text(
                         stepTitles[index],
-                        style: GoogleFonts.inter(
+                        style: TextStyle(fontFamily: 'ZT_Nature', 
                           fontSize: 9,
                           fontWeight: _currentPage == index ? FontWeight.bold : FontWeight.w500,
                           color: _currentPage == index ? KalaColors.charcoal : KalaColors.mediumGrey,
@@ -218,7 +218,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
           const SizedBox(height: 16),
           Text(
             'Primary Contact Person (If different)',
-            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           ),
           const SizedBox(height: 12),
           _buildTextField('Name', 'Megha Verma'),
@@ -246,7 +246,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
           const SizedBox(height: 24),
           Text(
             'Portfolio / Previous Work (Optional)',
-            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           ),
           const SizedBox(height: 12),
           Row(
@@ -312,9 +312,9 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Verification Documents', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                    Text('Verification Documents', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                     const SizedBox(height: 4),
-                    Text('2 Documents Uploaded', style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey)),
+                    Text('2 Documents Uploaded', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
                   ],
                 ),
                 const Icon(Icons.check_circle_outline, color: KalaColors.accentGreen),
@@ -337,9 +337,9 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Your information is secure', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                      Text('Your information is secure', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                       const SizedBox(height: 4),
-                      Text('Your documents and data are encrypted and used only for verification purposes.', style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey, height: 1.4)),
+                      Text('Your documents and data are encrypted and used only for verification purposes.', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey, height: 1.4)),
                     ],
                   ),
                 ),
@@ -360,12 +360,12 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
       children: [
         Text(
           title,
-          style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
         ),
         const SizedBox(height: 6),
         Text(
           subtitle,
-          style: GoogleFonts.inter(fontSize: 13, color: KalaColors.mediumGrey),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, color: KalaColors.mediumGrey),
         ),
         const SizedBox(height: 24),
       ],
@@ -375,7 +375,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
   Widget _buildTextField(String label, String value) {
     return _buildFieldContainer(
       label,
-      Text(value, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: KalaColors.charcoal)),
+      Text(value, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.w600, color: KalaColors.charcoal)),
     );
   }
 
@@ -385,7 +385,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: KalaColors.charcoal)),
+          Text(value, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.w600, color: KalaColors.charcoal)),
           const Icon(Icons.keyboard_arrow_down, color: KalaColors.mediumGrey, size: 20),
         ],
       ),
@@ -411,13 +411,13 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
             children: [
               Text(
                 value,
-                style: GoogleFonts.inter(fontSize: 13, fontWeight: isHint ? FontWeight.normal : FontWeight.w600, color: isHint ? KalaColors.mediumGrey : KalaColors.charcoal, height: 1.5),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: isHint ? FontWeight.normal : FontWeight.w600, color: isHint ? KalaColors.mediumGrey : KalaColors.charcoal, height: 1.5),
               ),
               if (charCount.isNotEmpty) ...[
                 const SizedBox(height: 24),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(charCount, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+                  child: Text(charCount, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
                 ),
               ],
             ],
@@ -455,7 +455,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
     if (parts.length > 1) {
       return RichText(
         text: TextSpan(
-          style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           children: [
             TextSpan(text: parts[0]),
             const TextSpan(text: '*', style: TextStyle(color: Colors.red)),
@@ -463,7 +463,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
         ),
       );
     }
-    return Text(label, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal));
+    return Text(label, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal));
   }
 
   Widget _buildImageUploader(String label, {bool isRound = false, bool isEdit = false}) {
@@ -490,7 +490,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
                       child: Text(
                         'KALĀ\nSTUDIOS',
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.cormorantGaramond(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1),
+                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1),
                       ),
                     ),
                   ),
@@ -507,7 +507,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
               ),
               if (!isEdit) ...[
                 const SizedBox(height: 12),
-                Text('JPG, PNG up to 5MB', style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+                Text('JPG, PNG up to 5MB', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
               ]
             ],
           ),
@@ -537,9 +537,9 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(fileName, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                    Text(fileName, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                     const SizedBox(height: 4),
-                    Text(subtitle, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+                    Text(subtitle, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
                   ],
                 ),
               ),
@@ -586,14 +586,14 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-              Text('Edit', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFEA580C))),
+              Text(title, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+              Text('Edit', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFEA580C))),
             ],
           ),
           const SizedBox(height: 12),
           ...details.map((detail) => Padding(
             padding: const EdgeInsets.only(bottom: 4),
-            child: Text(detail, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.charcoal, height: 1.5)),
+            child: Text(detail, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal, height: 1.5)),
           )),
         ],
       ),
@@ -615,7 +615,7 @@ class _OrganizerOnboardingScreenState extends State<OrganizerOnboardingScreen> {
           children: [
             Text(
               text,
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

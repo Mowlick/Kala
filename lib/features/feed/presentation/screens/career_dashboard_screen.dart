@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class CareerDashboardScreen extends StatelessWidget {
@@ -21,7 +21,10 @@ class CareerDashboardScreen extends StatelessWidget {
               const SizedBox(height: 24),
               _buildProfileStrengthCard(),
               const SizedBox(height: 24),
-              _buildSectionTitle('Recommended For You', 'Based on your profile & skills'),
+              _buildSectionTitle(
+                'Recommended For You',
+                'Based on your profile & skills',
+              ),
               const SizedBox(height: 16),
               _buildRecommendedOpportunityCard(
                 title: 'National ... Lead Actor — Street Play',
@@ -61,7 +64,10 @@ class CareerDashboardScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _buildCampusCommunityCarousel(),
               const SizedBox(height: 24),
-              _buildSectionTitle('Trending Skills', 'Add these to your profile to stand out'),
+              _buildSectionTitle(
+                'Trending Skills',
+                'Add these to your profile to stand out',
+              ),
               const SizedBox(height: 16),
               _buildTrendingSkillsList(),
               const SizedBox(height: 24),
@@ -91,7 +97,7 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               Text(
                 'My Dashboard',
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -101,7 +107,10 @@ class CareerDashboardScreen extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 'Good morning, Arjun Mehta 👋',
-                style: GoogleFonts.inter(fontSize: 14, color: KalaColors.mediumGrey),
+                style: TextStyle(fontFamily: 'ZT_Nature', 
+                  fontSize: 14,
+                  color: KalaColors.mediumGrey,
+                ),
               ),
             ],
           ),
@@ -115,7 +124,11 @@ class CareerDashboardScreen extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: KalaColors.lightGrey),
               ),
-              child: const Icon(Icons.search, size: 20, color: KalaColors.charcoal),
+              child: const Icon(
+                Icons.search,
+                size: 20,
+                color: KalaColors.charcoal,
+              ),
             ),
             const SizedBox(width: 12),
             Container(
@@ -125,7 +138,11 @@ class CareerDashboardScreen extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: KalaColors.lightGrey),
               ),
-              child: const Icon(Icons.notifications_none, size: 20, color: KalaColors.charcoal),
+              child: const Icon(
+                Icons.notifications_none,
+                size: 20,
+                color: KalaColors.charcoal,
+              ),
             ),
           ],
         ),
@@ -139,7 +156,7 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           'QUICK ACTIONS',
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 10,
             fontWeight: FontWeight.bold,
             color: KalaColors.mediumGrey,
@@ -153,9 +170,17 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               _buildQuickActionBtn('Find Auditions', Icons.mic_none, true),
               const SizedBox(width: 12),
-              _buildQuickActionBtn('Continue Applications', Icons.assignment_outlined, false),
+              _buildQuickActionBtn(
+                'Continue Applications',
+                Icons.assignment_outlined,
+                false,
+              ),
               const SizedBox(width: 12),
-              _buildQuickActionBtn('Build Portfolio', Icons.add_photo_alternate_outlined, false),
+              _buildQuickActionBtn(
+                'Build Portfolio',
+                Icons.add_photo_alternate_outlined,
+                false,
+              ),
             ],
           ),
         ),
@@ -182,7 +207,7 @@ class CareerDashboardScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: isPrimary ? Colors.white : KalaColors.charcoal,
@@ -201,7 +226,7 @@ class CareerDashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -218,7 +243,7 @@ class CareerDashboardScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Complete your profile',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 12,
                       color: KalaColors.mediumGrey,
                     ),
@@ -226,7 +251,7 @@ class CareerDashboardScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'Profile Strength',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: KalaColors.charcoal,
@@ -239,7 +264,7 @@ class CareerDashboardScreen extends StatelessWidget {
                 children: [
                   Text(
                     '82%',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: KalaColors.burntOrange,
@@ -247,7 +272,7 @@ class CareerDashboardScreen extends StatelessWidget {
                   ),
                   Text(
                     'Complete',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 10,
                       color: KalaColors.mediumGrey,
                     ),
@@ -292,7 +317,10 @@ class CareerDashboardScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'Complete Profile',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13),
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ),
@@ -310,7 +338,10 @@ class CareerDashboardScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'Improve Portfolio',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13),
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ),
@@ -327,7 +358,7 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           count,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -336,7 +367,7 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 11,
             color: KalaColors.charcoal,
             fontWeight: FontWeight.w500,
@@ -345,10 +376,7 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           subtext,
-          style: GoogleFonts.inter(
-            fontSize: 9,
-            color: KalaColors.accentGreen,
-          ),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.accentGreen),
         ),
       ],
     );
@@ -360,7 +388,7 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           title,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -369,10 +397,7 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           subtitle,
-          style: GoogleFonts.inter(
-            fontSize: 11,
-            color: KalaColors.mediumGrey,
-          ),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey),
         ),
       ],
     );
@@ -384,7 +409,7 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           title,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -392,7 +417,7 @@ class CareerDashboardScreen extends StatelessWidget {
         ),
         Text(
           actionLabel,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: KalaColors.burntOrange,
@@ -420,7 +445,7 @@ class CareerDashboardScreen extends StatelessWidget {
         border: Border.all(color: const Color(0xFFF0EBE1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -451,7 +476,7 @@ class CareerDashboardScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             title,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: KalaColors.charcoal,
@@ -460,14 +485,17 @@ class CareerDashboardScreen extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFEF3ED),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             matchPercentage,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
                               color: KalaColors.burntOrange,
@@ -505,11 +533,15 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.access_time, size: 14, color: KalaColors.burntOrange),
+                  const Icon(
+                    Icons.access_time,
+                    size: 14,
+                    color: KalaColors.burntOrange,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     daysLeft,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: KalaColors.burntOrange,
@@ -526,11 +558,17 @@ class CareerDashboardScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 10,
+                  ),
                 ),
                 child: Text(
                   'Apply Now',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12),
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ],
@@ -550,7 +588,7 @@ class CareerDashboardScreen extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: GoogleFonts.inter(
+        style: TextStyle(fontFamily: 'ZT_Nature', 
           fontSize: 10,
           fontWeight: FontWeight.w500,
           color: KalaColors.charcoal,
@@ -566,10 +604,7 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           text,
-          style: GoogleFonts.inter(
-            fontSize: 10,
-            color: KalaColors.mediumGrey,
-          ),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
         ),
       ],
     );
@@ -620,14 +655,17 @@ class CareerDashboardScreen extends StatelessWidget {
         children: [
           Text(
             company,
-            style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+            style: TextStyle(fontFamily: 'ZT_Nature', 
+              fontSize: 10,
+              color: KalaColors.mediumGrey,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
           Text(
             title,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 14,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -642,12 +680,12 @@ class CareerDashboardScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   status,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: statusColor,
@@ -656,7 +694,10 @@ class CareerDashboardScreen extends StatelessWidget {
               ),
               Text(
                 daysAgo,
-                style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                style: TextStyle(fontFamily: 'ZT_Nature', 
+                  fontSize: 10,
+                  color: KalaColors.mediumGrey,
+                ),
               ),
             ],
           ),
@@ -724,10 +765,7 @@ class CareerDashboardScreen extends StatelessWidget {
           margin: const EdgeInsets.only(top: 4),
           width: 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -736,7 +774,7 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -745,7 +783,7 @@ class CareerDashboardScreen extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 11,
                   color: KalaColors.mediumGrey,
                 ),
@@ -823,7 +861,11 @@ class CareerDashboardScreen extends StatelessWidget {
                         color: KalaColors.softBeige,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.person, size: 14, color: KalaColors.charcoal),
+                      child: const Icon(
+                        Icons.person,
+                        size: 14,
+                        color: KalaColors.charcoal,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Column(
@@ -831,7 +873,7 @@ class CareerDashboardScreen extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(fontFamily: 'ZT_Nature', 
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: KalaColors.charcoal,
@@ -839,7 +881,7 @@ class CareerDashboardScreen extends StatelessWidget {
                         ),
                         Text(
                           role,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(fontFamily: 'ZT_Nature', 
                             fontSize: 10,
                             color: KalaColors.mediumGrey,
                           ),
@@ -851,7 +893,7 @@ class CareerDashboardScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   featuredProject,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -860,7 +902,7 @@ class CareerDashboardScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   views,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
                     fontSize: 10,
                     color: KalaColors.mutedGold,
                     fontWeight: FontWeight.w600,
@@ -881,7 +923,10 @@ class CareerDashboardScreen extends StatelessWidget {
                     ),
                     child: Text(
                       'View Portfolio',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 11),
+                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11,
+                      ),
                     ),
                   ),
                 ),
@@ -900,7 +945,11 @@ class CareerDashboardScreen extends StatelessWidget {
         children: [
           _buildCommunityCard('Open Mic Night', 'The Q Cafe', 'Today, 8 PM'),
           const SizedBox(width: 16),
-          _buildCommunityCard('Photography Walk', 'Old Town Heritage', 'Sat, 7 AM'),
+          _buildCommunityCard(
+            'Photography Walk',
+            'Old Town Heritage',
+            'Sat, 7 AM',
+          ),
         ],
       ),
     );
@@ -937,7 +986,7 @@ class CareerDashboardScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -948,18 +997,29 @@ class CareerDashboardScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   location,
-                  style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                    fontSize: 11,
+                    color: KalaColors.mediumGrey,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.access_time, size: 12, color: KalaColors.charcoal),
+                    const Icon(
+                      Icons.access_time,
+                      size: 12,
+                      color: KalaColors.charcoal,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       time,
-                      style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                        fontSize: 10,
+                        color: KalaColors.charcoal,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -1004,12 +1064,16 @@ class CareerDashboardScreen extends StatelessWidget {
                   color: KalaColors.softBeige,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.trending_up, size: 16, color: KalaColors.charcoal),
+                child: const Icon(
+                  Icons.trending_up,
+                  size: 16,
+                  color: KalaColors.charcoal,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
                 skill,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: KalaColors.charcoal,
@@ -1021,14 +1085,18 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               Text(
                 opsCount,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 11,
                   color: KalaColors.accentGreen,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(width: 12),
-              const Icon(Icons.chevron_right, size: 16, color: KalaColors.mediumGrey),
+              const Icon(
+                Icons.chevron_right,
+                size: 16,
+                color: KalaColors.mediumGrey,
+              ),
             ],
           ),
         ],
@@ -1045,10 +1113,26 @@ class CareerDashboardScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       childAspectRatio: 1.5,
       children: [
-        _buildLearningCard(Icons.play_circle_outline, 'Portfolio Tips', 'Stand out to recruiters'),
-        _buildLearningCard(Icons.article_outlined, 'Resume Templates', 'Industry standard formats'),
-        _buildLearningCard(Icons.mic_none, 'Audition Prep', 'Nail your next casting'),
-        _buildLearningCard(Icons.copyright, 'Copyright Basics', 'Protect your creative work'),
+        _buildLearningCard(
+          Icons.play_circle_outline,
+          'Portfolio Tips',
+          'Stand out to recruiters',
+        ),
+        _buildLearningCard(
+          Icons.article_outlined,
+          'Resume Templates',
+          'Industry standard formats',
+        ),
+        _buildLearningCard(
+          Icons.mic_none,
+          'Audition Prep',
+          'Nail your next casting',
+        ),
+        _buildLearningCard(
+          Icons.copyright,
+          'Copyright Basics',
+          'Protect your creative work',
+        ),
       ],
     );
   }
@@ -1068,7 +1152,7 @@ class CareerDashboardScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             title,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -1077,10 +1161,7 @@ class CareerDashboardScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: GoogleFonts.inter(
-              fontSize: 9,
-              color: KalaColors.mediumGrey,
-            ),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -1092,9 +1173,17 @@ class CareerDashboardScreen extends StatelessWidget {
   Widget _buildRecentlySavedList() {
     return Column(
       children: [
-        _buildSavedItem('Lead Actor — Indie Short', 'Cinemagic Studios', 'Closes in 2d'),
+        _buildSavedItem(
+          'Lead Actor — Indie Short',
+          'Cinemagic Studios',
+          'Closes in 2d',
+        ),
         const SizedBox(height: 8),
-        _buildSavedItem('Visual Artist Intern', 'ArtHaus Gallery', 'Closes in 5d'),
+        _buildSavedItem(
+          'Visual Artist Intern',
+          'ArtHaus Gallery',
+          'Closes in 5d',
+        ),
         const SizedBox(height: 8),
         _buildSavedItem('Session Guitarist', 'Neon Records', 'Closes in 1w'),
       ],
@@ -1120,7 +1209,11 @@ class CareerDashboardScreen extends StatelessWidget {
                   color: KalaColors.softBeige,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.bookmark_border, size: 16, color: KalaColors.burntOrange),
+                child: const Icon(
+                  Icons.bookmark_border,
+                  size: 16,
+                  color: KalaColors.burntOrange,
+                ),
               ),
               const SizedBox(width: 12),
               Column(
@@ -1128,7 +1221,7 @@ class CareerDashboardScreen extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: KalaColors.charcoal,
@@ -1137,7 +1230,7 @@ class CareerDashboardScreen extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     company,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 11,
                       color: KalaColors.mediumGrey,
                     ),
@@ -1148,7 +1241,7 @@ class CareerDashboardScreen extends StatelessWidget {
           ),
           Text(
             closesIn,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 11,
               color: KalaColors.burntOrange,
               fontWeight: FontWeight.w500,

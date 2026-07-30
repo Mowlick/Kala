@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'kala_colors.dart';
 
 class KalaTheme {
+  static const String fontFamily = 'ZT_Nature';
+
   static ThemeData get lightTheme {
-    final baseTheme = ThemeData.light();
+    final baseTheme = ThemeData(
+      brightness: Brightness.light,
+      fontFamily: fontFamily,
+    );
 
     return baseTheme.copyWith(
       scaffoldBackgroundColor: KalaColors.ivory,
@@ -18,102 +22,115 @@ class KalaTheme {
         onSurface: KalaColors.charcoal,
       ),
       textTheme: TextTheme(
-        // Serif headlines representing "Reyes"
-        displayLarge: GoogleFonts.cormorantGaramond(
+        displayLarge: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 36,
           fontWeight: FontWeight.bold,
           color: KalaColors.charcoal,
           height: 1.1,
         ),
-        displayMedium: GoogleFonts.cormorantGaramond(
+        displayMedium: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: KalaColors.charcoal,
           height: 1.1,
         ),
-        displaySmall: GoogleFonts.cormorantGaramond(
+        displaySmall: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: KalaColors.charcoal,
           height: 1.2,
         ),
-        headlineLarge: GoogleFonts.cormorantGaramond(
+        headlineLarge: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 26,
           fontWeight: FontWeight.w700,
           color: KalaColors.charcoal,
           height: 1.2,
         ),
-        headlineMedium: GoogleFonts.cormorantGaramond(
+        headlineMedium: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 22,
           fontWeight: FontWeight.w700,
           color: KalaColors.charcoal,
           height: 1.2,
         ),
-        headlineSmall: GoogleFonts.cormorantGaramond(
+        headlineSmall: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: KalaColors.charcoal,
           height: 1.2,
         ),
-        titleLarge: GoogleFonts.cormorantGaramond(
+        titleLarge: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: KalaColors.charcoal,
         ),
-
-        // Sans-serif body elements using "Inter"
-        titleMedium: GoogleFonts.inter(
+        titleMedium: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: KalaColors.charcoal,
         ),
-        titleSmall: GoogleFonts.inter(
+        titleSmall: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: KalaColors.charcoal,
         ),
-        bodyLarge: GoogleFonts.inter(
+        bodyLarge: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: KalaColors.charcoal,
           height: 1.5,
         ),
-        bodyMedium: GoogleFonts.inter(
+        bodyMedium: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: KalaColors.charcoal,
           height: 1.4,
         ),
-        bodySmall: GoogleFonts.inter(
+        bodySmall: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 12,
           fontWeight: FontWeight.normal,
           color: KalaColors.mediumGrey,
           height: 1.3,
         ),
-        labelLarge: GoogleFonts.inter(
+        labelLarge: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: KalaColors.mediumGrey,
           letterSpacing: 0.5,
         ),
-        labelMedium: GoogleFonts.inter(
+        labelMedium: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: KalaColors.mediumGrey,
           letterSpacing: 0.5,
         ),
-        labelSmall: GoogleFonts.inter(
+        labelSmall: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 10,
           fontWeight: FontWeight.w500,
           color: KalaColors.mediumGrey,
           letterSpacing: 0.5,
         ),
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: KalaColors.ivory,
         elevation: 0,
-        iconTheme: const IconThemeData(color: KalaColors.charcoal),
-        titleTextStyle: GoogleFonts.cormorantGaramond(
+        iconTheme: IconThemeData(color: KalaColors.charcoal),
+        titleTextStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: KalaColors.charcoal,
@@ -141,11 +158,13 @@ class KalaTheme {
             width: 1.5,
           ),
         ),
-        labelStyle: GoogleFonts.inter(
+        labelStyle: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 14,
           color: KalaColors.mediumGrey,
         ),
-        floatingLabelStyle: GoogleFonts.inter(
+        floatingLabelStyle: const TextStyle(
+          fontFamily: fontFamily,
           fontSize: 12,
           color: KalaColors.burntOrange,
           fontWeight: FontWeight.w600,
@@ -160,7 +179,8 @@ class KalaTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          textStyle: GoogleFonts.inter(
+          textStyle: const TextStyle(
+            fontFamily: fontFamily,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -174,7 +194,8 @@ class KalaTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          textStyle: GoogleFonts.inter(
+          textStyle: const TextStyle(
+            fontFamily: fontFamily,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),

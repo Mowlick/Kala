@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class SuccessScreen extends StatelessWidget {
@@ -219,7 +219,7 @@ class SuccessScreen extends StatelessWidget {
             child: Center(
               child: Text(
                 'kā',
-                style: GoogleFonts.cormorantGaramond(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: centerTextSize,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,

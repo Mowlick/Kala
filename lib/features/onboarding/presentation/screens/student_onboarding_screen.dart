@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class StudentOnboardingScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Standard white background for forms
+      backgroundColor: KalaColors.ivory, // Standard white background for forms
       body: SafeArea(
         child: Column(
           children: [
@@ -83,7 +83,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
           Expanded(
             child: Text(
               'Create Account',
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: KalaColors.charcoal,
@@ -135,7 +135,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                 ? const Icon(Icons.check, color: Colors.white, size: 18)
                 : Text(
                     '${stepIndex + 1}',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: isActive ? Colors.white : KalaColors.mediumGrey,
@@ -146,7 +146,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
         const SizedBox(height: 8),
         Text(
           title,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 12,
             fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
             color: isActive ? KalaColors.charcoal : KalaColors.mediumGrey,
@@ -173,12 +173,12 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
         children: [
           Text(
             'Basic Information',
-            style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           ),
           const SizedBox(height: 8),
           Text(
             'Tell us more about yourself',
-            style: GoogleFonts.inter(fontSize: 14, color: KalaColors.mediumGrey),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
           ),
           const SizedBox(height: 32),
           _buildInputField(
@@ -223,19 +223,19 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
         children: [
           Text(
             'Profile Details',
-            style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           ),
           const SizedBox(height: 8),
           Text(
             'This helps organizers know you better',
-            style: GoogleFonts.inter(fontSize: 14, color: KalaColors.mediumGrey),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
           ),
           const SizedBox(height: 24),
           Row(
             children: [
               Text(
                 'Profile Photo',
-                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               ),
               const Spacer(),
               Stack(
@@ -269,7 +269,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
           const SizedBox(height: 24),
           RichText(
             text: TextSpan(
-              style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               children: [
                 const TextSpan(text: 'Category / Skills '),
                 TextSpan(
@@ -309,7 +309,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                     children: [
                       Text(
                         skill,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(fontFamily: 'ZT_Nature', 
                           fontSize: 12,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                           color: isSelected ? const Color(0xFFEA580C) : KalaColors.charcoal,
@@ -329,7 +329,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
           Row(
             children: [
               Expanded(
-                child: Text('Experience Level', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                child: Text('Experience Level', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
               ),
               Expanded(
                 child: Container(
@@ -341,7 +341,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Intermediate', style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal)),
+                      Text('Intermediate', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal)),
                       const Icon(Icons.keyboard_arrow_down, color: KalaColors.mediumGrey, size: 18),
                     ],
                   ),
@@ -353,7 +353,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
           Row(
             children: [
               Expanded(
-                child: Text('Years of Experience', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                child: Text('Years of Experience', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
               ),
               Expanded(
                 child: Container(
@@ -365,7 +365,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('2-4 Years', style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal)),
+                      Text('2-4 Years', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal)),
                       const Icon(Icons.keyboard_arrow_down, color: KalaColors.mediumGrey, size: 18),
                     ],
                   ),
@@ -376,7 +376,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
           const SizedBox(height: 24),
           Text(
             'Bio',
-            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           ),
           const SizedBox(height: 8),
           Container(
@@ -390,14 +390,14 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
               children: [
                 Text(
                   'Passionate singer and songwriter.\nPerformed at various college events\nand music festivals.',
-                  style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal, height: 1.5),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal, height: 1.5),
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
                   child: Text(
                     '92/200',
-                    style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
                   ),
                 ),
               ],
@@ -419,12 +419,12 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
         children: [
           Text(
             'Verification',
-            style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           ),
           const SizedBox(height: 8),
           Text(
             'Help us verify your identity',
-            style: GoogleFonts.inter(fontSize: 14, color: KalaColors.mediumGrey),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
           ),
           const SizedBox(height: 24),
           _buildUploadBox(
@@ -449,7 +449,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal),
+                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal),
                     children: [
                       const TextSpan(text: 'I agree to the '),
                       const TextSpan(
@@ -477,7 +477,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
               const SizedBox(width: 8),
               Text(
                 'Your data is secure with us',
-                style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
               ),
             ],
           ),
@@ -503,12 +503,12 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
                 ),
               ],
             ),
@@ -526,7 +526,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
       children: [
         RichText(
           text: TextSpan(
-            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
             children: [
               TextSpan(text: title),
               if (isOptional)
@@ -561,12 +561,12 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                   children: [
                     Text(
                       label,
-                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
                     ),
                   ],
                 ),
@@ -594,7 +594,7 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
           children: [
             Text(
               text,
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

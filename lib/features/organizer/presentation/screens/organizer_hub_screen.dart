@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class OrganizerHubScreen extends StatelessWidget {
@@ -46,7 +46,7 @@ class OrganizerHubScreen extends StatelessWidget {
             child: Center(
               child: Text(
                 'R',
-                style: GoogleFonts.cormorantGaramond(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -61,7 +61,7 @@ class OrganizerHubScreen extends StatelessWidget {
               children: [
                 Text(
                   'Good Morning,',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
                     fontSize: 12,
                     color: KalaColors.mediumGrey,
                   ),
@@ -72,7 +72,7 @@ class OrganizerHubScreen extends StatelessWidget {
                       child: Text(
                         'Rhythm Productions',
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(fontFamily: 'ZT_Nature', 
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: KalaColors.charcoal,
@@ -195,7 +195,7 @@ class OrganizerHubScreen extends StatelessWidget {
                 highlight != null
                     ? RichText(
                         text: TextSpan(
-                          style: GoogleFonts.inter(
+                          style: TextStyle(fontFamily: 'ZT_Nature', 
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: KalaColors.charcoal,
@@ -211,7 +211,7 @@ class OrganizerHubScreen extends StatelessWidget {
                       )
                     : Text(
                         title,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(fontFamily: 'ZT_Nature', 
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: KalaColors.charcoal,
@@ -220,7 +220,7 @@ class OrganizerHubScreen extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: GoogleFonts.inter(fontSize: 11, color: subtitleColor),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: subtitleColor),
                 ),
               ],
             ),
@@ -276,7 +276,7 @@ class OrganizerHubScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -285,7 +285,7 @@ class OrganizerHubScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey, height: 1.3),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey, height: 1.3),
           ),
           const SizedBox(height: 8),
           Container(
@@ -298,7 +298,7 @@ class OrganizerHubScreen extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             trend == '—' ? '—' : '↑ $trend',
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 11,
               fontWeight: FontWeight.bold,
               color: trend == '—' ? KalaColors.mediumGrey : KalaColors.accentGreen,
@@ -377,7 +377,7 @@ class OrganizerHubScreen extends StatelessWidget {
                   child: Text(
                     '$match\nMatch',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'ZT_Nature', 
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -396,13 +396,13 @@ class OrganizerHubScreen extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                 ),
                 Text(
                   role,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -414,7 +414,7 @@ class OrganizerHubScreen extends StatelessWidget {
                         location,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
                       ),
                     ),
                   ],
@@ -477,7 +477,7 @@ class OrganizerHubScreen extends StatelessWidget {
           GestureDetector(
             child: Text(
               'See Full Timeline >',
-              style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.burntOrange),
+              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.burntOrange),
             ),
           ),
           const SizedBox(height: 28),
@@ -504,11 +504,11 @@ class OrganizerHubScreen extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal, height: 1.4),
+              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal, height: 1.4),
             ),
           ),
           const SizedBox(width: 8),
-          Text(time, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(time, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
         ],
       ),
     );
@@ -552,8 +552,8 @@ class OrganizerHubScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text(month, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
-                Text(day, style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                Text(month, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                Text(day, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
               ],
             ),
           ),
@@ -562,13 +562,13 @@ class OrganizerHubScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                 const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.access_time_outlined, size: 11, color: KalaColors.mediumGrey),
                     const SizedBox(width: 3),
-                    Flexible(child: Text(time, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey))),
+                    Flexible(child: Text(time, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey))),
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -576,7 +576,7 @@ class OrganizerHubScreen extends StatelessWidget {
                   children: [
                     const Icon(Icons.location_on_outlined, size: 11, color: KalaColors.mediumGrey),
                     const SizedBox(width: 3),
-                    Flexible(child: Text(location, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey))),
+                    Flexible(child: Text(location, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey))),
                   ],
                 ),
               ],
@@ -601,13 +601,13 @@ class OrganizerHubScreen extends StatelessWidget {
           child: Text(
             title,
             overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
           ),
         ),
         if (showViewAll)
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text('View All', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
           ),
       ],
     );

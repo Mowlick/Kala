@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../events/presentation/controllers/event_controller.dart';
+import '../widgets/dynamic_form_renderer.dart';
 
 class OpportunityDetailScreen extends StatelessWidget {
   const OpportunityDetailScreen({super.key});
@@ -250,7 +253,31 @@ class OpportunityDetailScreen extends StatelessWidget {
                     flex: 2,
                     child: ElevatedButton(
                       onPressed: () {
-                        _showApplySuccessDialog(context);
+                        final controller = context.read<EventController>();
+                        final form = controller.forms.isNotEmpty ? controller.forms.first : null;
+                        if (form != null) {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (ctx) => SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.85,
+                              child: DynamicFormRenderer(
+                                form: form,
+                                opportunityId: 'opp_301',
+                                opportunityTitle: opp['title'] ?? 'Dancers for Music Video',
+                                eventId: 'evt_101',
+                                eventTitle: 'National Creative Fest 2026',
+                                onSubmit: (submission) {
+                                  controller.submitApplication(submission);
+                                  Navigator.pop(ctx);
+                                  _showApplySuccessDialog(context);
+                                },
+                              ),
+                            ),
+                          );
+                        } else {
+                          _showApplySuccessDialog(context);
+                        }
                       },
                       child: const Text('Apply Now'),
                     ),

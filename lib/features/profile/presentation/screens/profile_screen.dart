@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     const SizedBox(height: 16),
                     Text(
                       'Passionate musician blending soulful vocals with meaningful lyrics. Performing across genres and creating music that connects.',
-                      style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal, height: 1.5),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal, height: 1.5),
                     ),
                     const SizedBox(height: 16),
                     _buildSocialLinks(),
@@ -141,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 children: [
                   Text(
                     'Aarav Mehta',
-                    style: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                   ),
                   const SizedBox(width: 4),
                   const Icon(Icons.verified, size: 18, color: Color(0xFFEA580C)),
@@ -150,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               const SizedBox(height: 4),
               Text(
                 'Singer • Songwriter • Guitarist',
-                style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal),
               ),
               const SizedBox(height: 8),
               Row(
@@ -159,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                   const SizedBox(width: 4),
                   Text(
                     'Delhi, India',
-                    style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
                   ),
                   const SizedBox(width: 12),
                   Container(
@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     ),
                     child: Text(
                       'Available',
-                      style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
                     ),
                   ),
                 ],
@@ -197,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           ),
           child: Text(
             role,
-            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w500, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w500, color: KalaColors.charcoal),
           ),
         );
       }).toList(),
@@ -210,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       children: [
         Text(
           'Available For',
-          style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -227,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                   ),
                   child: Text(
                     tag,
-                    style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
+                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
                   ),
                 );
               }).toList(),
@@ -261,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               const SizedBox(width: 6),
               Text(
                 'Show Contact',
-                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
               ),
             ],
           ),
@@ -290,12 +290,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         const SizedBox(height: 8),
         Text(
           count,
-          style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
         ),
       ],
     );
@@ -317,12 +317,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         const SizedBox(height: 8),
         Text(
           '92%',
-          style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
         ),
         const SizedBox(height: 4),
         Text(
           'Profile Strength',
-          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
         ),
       ],
     );
@@ -347,12 +347,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                   children: [
                     Text(
                       'Complete your profile',
-                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       '(82%)',
-                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFFEA580C)),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFFEA580C)),
                     ),
                   ],
                 ),
@@ -457,7 +457,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         const SizedBox(width: 6),
         Text(
           label,
-          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal),
         ),
       ],
     );
@@ -475,8 +475,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         unselectedLabelColor: KalaColors.mediumGrey,
         indicatorColor: const Color(0xFFEA580C),
         indicatorWeight: 2,
-        labelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold),
-        unselectedLabelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+        labelStyle: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.w500),
         tabs: const [
           Tab(text: 'Portfolio'),
           Tab(text: 'Applications'),
@@ -499,11 +499,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 'Featured Work',
-                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               ),
               Text(
                 'View All',
-                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
               ),
             ],
           ),
@@ -542,11 +542,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 'My Applications',
-                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               ),
               Text(
                 'View All',
-                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
               ),
             ],
           ),
@@ -573,11 +573,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 'Career Timeline',
-                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               ),
               Text(
                 'View All',
-                style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
               ),
             ],
           ),
@@ -622,7 +622,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 ),
                 child: Text(
                   duration,
-                  style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],
@@ -630,14 +630,14 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           const SizedBox(height: 8),
           Text(
             title,
-            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
           Text(
             subtitle,
-            style: GoogleFonts.inter(fontSize: 9, color: KalaColors.mediumGrey),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey),
           ),
         ],
       ),
@@ -657,12 +657,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         children: [
           Text(
             count,
-            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: color),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w600, color: color, height: 1.1),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 8, fontWeight: FontWeight.w600, color: color, height: 1.1),
             textAlign: TextAlign.center,
           ),
         ],
@@ -701,7 +701,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 year,
-                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               ),
             ],
           ),
@@ -712,12 +712,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   date,
-                  style: GoogleFonts.inter(fontSize: 9, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey),
                 ),
                 if (!isLast) const SizedBox(height: 24),
               ],
@@ -747,7 +747,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         const SizedBox(height: 6),
         Text(
           label,
-          style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal),
         ),
       ],
     );

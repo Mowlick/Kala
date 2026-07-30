@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class OrganizerAdminScreen extends StatelessWidget {
@@ -42,11 +42,11 @@ class OrganizerAdminScreen extends StatelessWidget {
               children: [
                 Text(
                   'Admin',
-                  style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 28, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                 ),
                 Text(
                   'Manage your organization, team & hiring.',
-                  style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
                 ),
               ],
             ),
@@ -143,7 +143,7 @@ class OrganizerAdminScreen extends StatelessWidget {
                           child: Center(
                             child: Text(
                               'R',
-                              style: GoogleFonts.cormorantGaramond(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
                         ),
@@ -158,7 +158,7 @@ class OrganizerAdminScreen extends StatelessWidget {
                                     child: Text(
                                       'Rhythm Productions',
                                       overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                                     ),
                                   ),
                                   const SizedBox(width: 4),
@@ -188,7 +188,7 @@ class OrganizerAdminScreen extends StatelessWidget {
                                   children: [
                                     const Icon(Icons.verified_user, size: 10, color: KalaColors.accentGreen),
                                     const SizedBox(width: 4),
-                                    Text('Verified Organization', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
+                                    Text('Verified Organization', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
                                   ],
                                 ),
                               ),
@@ -200,7 +200,7 @@ class OrganizerAdminScreen extends StatelessWidget {
                     const SizedBox(height: 14),
                     Text(
                       'We create unforgettable stories through music, film and live experiences.',
-                      style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.85), height: 1.4),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: Colors.white.withValues(alpha: 0.85), height: 1.4),
                     ),
                     const SizedBox(height: 12),
                     Align(
@@ -216,7 +216,7 @@ class OrganizerAdminScreen extends StatelessWidget {
                           children: [
                             const Icon(Icons.edit_outlined, size: 14, color: KalaColors.charcoal),
                             const SizedBox(width: 6),
-                            Text('Edit Profile', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                            Text('Edit Profile', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                           ],
                         ),
                       ),
@@ -234,7 +234,7 @@ class OrganizerAdminScreen extends StatelessWidget {
   Widget _profileTag(String label) {
     return Text(
       label,
-      style: GoogleFonts.inter(fontSize: 10, color: Colors.white.withValues(alpha: 0.75)),
+      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: Colors.white.withValues(alpha: 0.75)),
     );
   }
 
@@ -272,9 +272,9 @@ class OrganizerAdminScreen extends StatelessWidget {
         children: [
           Icon(icon, color: KalaColors.burntOrange, size: 20),
           const SizedBox(height: 8),
-          Text(value, style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(value, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
           const SizedBox(height: 4),
-          Text(label, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey, height: 1.3)),
+          Text(label, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey, height: 1.3)),
         ],
       ),
     );
@@ -319,7 +319,7 @@ class OrganizerAdminScreen extends StatelessWidget {
         children: [
           Icon(icon, color: KalaColors.burntOrange, size: 22),
           const SizedBox(height: 6),
-          Text(label, textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal, height: 1.3)),
+          Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal, height: 1.3)),
         ],
       ),
     );
@@ -394,13 +394,13 @@ class OrganizerAdminScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                 const SizedBox(height: 6),
                 _oppStat(Icons.people_outline, applicants),
                 const SizedBox(height: 2),
                 _oppStat(Icons.calendar_today_outlined, positions),
                 const SizedBox(height: 6),
-                Text(closes, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                Text(closes, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
               ],
             ),
           ),
@@ -414,7 +414,7 @@ class OrganizerAdminScreen extends StatelessWidget {
       children: [
         Icon(icon, size: 11, color: KalaColors.mediumGrey),
         const SizedBox(width: 4),
-        Flexible(child: Text(text, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey))),
+        Flexible(child: Text(text, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey))),
       ],
     );
   }
@@ -456,7 +456,7 @@ class OrganizerAdminScreen extends StatelessWidget {
                       child: const Icon(Icons.add, color: KalaColors.burntOrange, size: 20),
                     ),
                     const SizedBox(height: 10),
-                    Text('Invite\nMember', textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                    Text('Invite\nMember', textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
                   ],
                 ),
               ),
@@ -488,15 +488,15 @@ class OrganizerAdminScreen extends StatelessWidget {
             backgroundColor: KalaColors.softBeige,
           ),
           const SizedBox(height: 10),
-          Text(name, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(name, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
           const SizedBox(height: 2),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
           const SizedBox(height: 6),
           Text(
             access,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 9,
               fontWeight: FontWeight.bold,
               color: isLimited ? Colors.orange : KalaColors.accentGreen,
@@ -542,11 +542,11 @@ class OrganizerAdminScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+        Text(label, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
         const SizedBox(height: 4),
-        Text(value, style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        Text(value, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
         const SizedBox(height: 4),
-        Text(trend, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
+        Text(trend, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
       ],
     );
   }
@@ -593,9 +593,9 @@ class OrganizerAdminScreen extends StatelessWidget {
             child: Icon(icon, size: 14, color: KalaColors.burntOrange),
           ),
           const SizedBox(width: 12),
-          Expanded(child: Text(text, style: GoogleFonts.inter(fontSize: 12, color: KalaColors.charcoal, height: 1.4))),
+          Expanded(child: Text(text, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal, height: 1.4))),
           const SizedBox(width: 8),
-          Text(time, style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(time, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
         ],
       ),
     );
@@ -606,11 +606,11 @@ class OrganizerAdminScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
+        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
         if (showViewAll)
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text('View all', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text('View all', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
           ),
       ],
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../theme/kala_colors.dart';
 import '../../features/feed/presentation/screens/career_dashboard_screen.dart';
 import '../../features/opportunities/presentation/screens/discover_marketplace_screen.dart';
@@ -84,7 +84,7 @@ class _NavigationHubState extends State<NavigationHub> {
                     padding: const EdgeInsets.only(left: 12.0, bottom: 28.0),
                     child: Text(
                       'kalā',
-                      style: GoogleFonts.cormorantGaramond(
+                      style: TextStyle(fontFamily: 'ZT_Nature', 
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: KalaColors.charcoal,
@@ -153,7 +153,7 @@ class _NavigationHubState extends State<NavigationHub> {
                               children: [
                                 Text(
                                   'Create / Post',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(fontFamily: 'ZT_Nature', 
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: KalaColors.charcoal,
@@ -192,7 +192,7 @@ class _NavigationHubState extends State<NavigationHub> {
                       children: [
                         Text(
                           'Your profile is 80% complete',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(fontFamily: 'ZT_Nature', 
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: KalaColors.charcoal,
@@ -218,7 +218,7 @@ class _NavigationHubState extends State<NavigationHub> {
                             children: [
                               Text(
                                 'Complete your profile',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(fontFamily: 'ZT_Nature', 
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                   color: KalaColors.charcoal,
@@ -268,11 +268,31 @@ class _NavigationHubState extends State<NavigationHub> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildBottomNavItem(0, Icons.home_outlined, Icons.home, 'Home'),
-              _buildBottomNavItem(1, Icons.explore_outlined, Icons.explore, 'Discover'),
+              _buildNavItem(
+                navIndex: 0,
+                outlineIcon: Icons.home_outlined,
+                filledIcon: Icons.home,
+                label: 'Home',
+              ),
+              _buildNavItem(
+                navIndex: 1,
+                outlineIcon: Icons.explore_outlined,
+                filledIcon: Icons.explore,
+                label: 'Discover',
+              ),
               _buildCenterNavItem(),
-              _buildBottomNavItem(3, Icons.description_outlined, Icons.description, 'Applications'),
-              _buildBottomNavItem(4, Icons.person_outline, Icons.person, 'Profile'),
+              _buildNavItem(
+                navIndex: 3,
+                outlineIcon: Icons.description_outlined,
+                filledIcon: Icons.description,
+                label: 'Applications',
+              ),
+              _buildNavItem(
+                navIndex: 4,
+                outlineIcon: Icons.person_outline,
+                filledIcon: Icons.person,
+                label: 'Profile',
+              ),
             ],
           ),
         ),
@@ -280,32 +300,57 @@ class _NavigationHubState extends State<NavigationHub> {
     );
   }
 
-  Widget _buildBottomNavItem(int index, IconData outlineIcon, IconData filledIcon, String label) {
-    final isSelected = _currentIndex == index;
-    final color = isSelected ? KalaColors.burntOrange : KalaColors.charcoal;
+  Widget _buildNavItem({
+    required int navIndex,
+    required IconData outlineIcon,
+    required IconData filledIcon,
+    required String label,
+  }) {
+    final bool isSelected = _currentIndex == navIndex;
+    final Color color = isSelected ? KalaColors.burntOrange : KalaColors.charcoal;
 
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => _onTabTapped(index),
+        onTap: () => _onTabTapped(navIndex),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(isSelected ? filledIcon : outlineIcon, color: color, size: 24),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 280),
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: Tween<double>(begin: 0.75, end: 1.0).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.elasticOut),
+                ),
+                child: FadeTransition(opacity: animation, child: child),
+              ),
+              child: Icon(
+                isSelected ? filledIcon : outlineIcon,
+                key: ValueKey<bool>(isSelected),
+                color: color,
+                size: 24,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(
-              label,
-              style: GoogleFonts.inter(
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: color,
               ),
+              child: Text(label),
             ),
             const SizedBox(height: 4),
-            Container(
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
               height: 2,
-              width: 32,
-              color: isSelected ? KalaColors.burntOrange : Colors.transparent,
+              width: isSelected ? 32 : 0,
+              decoration: BoxDecoration(
+                color: isSelected ? KalaColors.burntOrange : Colors.transparent,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
           ],
         ),
@@ -370,7 +415,7 @@ class _NavigationHubState extends State<NavigationHub> {
             const SizedBox(width: 14),
             Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 color: isSelected

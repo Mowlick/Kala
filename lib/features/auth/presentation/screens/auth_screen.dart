@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -77,14 +77,14 @@ class _AuthScreenState extends State<AuthScreen> {
             // Logo
             Text(
               'kalā',
-              style: GoogleFonts.cormorantGaramond(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
                 color: KalaColors.charcoal,
                 letterSpacing: -1,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 10),
             // 4-point star
             const Icon(Icons.flare, color: KalaColors.burntOrange, size: 28),
             const SizedBox(height: 12),
@@ -92,7 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
             Text(
               _title,
               textAlign: TextAlign.center,
-              style: GoogleFonts.cormorantGaramond(
+              style: TextStyle(fontFamily: 'ZT_Nature', 
                 fontSize: 40,
                 height: 1.1,
                 color: KalaColors.charcoal,
@@ -142,7 +142,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     children: [
                       Text(
                         'kalā',
-                        style: GoogleFonts.cormorantGaramond(
+                        style: TextStyle(fontFamily: 'ZT_Nature', 
                           fontSize: 42,
                           fontWeight: FontWeight.bold,
                           color: KalaColors.charcoal,
@@ -155,7 +155,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(height: 16),
                       RichText(
                         text: TextSpan(
-                          style: GoogleFonts.cormorantGaramond(
+                          style: TextStyle(fontFamily: 'ZT_Nature', 
                             fontSize: 60,
                             height: 1.1,
                             color: KalaColors.charcoal,
@@ -219,7 +219,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           // Card title
                           Text(
                             _title,
-                            style: GoogleFonts.cormorantGaramond(
+                            style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: KalaColors.charcoal,
@@ -390,7 +390,7 @@ class _AuthScreenState extends State<AuthScreen> {
       children: [
         Text(
           'I am joining as',
-          style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
         ),
         const SizedBox(height: 16),
         IntrinsicHeight(
@@ -416,44 +416,50 @@ class _AuthScreenState extends State<AuthScreen> {
                           : [],
                     ),
                     child: Stack(
-                      alignment: Alignment.topRight,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 220),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: _selectedRole == 'artist' ? const Color(0xFFFFEDD5) : const Color(0xFFF5F5F5),
-                                shape: BoxShape.circle,
+                        SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 220),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: _selectedRole == 'artist' ? const Color(0xFFFFEDD5) : const Color(0xFFF5F5F5),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.theater_comedy, color: _selectedRole == 'artist' ? const Color(0xFFEA580C) : KalaColors.mediumGrey, size: 28),
                               ),
-                              child: Icon(Icons.theater_comedy, color: _selectedRole == 'artist' ? const Color(0xFFEA580C) : KalaColors.mediumGrey, size: 28),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Performer / Artist',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: KalaColors.charcoal,
+                              const SizedBox(height: 16),
+                              Text(
+                                'Performer / Artist',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontFamily: 'ZT_Nature', 
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: KalaColors.charcoal,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Showcase your talent\nand get discovered.',
-                              style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                              Text(
+                                'Showcase your talent\nand get discovered.',
+                                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: _selectedRole == 'artist'
-                              ? const Icon(Icons.check_circle, key: ValueKey('checked_a'), color: Color(0xFFEA580C), size: 20)
-                              : const Icon(Icons.radio_button_unchecked, key: ValueKey('unchecked_a'), color: KalaColors.lightGrey, size: 20),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: _selectedRole == 'artist'
+                                ? const Icon(Icons.check_circle, key: ValueKey('checked_a'), color: Color(0xFFEA580C), size: 20)
+                                : const Icon(Icons.radio_button_unchecked, key: ValueKey('unchecked_a'), color: KalaColors.lightGrey, size: 20),
+                          ),
                         ),
                       ],
                     ),
@@ -480,44 +486,50 @@ class _AuthScreenState extends State<AuthScreen> {
                           : [],
                     ),
                     child: Stack(
-                      alignment: Alignment.topRight,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 220),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: _selectedRole == 'organization' ? const Color(0xFFFFEDD5) : const Color(0xFFF5F5F5),
-                                shape: BoxShape.circle,
+                        SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 220),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: _selectedRole == 'organization' ? const Color(0xFFFFEDD5) : const Color(0xFFF5F5F5),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.domain, color: _selectedRole == 'organization' ? const Color(0xFFEA580C) : KalaColors.mediumGrey, size: 28),
                               ),
-                              child: Icon(Icons.domain, color: _selectedRole == 'organization' ? const Color(0xFFEA580C) : KalaColors.mediumGrey, size: 28),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Organisation',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: KalaColors.charcoal,
+                              const SizedBox(height: 16),
+                              Text(
+                                'Organisation',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontFamily: 'ZT_Nature', 
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: KalaColors.charcoal,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Manage events and\nconnect with artists.',
-                              style: GoogleFonts.inter(fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                              Text(
+                                'Manage events and\nconnect with artists.',
+                                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: _selectedRole == 'organization'
-                              ? const Icon(Icons.check_circle, key: ValueKey('checked_o'), color: Color(0xFFEA580C), size: 20)
-                              : const Icon(Icons.radio_button_unchecked, key: ValueKey('unchecked_o'), color: KalaColors.lightGrey, size: 20),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: _selectedRole == 'organization'
+                                ? const Icon(Icons.check_circle, key: ValueKey('checked_o'), color: Color(0xFFEA580C), size: 20)
+                                : const Icon(Icons.radio_button_unchecked, key: ValueKey('unchecked_o'), color: KalaColors.lightGrey, size: 20),
+                          ),
                         ),
                       ],
                     ),
@@ -630,7 +642,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: Row(
                     children: [
                       Text('+91',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 15,
                               color: KalaColors.charcoal,
                               fontWeight: FontWeight.w600)),
@@ -650,7 +662,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       hintText: 'Enter your mobile number',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(fontFamily: 'ZT_Nature', 
                         color: KalaColors.charcoal.withValues(alpha: 0.3),
                         fontSize: 15,
                       ),

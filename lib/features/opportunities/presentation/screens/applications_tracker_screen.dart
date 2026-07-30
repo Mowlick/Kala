@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../applications/domain/models/application_status.dart';
 
 class ApplicationsTrackerScreen extends StatefulWidget {
   const ApplicationsTrackerScreen({super.key});
@@ -25,6 +27,9 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final eventController = context.watch<EventController>();
+    final liveSubmissions = eventController.submissions;
+
     return Scaffold(
       backgroundColor: KalaColors.ivory,
       body: SafeArea(
@@ -41,6 +46,30 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(height: 32),
               _buildSectionTitleWithSort('Recent Applications', 'Latest First'),
               const SizedBox(height: 16),
+
+              // Render Live Real-time Submissions
+              ...liveSubmissions.map((sub) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: _buildApplicationCard(
+                      id: sub.submissionId,
+                      imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=200',
+                      type: sub.studentRole.toUpperCase(),
+                      typeColor: KalaColors.burntOrange,
+                      typeBgColor: KalaColors.burntOrange.withValues(alpha: 0.1),
+                      title: sub.opportunityTitle,
+                      company: sub.eventTitle,
+                      isVerified: true,
+                      location: 'Mumbai',
+                      appliedDate: 'Submitted recently',
+                      statusTag: sub.status.label,
+                      statusColor: sub.status == ApplicationStatus.selected ? KalaColors.accentGreen : KalaColors.burntOrange,
+                      statusBgColor: (sub.status == ApplicationStatus.selected ? KalaColors.accentGreen : KalaColors.burntOrange).withValues(alpha: 0.1),
+                      statusIcon: Icons.star_border,
+                      totalStages: 8,
+                      completedStages: sub.status.stepOrder,
+                      stageColor: KalaColors.burntOrange,
+                    ),
+                  )),
               _buildApplicationCard(
                 id: 'Indian Dance Festival 2025',
                 imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=200',
@@ -119,7 +148,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             children: [
               Text(
                 'My Applications',
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -129,7 +158,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(height: 6),
               Text(
                 'Track every opportunity you\'ve applied for.',
-                style: GoogleFonts.inter(fontSize: 14, color: KalaColors.mediumGrey),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
               ),
             ],
           ),
@@ -214,7 +243,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                   children: [
                     Text(
                       chip['label']!,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(fontFamily: 'ZT_Nature', 
                         fontSize: 12,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                         color: isSelected ? Colors.white : KalaColors.charcoal,
@@ -223,7 +252,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                     const SizedBox(height: 4),
                     Text(
                       chip['count']!,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(fontFamily: 'ZT_Nature', 
                         fontSize: 11,
                         color: isSelected ? Colors.white70 : KalaColors.mediumGrey,
                       ),
@@ -282,7 +311,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         const SizedBox(height: 8),
         Text(
           count,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -292,7 +321,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 10,
             color: KalaColors.mediumGrey,
           ),
@@ -308,7 +337,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         Expanded(
           child: Text(
             title,
-            style: GoogleFonts.inter(
+            style: TextStyle(fontFamily: 'ZT_Nature', 
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -327,7 +356,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             children: [
               Text(
                 sortLabel,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 12,
                   color: KalaColors.charcoal,
                 ),
@@ -416,7 +445,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                           ),
                           child: Text(
                             type,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color: typeColor,
@@ -437,7 +466,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                               const SizedBox(width: 4),
                               Text(
                                 statusTag,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(fontFamily: 'ZT_Nature', 
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
                                   color: statusColor,
@@ -451,7 +480,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                     const SizedBox(height: 8),
                     Text(
                       title,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(fontFamily: 'ZT_Nature', 
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: KalaColors.charcoal,
@@ -466,7 +495,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                         Flexible(
                           child: Text(
                             company,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(fontFamily: 'ZT_Nature', 
                               fontSize: 12,
                               color: KalaColors.charcoal,
                             ),
@@ -488,20 +517,20 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                         Flexible(
                           child: Text(
                             location,
-                            style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text('•', style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey)),
+                        Text('•', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
                         const SizedBox(width: 8),
                         const Icon(Icons.calendar_today_outlined, size: 12, color: KalaColors.mediumGrey),
                         const SizedBox(width: 4),
                         Flexible(
                           child: Text(
                             appliedDate,
-                            style: GoogleFonts.inter(fontSize: 12, color: KalaColors.mediumGrey),
+                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -546,7 +575,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                     const SizedBox(width: 12),
                     Text(
                       '$completedStages/$totalStages stages',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(fontFamily: 'ZT_Nature', 
                         fontSize: 11,
                         color: KalaColors.mediumGrey,
                       ),
@@ -574,7 +603,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
       children: [
         Text(
           'Application Timeline',
-          style: GoogleFonts.inter(
+          style: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -678,7 +707,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(height: 8),
               Text(
                 stages[index]['label']!,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 10,
                   fontWeight: isActive ? FontWeight.bold : FontWeight.w600,
                   color: textColor,
@@ -688,7 +717,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(height: 2),
               Text(
                 stages[index]['date']!,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'ZT_Nature', 
                   fontSize: 10,
                   color: dateColor,
                 ),
@@ -718,7 +747,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               Expanded(
                 child: Text(
                   'Interview Details',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(fontFamily: 'ZT_Nature', 
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -741,7 +770,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             child: OutlinedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.calendar_today, size: 14),
-              label: Text('Add to Calendar', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600)),
+              label: Text('Add to Calendar', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600)),
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFFEA580C),
                 side: const BorderSide(color: Color(0xFFF9E4D4)),
@@ -764,7 +793,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         Expanded(
           child: Text(
             text,
-            style: GoogleFonts.inter(fontSize: 11, color: KalaColors.charcoal),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal),
           ),
         ),
       ],
@@ -793,7 +822,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                     Expanded(
                       child: Text(
                         'Organizer Update',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(fontFamily: 'ZT_Nature', 
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: KalaColors.charcoal,
@@ -808,14 +837,14 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(width: 4),
               Text(
                 '16 May',
-                style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             'Congratulations! You\'ve been shortlisted for the in-person audition. Please carry a valid ID and be prepared with a 2 min monologue.',
-            style: GoogleFonts.inter(fontSize: 11, color: KalaColors.charcoal, height: 1.4),
+            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal, height: 1.4),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -831,7 +860,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('View All Updates', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600)),
+                  Text('View All Updates', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600)),
                   const SizedBox(width: 4),
                   const Icon(Icons.arrow_forward, size: 14),
                 ],
@@ -869,12 +898,12 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               children: [
                 Text(
                   'Your Submission',
-                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Resume • Acting Reel • 2 Photos • Cover Letter',
-                  style: GoogleFonts.inter(fontSize: 10, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -892,7 +921,7 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             ),
             child: Text(
               'View Submission',
-              style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600),
+              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600),
             ),
           ),
         ],

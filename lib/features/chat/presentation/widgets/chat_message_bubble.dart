@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/kala_colors.dart';
 import '../../domain/models/chat_message.dart';
 
@@ -51,7 +51,7 @@ class ChatMessageBubble extends StatelessWidget {
               children: [
                 Text(
                   message.text,
-                  style: GoogleFonts.inter(fontSize: 13, height: 1.4, color: KalaColors.charcoal),
+                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, height: 1.4, color: KalaColors.charcoal),
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -59,7 +59,7 @@ class ChatMessageBubble extends StatelessWidget {
                   children: [
                     Text(
                       message.time,
-                      style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
                     ),
                     const SizedBox(width: 3),
                     Icon(
@@ -74,7 +74,7 @@ class ChatMessageBubble extends StatelessWidget {
           // Incoming: only text inside bubble, time goes below
           : Text(
               message.text,
-              style: GoogleFonts.inter(fontSize: 13, height: 1.4, color: KalaColors.charcoal),
+              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, height: 1.4, color: KalaColors.charcoal),
             ),
     );
 
@@ -92,7 +92,7 @@ class ChatMessageBubble extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   child: Text(
                     message.time,
-                    style: GoogleFonts.inter(fontSize: 10, color: KalaColors.mediumGrey),
+                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
                   ),
                 ),
               ],

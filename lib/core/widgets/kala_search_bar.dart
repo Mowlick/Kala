@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../theme/kala_colors.dart';
 
 class KalaSearchBar extends StatelessWidget {
@@ -34,10 +34,10 @@ class KalaSearchBar extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         onSubmitted: onSubmitted,
-        style: GoogleFonts.inter(fontSize: 14, color: KalaColors.charcoal),
+        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.charcoal),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: GoogleFonts.inter(
+          hintStyle: TextStyle(fontFamily: 'ZT_Nature', 
             fontSize: 14,
             color: KalaColors.mediumGrey,
           ),

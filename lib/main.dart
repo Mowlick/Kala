@@ -4,6 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/theme/kala_theme.dart';
 import 'core/navigation/app_router.dart';
 import 'features/onboarding/presentation/onboarding_controller.dart';
+import 'features/events/presentation/controllers/event_controller.dart';
+import 'features/profile/presentation/controllers/student_profile_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +33,8 @@ class KalaApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => OnboardingController()),
+        ChangeNotifierProvider(create: (_) => EventController()),
+        ChangeNotifierProvider(create: (_) => StudentProfileController()),
       ],
       child: MaterialApp(
         title: 'KALĀ',

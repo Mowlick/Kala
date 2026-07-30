@@ -14,14 +14,46 @@ class RoleSelectScreen extends StatefulWidget {
 
 class _RoleSelectScreenState extends State<RoleSelectScreen> {
   final List<Map<String, dynamic>> _roles = [
-    {'name': 'Singer', 'icon': Icons.mic_none_outlined, 'description': 'Share your voice and create magic.'},
-    {'name': 'Dancer', 'icon': Icons.directions_run, 'description': 'Express yourself through movement and rhythm.'},
-    {'name': 'Actor', 'icon': Icons.theater_comedy_outlined, 'description': 'Bring stories to life on stage and screen.'},
-    {'name': 'Filmmaker', 'icon': Icons.movie_creation_outlined, 'description': 'Tell visual stories behind the camera.'},
-    {'name': 'Music Producer', 'icon': Icons.headphones_outlined, 'description': 'Create, produce and shape sound.'},
-    {'name': 'Photographer', 'icon': Icons.camera_alt_outlined, 'description': 'Capture moments, create art.'},
-    {'name': 'Writer / Poet', 'icon': Icons.edit_outlined, 'description': 'Write words that inspire and connect.'},
-    {'name': 'Other', 'icon': Icons.grid_view, 'description': 'Something else? Tell us more.'},
+    {
+      'name': 'Singer',
+      'icon': Icons.mic_none_outlined,
+      'description': 'Share your voice and create magic.',
+    },
+    {
+      'name': 'Dancer',
+      'icon': Icons.directions_run,
+      'description': 'Express yourself through movement and rhythm.',
+    },
+    {
+      'name': 'Actor',
+      'icon': Icons.theater_comedy_outlined,
+      'description': 'Bring stories to life on stage and screen.',
+    },
+    {
+      'name': 'Filmmaker',
+      'icon': Icons.movie_creation_outlined,
+      'description': 'Tell visual stories behind the camera.',
+    },
+    {
+      'name': 'Music Producer',
+      'icon': Icons.headphones_outlined,
+      'description': 'Create, produce and shape sound.',
+    },
+    {
+      'name': 'Photographer',
+      'icon': Icons.camera_alt_outlined,
+      'description': 'Capture moments, create art.',
+    },
+    {
+      'name': 'Writer / Poet',
+      'icon': Icons.edit_outlined,
+      'description': 'Write words that inspire and connect.',
+    },
+    {
+      'name': 'Other',
+      'icon': Icons.grid_view,
+      'description': 'Something else? Tell us more.',
+    },
   ];
 
   List<String>? _selectedRoles;
@@ -46,10 +78,14 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
     );
   }
 
-  Widget _buildLaptopLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildLaptopLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return OnboardingLaptopLayout(
       title: 'What best\ndescribes you?',
-      subtitle: 'This helps us personalize your\nexperience and show you the most\nrelevant opportunities.',
+      subtitle:
+          'This helps us personalize your\nexperience and show you the most\nrelevant opportunities.',
       stepNumber: 1,
       illustration: Image.asset('assets/images/onboarding/illustration_1.png'),
       onBackPressed: () => controller.prevStep(context),
@@ -61,12 +97,21 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                 controller.nextStep(context, '/profile-details');
               },
         style: ElevatedButton.styleFrom(
-          backgroundColor: _selectedRoles!.isEmpty ? KalaColors.lightGrey : KalaColors.burntOrange,
-          foregroundColor: _selectedRoles!.isEmpty ? KalaColors.mediumGrey : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          backgroundColor: _selectedRoles!.isEmpty
+              ? KalaColors.lightGrey
+              : KalaColors.burntOrange,
+          foregroundColor: _selectedRoles!.isEmpty
+              ? KalaColors.mediumGrey
+              : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
           elevation: 0,
         ),
-        child: const Text('Continue', style: TextStyle(fontWeight: FontWeight.bold)),
+        child: const Text(
+          'Continue',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       child: GridView.builder(
         shrinkWrap: true,
@@ -98,16 +143,18 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isSelected ? KalaColors.burntOrange : KalaColors.softBeige,
+                  color: isSelected
+                      ? KalaColors.burntOrange
+                      : KalaColors.softBeige,
                   width: isSelected ? 1.5 : 1,
                 ),
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: KalaColors.burntOrange.withOpacity(0.1),
+                          color: KalaColors.burntOrange.withValues(alpha: 0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
-                        )
+                        ),
                       ]
                     : null,
               ),
@@ -118,13 +165,16 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                     children: [
                       Icon(
                         role['icon'],
-                        color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal,
+                        color: isSelected
+                            ? KalaColors.burntOrange
+                            : KalaColors.charcoal,
                         size: 40,
                       ),
                       const SizedBox(height: 16),
                       Text(
                         role['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: KalaColors.charcoal,
                             ),
@@ -153,14 +203,22 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                          color: isSelected ? KalaColors.burntOrange : KalaColors.lightGrey,
+                          color: isSelected
+                              ? KalaColors.burntOrange
+                              : KalaColors.lightGrey,
                           width: 1.5,
                         ),
-                        color: isSelected ? KalaColors.burntOrange : Colors.transparent,
+                        color: isSelected
+                            ? KalaColors.burntOrange
+                            : Colors.transparent,
                       ),
                       child: isSelected
                           ? const Center(
-                              child: Icon(Icons.check, color: Colors.white, size: 14),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 14,
+                              ),
                             )
                           : null,
                     ),
@@ -174,7 +232,10 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildMobileLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -189,7 +250,10 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 8.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -203,8 +267,8 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                     Text(
                       'Select all that apply to personalize your experience.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: KalaColors.mediumGrey,
-                          ),
+                        color: KalaColors.mediumGrey,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Expanded(
@@ -212,7 +276,9 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                         itemCount: _roles.length,
                         itemBuilder: (context, index) {
                           final role = _roles[index];
-                          final isSelected = _selectedRoles!.contains(role['name']);
+                          final isSelected = _selectedRoles!.contains(
+                            role['name'],
+                          );
 
                           return GestureDetector(
                             onTap: () {
@@ -234,7 +300,9 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: isSelected ? KalaColors.burntOrange : KalaColors.softBeige,
+                                  color: isSelected
+                                      ? KalaColors.burntOrange
+                                      : KalaColors.softBeige,
                                   width: isSelected ? 1.5 : 1,
                                 ),
                               ),
@@ -242,14 +310,21 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                                 children: [
                                   Icon(
                                     role['icon'],
-                                    color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal,
+                                    color: isSelected
+                                        ? KalaColors.burntOrange
+                                        : KalaColors.charcoal,
                                     size: 24,
                                   ),
                                   const SizedBox(width: 16),
                                   Text(
                                     role['name'],
-                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
                                         ),
                                   ),
                                   const Spacer(),
@@ -259,14 +334,22 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(6),
                                       border: Border.all(
-                                        color: isSelected ? KalaColors.burntOrange : KalaColors.lightGrey,
+                                        color: isSelected
+                                            ? KalaColors.burntOrange
+                                            : KalaColors.lightGrey,
                                         width: 1.5,
                                       ),
-                                      color: isSelected ? KalaColors.burntOrange : Colors.transparent,
+                                      color: isSelected
+                                          ? KalaColors.burntOrange
+                                          : Colors.transparent,
                                     ),
                                     child: isSelected
                                         ? const Center(
-                                            child: Icon(Icons.check, color: Colors.white, size: 16),
+                                            child: Icon(
+                                              Icons.check,
+                                              color: Colors.white,
+                                              size: 16,
+                                            ),
                                           )
                                         : null,
                                   ),
@@ -287,7 +370,9 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
                             },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: const Text('Continue'),
                     ),
