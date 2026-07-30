@@ -10,16 +10,14 @@ import 'features/profile/presentation/controllers/student_profile_controller.dar
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Supabase within a try-catch block.
-  // This ensures that the application still boots up and runs in offline mockup demo mode
-  // even if valid Supabase URL / Keys are not yet configured in local environment variables.
+  // Initialize live Supabase client using project credentials
   try {
     await Supabase.initialize(
-      url: 'https://your-supabase-url.supabase.co',
-      anonKey: 'your-supabase-anon-key',
+      url: 'https://vezpmtuugcasoqzkrten.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenBtdHV1Z2Nhc29xemtydGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzODU3MzksImV4cCI6MjEwMDk2MTczOX0.Tdx4kgGfzxdpavAM-KgZC3b-lsj38-1-ZyT53N6HQAU',
     );
   } catch (e) {
-    debugPrint('Supabase client initialization skipped/fallback to mock mode: $e');
+    debugPrint('Supabase client initialization fallback to offline mock mode: $e');
   }
 
   runApp(const KalaApp());

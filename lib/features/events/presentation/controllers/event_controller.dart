@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/models/event_model.dart';
 import '../../domain/models/event_status.dart';
 import '../../domain/models/schedule_model.dart';
@@ -11,11 +12,11 @@ import '../../../applications/domain/models/application_status.dart';
 import '../../../applications/domain/models/submission_answer.dart';
 
 class EventController extends ChangeNotifier {
-  // In-memory reactive stores
   final List<EventModel> _events = [];
   final List<OpportunityModel> _opportunities = [];
   final List<DynamicFormModel> _forms = [];
   final List<ApplicationSubmissionModel> _submissions = [];
+  RealtimeChannel? _realtimeChannel;
 
   List<EventModel> get events => List.unmodifiable(_events);
   List<OpportunityModel> get opportunities => List.unmodifiable(_opportunities);
@@ -24,6 +25,7 @@ class EventController extends ChangeNotifier {
 
   EventController() {
     _seedInitialMockData();
+    _initSupabaseRealtime();
   }
 
   void _seedInitialMockData() {
@@ -149,10 +151,73 @@ class EventController extends ChangeNotifier {
     _submissions.add(mockSubmission);
   }
 
+  // ─── SUPABASE REALTIME SYNC ────────────────────────────────────────────────
+  void _initSupabaseRealtime() {
+    try {
+      final client = Supabase.instance.client;
+      _realtimeChannel = client
+          .channel('public:application_submissions')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'application_submissions',
+            callback: (payload) {
+              _handleSubmissionRealtimePayload(payload);
+            },
+          )
+          .subscribe();
+    } catch (e) {
+      debugPrint('Realtime channel init skipped/offline: $e');
+    }
+  }
+
+  void _handleSubmissionRealtimePayload(PostgresChangePayload payload) {
+    try {
+      final record = payload.newRecord;
+      if (record.isNotEmpty) {
+        final submissionId = record['id']?.toString() ?? '';
+        final newStatusStr = record['status']?.toString() ?? 'applied';
+        final newStatus = ApplicationStatusExtension.fromString(newStatusStr);
+
+        final idx = _submissions.indexWhere((s) => s.submissionId == submissionId);
+        if (idx != -1) {
+          _submissions[idx] = _submissions[idx].copyWith(
+            status: newStatus,
+            updatedAt: DateTime.now(),
+          );
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error processing Supabase realtime payload: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _realtimeChannel?.unsubscribe();
+    super.dispose();
+  }
+
   // ─── EVENT OPERATIONS ───────────────────────────────────────────────────────
-  void addEvent(EventModel event) {
+  void addEvent(EventModel event) async {
     _events.add(event);
     notifyListeners();
+
+    try {
+      final client = Supabase.instance.client;
+      await client.from('events').insert({
+        'title': event.title,
+        'description': event.description,
+        'banner_url': event.bannerUrl,
+        'category': event.category,
+        'venue': event.venue,
+        'location': event.location,
+        'status': event.status.name,
+      });
+    } catch (e) {
+      debugPrint('Supabase event insert skipped/offline: $e');
+    }
   }
 
   EventModel? getEventById(String eventId) {
@@ -164,16 +229,29 @@ class EventController extends ChangeNotifier {
   }
 
   // ─── OPPORTUNITY & FORM OPERATIONS ─────────────────────────────────────────
-  void addOpportunity(OpportunityModel opp) {
+  void addOpportunity(OpportunityModel opp) async {
     _opportunities.add(opp);
     notifyListeners();
+
+    try {
+      final client = Supabase.instance.client;
+      await client.from('opportunities').insert({
+        'title': opp.title,
+        'type': opp.category,
+        'vacancies': opp.vacancies,
+        'stipend': opp.stipend,
+        'status': opp.status,
+      });
+    } catch (e) {
+      debugPrint('Supabase opportunity insert skipped/offline: $e');
+    }
   }
 
   List<OpportunityModel> getOpportunitiesForEvent(String eventId) {
     return _opportunities.where((o) => o.eventId == eventId).toList();
   }
 
-  void saveForm(DynamicFormModel form) {
+  void saveForm(DynamicFormModel form) async {
     final idx = _forms.indexWhere((f) => f.formId == form.formId);
     if (idx != -1) {
       _forms[idx] = form;
@@ -181,6 +259,17 @@ class EventController extends ChangeNotifier {
       _forms.add(form);
     }
     notifyListeners();
+
+    try {
+      final client = Supabase.instance.client;
+      await client.from('dynamic_forms').upsert({
+        'title': form.title,
+        'version': form.version,
+        'is_template': form.isTemplate,
+      });
+    } catch (e) {
+      debugPrint('Supabase form save skipped/offline: $e');
+    }
   }
 
   DynamicFormModel? getFormById(String formId) {
@@ -192,32 +281,41 @@ class EventController extends ChangeNotifier {
   }
 
   // ─── SUBMISSION & STATUS PIPELINE ─────────────────────────────────────────
-  void submitApplication(ApplicationSubmissionModel submission) {
+  void submitApplication(ApplicationSubmissionModel submission) async {
     _submissions.add(submission);
     notifyListeners();
+
+    try {
+      final client = Supabase.instance.client;
+      await client.from('application_submissions').insert({
+        'student_name': submission.studentName,
+        'student_role': submission.studentRole,
+        'status': submission.status.name,
+        'attached_portfolio_item_ids': submission.attachedPortfolioItemIds,
+      });
+    } catch (e) {
+      debugPrint('Supabase submission insert skipped/offline: $e');
+    }
   }
 
-  void updateApplicationStatus(String submissionId, ApplicationStatus newStatus) {
+  void updateApplicationStatus(String submissionId, ApplicationStatus newStatus) async {
     final idx = _submissions.indexWhere((s) => s.submissionId == submissionId);
     if (idx != -1) {
-      final current = _submissions[idx];
-      _submissions[idx] = ApplicationSubmissionModel(
-        submissionId: current.submissionId,
-        opportunityId: current.opportunityId,
-        opportunityTitle: current.opportunityTitle,
-        eventId: current.eventId,
-        eventTitle: current.eventTitle,
-        studentId: current.studentId,
-        studentName: current.studentName,
-        studentAvatar: current.studentAvatar,
-        studentRole: current.studentRole,
-        answers: current.answers,
+      _submissions[idx] = _submissions[idx].copyWith(
         status: newStatus,
-        formVersion: current.formVersion,
-        submittedAt: current.submittedAt,
         updatedAt: DateTime.now(),
       );
       notifyListeners();
+
+      try {
+        final client = Supabase.instance.client;
+        await client.from('application_submissions').update({
+          'status': newStatus.name,
+          'updated_at': DateTime.now().toIso8601String(),
+        }).eq('id', submissionId);
+      } catch (e) {
+        debugPrint('Supabase status update skipped/offline: $e');
+      }
     }
   }
 }
