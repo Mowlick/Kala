@@ -325,11 +325,12 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               cat['title']!,
               cat['desc']!,
               onTap: () {
-                Navigator.pop(context);
+                final navigator = Navigator.of(context);
+                navigator.pop(); // Pop Create Sheet
 
-                // Show Guided Success Checklist
+                // Show Guided Success Checklist on active root navigator
                 CreationSuccessChecklistDialog.show(
-                  context,
+                  navigator.context,
                   entityTitle: '${cat['title']} ($_eventCreationMode)',
                   isEvent: true,
                   items: [
@@ -339,9 +340,7 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                     ChecklistItem(title: 'Publish Announcement', description: 'Broadcast event launch to students', isCompleted: false),
                   ],
                   onContinue: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
+                    navigator.push(
                       MaterialPageRoute(
                         builder: (_) => const EventWorkspaceScreen(
                           eventId: 'evt_101',
@@ -437,14 +436,15 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               type['title']!,
               type['desc']!,
               onTap: () {
-                Navigator.pop(context);
+                final navigator = Navigator.of(context);
+                navigator.pop(); // Pop Create Sheet
 
                 if (_selectedSetupMode == 'Advanced Create') {
                   showModalBottomSheet(
-                    context: context,
+                    context: navigator.context,
                     isScrollControlled: true,
-                    builder: (ctx) => SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.85,
+                    builder: (formCtx) => SizedBox(
+                      height: MediaQuery.of(formCtx).size.height * 0.85,
                       child: FormBuilderWidget(
                         initialForm: DynamicFormModel(
                           formId: 'form_${DateTime.now().millisecondsSinceEpoch}',
@@ -453,8 +453,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                           createdAt: DateTime.now(),
                         ),
                         onSave: (form) {
-                          Navigator.push(
-                            context,
+                          Navigator.pop(formCtx); // Pop form sheet
+                          navigator.push(
                             MaterialPageRoute(
                               builder: (_) => const OpportunityStudioScreen(opportunityId: 'opp_301'),
                             ),
@@ -466,7 +466,7 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                 } else {
                   // Quick Create -> Guided Checklist Dialog -> Open Opportunity Studio
                   CreationSuccessChecklistDialog.show(
-                    context,
+                    navigator.context,
                     entityTitle: '${type['title']} Opportunity',
                     isEvent: false,
                     items: [
@@ -475,9 +475,7 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                       ChecklistItem(title: 'Send Applicant Announcement', description: 'Notify candidates about interview schedules', isCompleted: false),
                     ],
                     onContinue: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
+                      navigator.push(
                         MaterialPageRoute(
                           builder: (_) => const OpportunityStudioScreen(opportunityId: 'opp_301'),
                         ),

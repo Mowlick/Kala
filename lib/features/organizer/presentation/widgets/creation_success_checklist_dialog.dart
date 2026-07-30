@@ -38,6 +38,7 @@ class CreationSuccessChecklistDialog extends StatelessWidget {
   }) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => CreationSuccessChecklistDialog(
         entityTitle: entityTitle,
         isEvent: isEvent,
@@ -166,7 +167,10 @@ class CreationSuccessChecklistDialog extends StatelessWidget {
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: onContinue,
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog safely
+                  onContinue(); // Execute navigation action
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: KalaColors.burntOrange,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
