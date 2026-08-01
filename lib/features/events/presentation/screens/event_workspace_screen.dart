@@ -6,6 +6,9 @@ import '../../domain/models/event_model.dart';
 import '../../../opportunities/presentation/widgets/form_builder_widget.dart';
 import '../../../opportunities/domain/models/dynamic_form_model.dart';
 import '../../../organizer/presentation/widgets/broadcast_post_modal.dart';
+import '../../../applications/domain/models/application_status.dart';
+import '../../../applications/domain/models/application_submission_model.dart';
+import '../../../organizer/presentation/screens/organizer_flow_screen.dart';
 
 class EventWorkspaceScreen extends StatefulWidget {
   final String eventId;
@@ -28,9 +31,9 @@ class _EventWorkspaceScreenState extends State<EventWorkspaceScreen> with Single
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 4,
+      length: 5,
       vsync: this,
-      initialIndex: widget.initialTabIndex.clamp(0, 3),
+      initialIndex: widget.initialTabIndex.clamp(0, 4),
     );
   }
 
@@ -54,6 +57,10 @@ class _EventWorkspaceScreenState extends State<EventWorkspaceScreen> with Single
     }
 
     final opportunities = eventController.getOpportunitiesForEvent(event.eventId);
+
+    final eventSubmissions = eventController.submissions.where(
+      (s) => s.eventId == event.eventId || eventController.submissions.length <= 1,
+    ).toList();
 
     return Scaffold(
       backgroundColor: KalaColors.ivory,
@@ -80,22 +87,25 @@ class _EventWorkspaceScreenState extends State<EventWorkspaceScreen> with Single
         ],
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
           labelColor: KalaColors.burntOrange,
           unselectedLabelColor: KalaColors.mediumGrey,
           indicatorColor: KalaColors.burntOrange,
-          tabs: const [
-            Tab(text: 'Overview'),
-            Tab(text: 'Opportunities'),
-            Tab(text: 'Schedule'),
-            Tab(text: 'Announcements'),
+          tabs: [
+            const Tab(text: 'Overview'),
+            const Tab(text: 'Opportunities'),
+            Tab(text: 'Applicants (${eventSubmissions.length})'),
+            const Tab(text: 'Schedule'),
+            const Tab(text: 'Announcements'),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildOverviewTab(context, event, opportunities.length),
+          _buildOverviewTab(context, event, opportunities.length, eventSubmissions.length),
           _buildOpportunitiesTab(context, eventController, event, opportunities),
+          _buildApplicantsTab(context, eventController, eventSubmissions),
           _buildScheduleTab(event),
           _buildAnnouncementsTab(event),
         ],
@@ -103,12 +113,12 @@ class _EventWorkspaceScreenState extends State<EventWorkspaceScreen> with Single
     );
   }
 
-  Widget _buildOverviewTab(BuildContext context, EventModel event, int oppCount) {
+  Widget _buildOverviewTab(BuildContext context, EventModel event, int oppCount, int applicantCount) {
     final bool hasOpportunities = oppCount > 0;
     final bool hasSchedule = event.schedule.isNotEmpty;
     final bool hasAnnouncements = event.announcements.isNotEmpty;
 
-    int completedSteps = 1; // Event created
+    int completedSteps = 1;
     if (hasOpportunities) completedSteps++;
     if (hasSchedule) completedSteps++;
     if (hasAnnouncements) completedSteps++;
@@ -128,6 +138,46 @@ class _EventWorkspaceScreenState extends State<EventWorkspaceScreen> with Single
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(height: 180, color: KalaColors.softBeige, child: const Icon(Icons.event, size: 48, color: KalaColors.mediumGrey)),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // View Applicants Action Banner
+          GestureDetector(
+            onTap: () => _tabController.animateTo(2),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: [KalaColors.charcoal, Color(0xFF2C2C2C)]),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: KalaColors.burntOrange.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.people_alt_rounded, color: KalaColors.burntOrange, size: 24),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('👥 $applicantCount Candidate Application${applicantCount == 1 ? '' : 's'}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                        const SizedBox(height: 2),
+                        const Text('Tap to review candidate form responses & portfolios', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: Colors.white70)),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 16),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -383,6 +433,160 @@ class _EventWorkspaceScreenState extends State<EventWorkspaceScreen> with Single
             );
           }),
       ],
+    );
+  }
+
+  Widget _buildApplicantsTab(BuildContext context, EventController controller, List<ApplicationSubmissionModel> submissions) {
+    if (submissions.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.people_outline_rounded, size: 56, color: KalaColors.mediumGrey),
+              const SizedBox(height: 16),
+              const Text('No Applications Received Yet', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+              const SizedBox(height: 8),
+              const Text('Share your event & opportunities on WhatsApp or social media to start receiving applications.', textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () {
+                  BroadcastPostModal.show(context);
+                },
+                icon: const Icon(Icons.campaign, size: 18),
+                label: const Text('Broadcast Event Announcement'),
+                style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: submissions.length,
+      itemBuilder: (context, index) {
+        final sub = submissions[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: KalaColors.lightGrey),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 3)),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(sub.studentAvatar.isNotEmpty ? sub.studentAvatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(sub.studentName, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                        Text('${sub.studentRole} • ${sub.opportunityTitle}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(sub.status.label, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Form Answers Summary
+              if (sub.answers.isNotEmpty) ...[
+                const Text('Form Submissions:', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.mediumGrey)),
+                const SizedBox(height: 4),
+                ...sub.answers.map((ans) => Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: Text('• ${ans.answer ?? 'N/A'}', style: const TextStyle(fontSize: 12, color: KalaColors.charcoal)),
+                )),
+                const SizedBox(height: 8),
+              ],
+
+              // Attached Portfolio Badge
+              if (sub.attachedPortfolioItemIds.isNotEmpty) ...[
+                Row(
+                  children: [
+                    const Icon(Icons.star_rounded, size: 14, color: KalaColors.burntOrange),
+                    const SizedBox(width: 4),
+                    Text('${sub.attachedPortfolioItemIds.length} Verified Portfolio Items Attached', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+              ],
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const OrganizerFlowScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.view_kanban_outlined, size: 14),
+                    label: const Text('Open in Flow ATS', style: TextStyle(fontSize: 11)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showStatusChangeModal(context, controller, sub);
+                    },
+                    style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
+                    child: const Text('Update Status', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showStatusChangeModal(BuildContext context, EventController controller, ApplicationSubmissionModel sub) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Update Applicant Status', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(sub.studentName, style: const TextStyle(fontSize: 13, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            ...ApplicationStatus.values.map((st) => ListTile(
+              title: Text(st.label),
+              trailing: sub.status == st ? const Icon(Icons.check_circle, color: KalaColors.accentGreen) : null,
+              onTap: () {
+                controller.updateApplicationStatus(sub.submissionId, st);
+                Navigator.pop(ctx);
+              },
+            )),
+          ],
+        ),
+      ),
     );
   }
 

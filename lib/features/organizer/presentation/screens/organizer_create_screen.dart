@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../events/domain/models/event_model.dart';
+import '../../../events/domain/models/event_status.dart';
 import '../../../events/presentation/screens/event_workspace_screen.dart';
+import '../../../opportunities/domain/models/opportunity_model.dart';
 import '../../../opportunities/presentation/screens/opportunity_studio_screen.dart';
-import '../../../opportunities/presentation/widgets/form_builder_widget.dart';
 import '../../../opportunities/domain/models/dynamic_form_model.dart';
+import '../../../opportunities/domain/models/form_field_schema.dart';
 import '../widgets/broadcast_post_modal.dart';
 import '../widgets/creation_success_checklist_dialog.dart';
+import '../widgets/publish_review_confirmation_modal.dart';
 
 class OrganizerCreateScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -37,7 +43,18 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
 
   // Opportunity Flow State
   String _selectedSetupMode = 'Quick Create'; // 'Quick Create' or 'Advanced Create'
-  String _selectedTab = 'Drafts';
+  String _selectedTab = 'Recently Created';
+  // Step 3 Details State
+  String _selectedCategory = 'College Festival';
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _venueController = TextEditingController();
+  final TextEditingController _stipendController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _vacanciesController = TextEditingController(text: '3');
+  final List<FormFieldSchema> _customFormFields = [
+    FormFieldSchema(id: 'q1', type: FormFieldType.text, label: 'Stage / Artist Name', placeholder: 'e.g. Aarav Sharma', isRequired: true),
+    FormFieldSchema(id: 'q2', type: FormFieldType.mediaUrl, label: 'Performance / Audio Reel Link', placeholder: 'YouTube / SoundCloud / Drive URL', isRequired: true),
+  ];
 
   void _goBack() {
     if (_currentStep > 0) {
@@ -51,6 +68,16 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
         Navigator.of(context).pop();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _venueController.dispose();
+    _stipendController.dispose();
+    _descriptionController.dispose();
+    _vacanciesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -159,6 +186,9 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
 
   String _getStepHeaderTitle() {
     if (_currentStep == 0) return 'What would you like to create?';
+    if (_currentStep == 3) {
+      return _selectedEntityType == 'Event' ? 'Configure Event Details' : 'Configure Opportunity & Form';
+    }
     if (_selectedEntityType == 'Event') {
       return _currentStep == 1 ? 'Choose Event Creation Method' : 'Select Event Category';
     } else if (_selectedEntityType == 'Opportunity') {
@@ -170,6 +200,10 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
   Widget _buildCurrentStepContent(BuildContext context) {
     if (_currentStep == 0) {
       return _buildStep0MainContent(context);
+    }
+
+    if (_currentStep == 3) {
+      return _buildStep3DetailsAndFormFieldsContent(context);
     }
 
     if (_selectedEntityType == 'Event') {
@@ -294,7 +328,7 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
     );
   }
 
-  // ─── EVENT FLOW: STEP 2 (Category Selection & Launch Workspace) ───────────
+  // ─── EVENT FLOW: STEP 2 (Category Selection) ─────────────────────────────
   Widget _buildEventStep2CategoryContent(BuildContext context) {
     final List<Map<String, String>> categories = [
       {'title': 'College Festival', 'desc': 'Multi-tier cultural & technical university fests', 'emoji': '🎓'},
@@ -325,31 +359,13 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               cat['title']!,
               cat['desc']!,
               onTap: () {
-                final navigator = Navigator.of(context);
-                navigator.pop(); // Pop Create Sheet
-
-                // Show Guided Success Checklist on active root navigator
-                CreationSuccessChecklistDialog.show(
-                  navigator.context,
-                  entityTitle: '${cat['title']} ($_eventCreationMode)',
-                  isEvent: true,
-                  items: [
-                    ChecklistItem(title: 'Event Created', description: 'Basic info & workspace initialized', isCompleted: true),
-                    ChecklistItem(title: 'Add First Opportunity', description: 'Recruit singers, dancers, or volunteers', isCompleted: false),
-                    ChecklistItem(title: 'Build Event Schedule', description: 'Add keynotes, audition & workshop slots', isCompleted: false),
-                    ChecklistItem(title: 'Publish Announcement', description: 'Broadcast event launch to students', isCompleted: false),
-                  ],
-                  onContinue: () {
-                    navigator.push(
-                      MaterialPageRoute(
-                        builder: (_) => const EventWorkspaceScreen(
-                          eventId: 'evt_101',
-                          initialTabIndex: 1, // Automatically land on Opportunities tab
-                        ),
-                      ),
-                    );
-                  },
-                );
+                setState(() {
+                  _selectedCategory = cat['title']!;
+                  _titleController.text = '${cat['title']} ($_eventCreationMode)';
+                  _venueController.text = 'Main Stage / NCPA Auditorium';
+                  _descriptionController.text = cat['desc']!;
+                  _currentStep = 3;
+                });
               },
             )),
       ],
@@ -403,7 +419,7 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
     );
   }
 
-  // ─── OPPORTUNITY FLOW: STEP 2 (Choose Type & Launch Opportunity Studio) ─
+  // ─── OPPORTUNITY FLOW: STEP 2 (Choose Type) ─────────────────────────────
   Widget _buildOpportunityStep2TypeContent(BuildContext context) {
     final List<Map<String, String>> oppTypes = [
       {'title': 'Audition', 'desc': 'Singers, musicians & stage performers', 'emoji': '🎤'},
@@ -436,56 +452,356 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               type['title']!,
               type['desc']!,
               onTap: () {
-                final navigator = Navigator.of(context);
-                navigator.pop(); // Pop Create Sheet
-
-                if (_selectedSetupMode == 'Advanced Create') {
-                  showModalBottomSheet(
-                    context: navigator.context,
-                    isScrollControlled: true,
-                    builder: (formCtx) => SizedBox(
-                      height: MediaQuery.of(formCtx).size.height * 0.85,
-                      child: FormBuilderWidget(
-                        initialForm: DynamicFormModel(
-                          formId: 'form_${DateTime.now().millisecondsSinceEpoch}',
-                          title: '${type['title']} Form Template',
-                          fields: [],
-                          createdAt: DateTime.now(),
-                        ),
-                        onSave: (form) {
-                          Navigator.pop(formCtx); // Pop form sheet
-                          navigator.push(
-                            MaterialPageRoute(
-                              builder: (_) => const OpportunityStudioScreen(opportunityId: 'opp_301'),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                } else {
-                  // Quick Create -> Guided Checklist Dialog -> Open Opportunity Studio
-                  CreationSuccessChecklistDialog.show(
-                    navigator.context,
-                    entityTitle: '${type['title']} Opportunity',
-                    isEvent: false,
-                    items: [
-                      ChecklistItem(title: 'Opportunity Published', description: 'Listing active on marketplace', isCompleted: true),
-                      ChecklistItem(title: 'Review Applications', description: 'Inspect candidate portfolios in Flow', isCompleted: false),
-                      ChecklistItem(title: 'Send Applicant Announcement', description: 'Notify candidates about interview schedules', isCompleted: false),
-                    ],
-                    onContinue: () {
-                      navigator.push(
-                        MaterialPageRoute(
-                          builder: (_) => const OpportunityStudioScreen(opportunityId: 'opp_301'),
-                        ),
-                      );
-                    },
-                  );
-                }
+                setState(() {
+                  _selectedCategory = type['title']!;
+                  _titleController.text = '${type['title']} Call';
+                  _stipendController.text = 'Paid / Stipend + Certificate';
+                  _descriptionController.text = type['desc']!;
+                  _currentStep = 3;
+                });
               },
             )),
       ],
+    );
+  }
+
+  // ─── STEP 3: DETAILS & DYNAMIC FORM FIELD BUILDER ────────────────────────
+  Widget _buildStep3DetailsAndFormFieldsContent(BuildContext context) {
+    final isEvent = _selectedEntityType == 'Event';
+
+    return Column(
+      key: const ValueKey('step_3'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
+              child: Text('Category: $_selectedCategory', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Title Input
+        const Text('Title', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        const SizedBox(height: 6),
+        TextField(
+          controller: _titleController,
+          style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14),
+          decoration: InputDecoration(
+            hintText: isEvent ? 'e.g. National Cultural Fest 2026' : 'e.g. Lead Vocalist Audition',
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: KalaColors.lightGrey)),
+          ),
+        ),
+        const SizedBox(height: 14),
+
+        // Venue / Stipend Input
+        Text(isEvent ? 'Venue & Location' : 'Stipend / Compensation', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        const SizedBox(height: 6),
+        TextField(
+          controller: isEvent ? _venueController : _stipendController,
+          style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14),
+          decoration: InputDecoration(
+            hintText: isEvent ? 'e.g. NCPA Auditorium, Mumbai' : 'e.g. ₹15,000 / Gig + Certificate',
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: KalaColors.lightGrey)),
+          ),
+        ),
+        const SizedBox(height: 14),
+
+        // Description Input
+        const Text('Description', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        const SizedBox(height: 6),
+        TextField(
+          controller: _descriptionController,
+          maxLines: 3,
+          style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13),
+          decoration: InputDecoration(
+            hintText: 'Describe requirements, criteria, and expectations...',
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.all(14),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: KalaColors.lightGrey)),
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Application Form Questions Section
+        const Divider(color: KalaColors.lightGrey),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('📋 Application Form Fields', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            TextButton.icon(
+              onPressed: () => _showAddCustomQuestionDialog(context),
+              icon: const Icon(Icons.add_circle_outline, size: 16, color: KalaColors.burntOrange),
+              label: const Text('+ Add Question', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+
+        ..._customFormFields.asMap().entries.map((entry) {
+          final idx = entry.key;
+          final q = entry.value;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: KalaColors.lightGrey),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), shape: BoxShape.circle),
+                  child: Text('${idx + 1}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(q.label, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                      Text('Type: ${q.type.name} • ${q.isRequired ? "Required" : "Optional"}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete_outline, size: 18, color: Colors.redAccent),
+                  onPressed: () {
+                    setState(() {
+                      _customFormFields.removeAt(idx);
+                    });
+                  },
+                ),
+              ],
+            ),
+          );
+        }),
+
+        const SizedBox(height: 24),
+
+        // Continue to Review & Publish Button
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              final title = _titleController.text.trim().isNotEmpty
+                  ? _titleController.text.trim()
+                  : '$_selectedCategory (${isEvent ? _eventCreationMode : _selectedSetupMode})';
+              final venueOrStipend = isEvent
+                  ? (_venueController.text.trim().isNotEmpty ? _venueController.text.trim() : 'NCPA Auditorium, Mumbai')
+                  : (_stipendController.text.trim().isNotEmpty ? _stipendController.text.trim() : 'Paid / Stipend + Certificate');
+              final desc = _descriptionController.text.trim().isNotEmpty
+                  ? _descriptionController.text.trim()
+                  : 'Open call for creative performers and talent.';
+
+              final eventController = context.read<EventController>();
+              final navigator = Navigator.of(context);
+
+              PublishReviewConfirmationModal.show(
+                context,
+                title: title,
+                category: _selectedCategory,
+                entityType: isEvent ? 'Event' : 'Opportunity',
+                detailSubtitle: venueOrStipend,
+                description: desc,
+                onConfirmPublish: (broadcastNow) {
+                  if (isEvent) {
+                    final newEventId = 'evt_${DateTime.now().millisecondsSinceEpoch}';
+                    final newEvent = EventModel(
+                      eventId: newEventId,
+                      organizationId: 'org_current',
+                      organizationName: 'My Organization',
+                      organizationLogo: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+                      title: title,
+                      description: desc,
+                      category: _selectedCategory,
+                      venue: venueOrStipend,
+                      location: 'Mumbai, Maharashtra',
+                      status: EventStatus.registrationOpen,
+                      startDate: DateTime.now().add(const Duration(days: 14)),
+                      endDate: DateTime.now().add(const Duration(days: 16)),
+                      registrationDeadline: DateTime.now().add(const Duration(days: 7)),
+                      bannerUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
+                      publishedAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    );
+
+                    eventController.addEvent(newEvent);
+                    navigator.pop(); // Pop Create sheet
+
+                    if (broadcastNow) {
+                      BroadcastPostModal.show(navigator.context, initialEventId: newEventId);
+                    } else {
+                      CreationSuccessChecklistDialog.show(
+                        navigator.context,
+                        entityTitle: newEvent.title,
+                        isEvent: true,
+                        items: [
+                          ChecklistItem(title: 'Event Created', description: 'Basic info & workspace initialized', isCompleted: true),
+                          ChecklistItem(title: 'Add First Opportunity', description: 'Recruit singers, dancers, or volunteers', isCompleted: false),
+                          ChecklistItem(title: 'Build Event Schedule', description: 'Add keynotes, audition & workshop slots', isCompleted: false),
+                          ChecklistItem(title: 'Publish Announcement', description: 'Broadcast event launch to students', isCompleted: false),
+                        ],
+                        onContinue: () {
+                          navigator.push(
+                            MaterialPageRoute(
+                              builder: (_) => EventWorkspaceScreen(eventId: newEventId, initialTabIndex: 1),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    final newOppId = 'opp_${DateTime.now().millisecondsSinceEpoch}';
+                    final newFormId = 'form_${DateTime.now().millisecondsSinceEpoch}';
+                    final parentEvent = eventController.events.isNotEmpty ? eventController.events.first : null;
+
+                    final newOpp = OpportunityModel(
+                      opportunityId: newOppId,
+                      eventId: parentEvent?.eventId ?? 'evt_101',
+                      title: title,
+                      category: _selectedCategory,
+                      vacancies: int.tryParse(_vacanciesController.text) ?? 3,
+                      deadline: DateTime.now().add(const Duration(days: 7)),
+                      formId: newFormId,
+                      stipend: venueOrStipend,
+                      status: 'Open',
+                      publishedAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    );
+
+                    final newForm = DynamicFormModel(
+                      formId: newFormId,
+                      title: '$title Form',
+                      fields: List.from(_customFormFields),
+                      createdAt: DateTime.now(),
+                    );
+
+                    eventController.addOpportunity(newOpp);
+                    eventController.saveForm(newForm);
+                    navigator.pop(); // Pop Create sheet
+
+                    if (broadcastNow) {
+                      BroadcastPostModal.show(navigator.context, initialOpportunityId: newOppId);
+                    } else {
+                      CreationSuccessChecklistDialog.show(
+                        navigator.context,
+                        entityTitle: newOpp.title,
+                        isEvent: false,
+                        items: [
+                          ChecklistItem(title: 'Opportunity Published', description: 'Listing active on marketplace', isCompleted: true),
+                          ChecklistItem(title: 'Review Applications', description: 'Inspect candidate portfolios in Flow', isCompleted: false),
+                          ChecklistItem(title: 'Send Applicant Announcement', description: 'Notify candidates about interview schedules', isCompleted: false),
+                        ],
+                        onContinue: () {
+                          navigator.push(
+                            MaterialPageRoute(
+                              builder: (_) => OpportunityStudioScreen(opportunityId: newOppId),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }
+                },
+              );
+            },
+            icon: const Icon(Icons.rocket_launch_rounded, size: 20),
+            label: const Text('Review & Publish 🚀', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: KalaColors.burntOrange,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showAddCustomQuestionDialog(BuildContext context) {
+    final TextEditingController qController = TextEditingController();
+    FormFieldType selectedType = FormFieldType.text;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => Padding(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).viewInsets.bottom + 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Add Form Question', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 14),
+              TextField(
+                controller: qController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'e.g. Portfolio Drive Link / Vocal Range / Age',
+                  filled: true,
+                  fillColor: KalaColors.ivory,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              const SizedBox(height: 14),
+              DropdownButtonFormField<FormFieldType>(
+                value: selectedType,
+                decoration: InputDecoration(
+                  labelText: 'Field Type',
+                  filled: true,
+                  fillColor: KalaColors.ivory,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                items: FormFieldType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.name))).toList(),
+                onChanged: (val) {
+                  if (val != null) setModalState(() => selectedType = val);
+                },
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 46,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (qController.text.trim().isNotEmpty) {
+                      setState(() {
+                        _customFormFields.add(
+                          FormFieldSchema(
+                            id: 'q_${DateTime.now().millisecondsSinceEpoch}',
+                            type: selectedType,
+                            label: qController.text.trim(),
+                            placeholder: 'Enter answer...',
+                            isRequired: true,
+                          ),
+                        );
+                      });
+                      Navigator.pop(ctx);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
+                  child: const Text('Add Question to Form', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -626,44 +942,127 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
 
   // ─── DRAFTS, TEMPLATES & RECENTLY CREATED SECTION ────────────────────────
   Widget _buildDraftsTemplatesTabs() {
+    final eventController = context.watch<EventController>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            _tabPill('Drafts', '📝'),
+            _tabPill('Recently Created', '🕘'),
             const SizedBox(width: 8),
             _tabPill('Templates', '⭐'),
             const SizedBox(width: 8),
-            _tabPill('Recently Created', '🕘'),
+            _tabPill('Drafts', '📝'),
           ],
         ),
         const SizedBox(height: 16),
 
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              _recentCard(
-                'Music Fest 2026',
-                'Event • Draft saved 2h ago',
-                'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=300',
-              ),
-              _recentCard(
-                'Short Film Audition',
-                'Opportunity • Saved template',
-                'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=300',
-              ),
-              _recentCard(
-                'Dance Workshop Call',
-                'Workshop • Published 3d ago',
-                'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&q=80&w=300',
-              ),
-            ],
-          ),
-        ),
+        _buildTabContent(context, eventController),
       ],
     );
+  }
+
+  Widget _buildTabContent(BuildContext context, EventController eventController) {
+    if (_selectedTab == 'Recently Created') {
+      final events = eventController.events;
+      final opps = eventController.opportunities;
+
+      if (events.isEmpty && opps.isEmpty) {
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: KalaColors.lightGrey),
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.history, color: KalaColors.mediumGrey, size: 20),
+              SizedBox(width: 10),
+              Text('No items created recently', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+            ],
+          ),
+        );
+      }
+
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            ...events.map((evt) => _recentCard(
+              title: evt.title,
+              subtitle: '📅 Event • ${evt.category}',
+              imgUrl: evt.bannerUrl,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => EventWorkspaceScreen(eventId: evt.eventId)));
+              },
+            )),
+            ...opps.map((opp) => _recentCard(
+              title: opp.title,
+              subtitle: '🎯 Gig • ${opp.stipend}',
+              imgUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=300',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityStudioScreen(opportunityId: opp.opportunityId)));
+              },
+            )),
+          ],
+        ),
+      );
+    } else if (_selectedTab == 'Drafts') {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: KalaColors.lightGrey),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.edit_note_outlined, color: KalaColors.mediumGrey, size: 20),
+            SizedBox(width: 10),
+            Text('No saved drafts. All creations auto-save.', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+          ],
+        ),
+      );
+    } else {
+      // Templates tab
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _recentCard(
+              title: 'College Fest Audition',
+              subtitle: '⭐ Event Template',
+              imgUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=300',
+              onTap: () {
+                setState(() {
+                  _selectedEntityType = 'Event';
+                  _eventCreationMode = 'Use Template';
+                  _currentStep = 2;
+                });
+              },
+            ),
+            _recentCard(
+              title: 'Lead Vocalist Call',
+              subtitle: '⭐ Opportunity Template',
+              imgUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=300',
+              onTap: () {
+                setState(() {
+                  _selectedEntityType = 'Opportunity';
+                  _selectedSetupMode = 'Advanced Create';
+                  _currentStep = 2;
+                });
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Widget _tabPill(String label, String emoji) {
@@ -697,40 +1096,48 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
     );
   }
 
-  Widget _recentCard(String title, String subtitle, String imgUrl) {
-    return Container(
-      width: 170,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: KalaColors.lightGrey),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-            child: Image.network(
-              imgUrl,
-              height: 90,
-              width: 170,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(height: 90, width: 170, color: KalaColors.softBeige, child: const Icon(Icons.image, color: KalaColors.mediumGrey)),
+  Widget _recentCard({
+    required String title,
+    required String subtitle,
+    required String imgUrl,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 170,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: KalaColors.lightGrey),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+              child: Image.network(
+                imgUrl,
+                height: 90,
+                width: 170,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(height: 90, width: 170, color: KalaColors.softBeige, child: const Icon(Icons.image, color: KalaColors.mediumGrey)),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-                const SizedBox(height: 2),
-                Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const SizedBox(height: 2),
+                  Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

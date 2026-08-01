@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkSessionAndNavigate();
+  }
+
+  Future<void> _checkSessionAndNavigate() async {
+    // Wait for AuthController to finish its own init
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (!mounted) return;
+
+    final auth = context.read<AuthController>();
+    if (auth.isLoggedIn) {
+      final route = auth.isOrganizer ? '/organizer-home' : '/home';
+      Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
+    }
+    // If not logged in, just stay on splash — user taps Get Started → /auth
+  }
 
   @override
   Widget build(BuildContext context) {

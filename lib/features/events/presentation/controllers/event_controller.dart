@@ -280,6 +280,16 @@ class EventController extends ChangeNotifier {
     }
   }
 
+  String _ensureUuid(String id) {
+    if (id.isEmpty) return '00000000-0000-0000-0000-000000000000';
+    if (RegExp(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$').hasMatch(id)) {
+      return id;
+    }
+    final hex = id.codeUnits.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    final padded = hex.padRight(32, '0').substring(0, 32);
+    return '${padded.substring(0,8)}-${padded.substring(8,12)}-${padded.substring(12,16)}-${padded.substring(16,20)}-${padded.substring(20,32)}';
+  }
+
   // ─── SUBMISSION & STATUS PIPELINE ─────────────────────────────────────────
   void submitApplication(ApplicationSubmissionModel submission) async {
     _submissions.add(submission);
@@ -287,12 +297,31 @@ class EventController extends ChangeNotifier {
 
     try {
       final client = Supabase.instance.client;
+
+      // Insert submission row with valid UUIDs
       await client.from('application_submissions').insert({
+        'id': _ensureUuid(submission.submissionId),
+        'opportunity_id': _ensureUuid(submission.opportunityId),
+        'event_id': _ensureUuid(submission.eventId),
+        'student_id': _ensureUuid(submission.studentId),
         'student_name': submission.studentName,
         'student_role': submission.studentRole,
         'status': submission.status.name,
         'attached_portfolio_item_ids': submission.attachedPortfolioItemIds,
+        'submitted_at': submission.submittedAt.toIso8601String(),
+        'updated_at': submission.updatedAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
       });
+
+      // Bulk insert individual answers
+      if (submission.answers.isNotEmpty) {
+        final answerRows = submission.answers.map((a) => {
+          'submission_id': _ensureUuid(submission.submissionId),
+          'field_id': a.fieldId,
+          'field_type': a.fieldType,
+          'answer': a.answer?.toString() ?? '',
+        }).toList();
+        await client.from('submission_answers').insert(answerRows);
+      }
     } catch (e) {
       debugPrint('Supabase submission insert skipped/offline: $e');
     }
@@ -312,7 +341,7 @@ class EventController extends ChangeNotifier {
         await client.from('application_submissions').update({
           'status': newStatus.name,
           'updated_at': DateTime.now().toIso8601String(),
-        }).eq('id', submissionId);
+        }).eq('id', _ensureUuid(submissionId));
       } catch (e) {
         debugPrint('Supabase status update skipped/offline: $e');
       }

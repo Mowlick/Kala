@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -53,9 +54,24 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     const SizedBox(height: 24),
                     _buildStatsRow(),
                     const SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     _buildProfileCompletionBox(),
                     const SizedBox(height: 24),
                     _buildTabBar(),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: OutlinedButton.icon(
+                        onPressed: () => _showLogoutConfirmationDialog(context),
+                        icon: const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 18),
+                        label: const Text('Log Out', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Colors.redAccent),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -96,11 +112,57 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           onPressed: () {},
         ),
         IconButton(
-          icon: const Icon(Icons.more_horiz, color: KalaColors.charcoal, size: 24),
-          onPressed: () {},
+          icon: const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 22),
+          tooltip: 'Log Out',
+          onPressed: () => _showLogoutConfirmationDialog(context),
         ),
       ],
     );
+  }
+
+  Future<void> _showLogoutConfirmationDialog(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.logout_rounded, color: Colors.redAccent, size: 22),
+            SizedBox(width: 8),
+            Text(
+              'Log Out',
+              style: TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold, fontSize: 18, color: KalaColors.charcoal),
+            ),
+          ],
+        ),
+        content: const Text(
+          'Are you sure you want to log out of your Kalā account?',
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.charcoal),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel', style: TextStyle(color: KalaColors.mediumGrey, fontWeight: FontWeight.bold)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              elevation: 0,
+            ),
+            child: const Text('Log Out', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      final navigator = Navigator.of(context);
+      await context.read<AuthController>().signOut();
+      navigator.pushNamedAndRemoveUntil('/', (_) => false);
+    }
   }
 
   Widget _buildProfileHeader() {

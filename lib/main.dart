@@ -6,6 +6,7 @@ import 'core/navigation/app_router.dart';
 import 'features/onboarding/presentation/onboarding_controller.dart';
 import 'features/events/presentation/controllers/event_controller.dart';
 import 'features/profile/presentation/controllers/student_profile_controller.dart';
+import 'features/auth/presentation/controllers/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class KalaApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => OnboardingController()),
+        ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => EventController()),
         ChangeNotifierProvider(create: (_) => StudentProfileController()),
       ],

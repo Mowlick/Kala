@@ -14,6 +14,7 @@ class DynamicFormRenderer extends StatefulWidget {
   final String opportunityTitle;
   final String eventId;
   final String eventTitle;
+  final String studentId; // real user UUID from AuthController
   final Function(ApplicationSubmissionModel submission) onSubmit;
 
   const DynamicFormRenderer({
@@ -23,6 +24,7 @@ class DynamicFormRenderer extends StatefulWidget {
     required this.opportunityTitle,
     required this.eventId,
     required this.eventTitle,
+    this.studentId = 'usr_demo',
     required this.onSubmit,
   });
 
@@ -113,7 +115,7 @@ class _DynamicFormRendererState extends State<DynamicFormRenderer> {
       opportunityTitle: widget.opportunityTitle,
       eventId: widget.eventId,
       eventTitle: widget.eventTitle,
-      studentId: 'usr_current',
+      studentId: widget.studentId,
       studentName: 'Aarav Sharma',
       studentAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
       studentRole: 'Singer / Performer',

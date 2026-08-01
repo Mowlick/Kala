@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
 import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../domain/models/opportunity_model.dart';
 import '../widgets/dynamic_form_renderer.dart';
 
 class OpportunityDetailScreen extends StatelessWidget {
@@ -9,15 +11,22 @@ class OpportunityDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Retrieve arguments passed from navigation list
-    final Map<String, dynamic> opp = (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?) ?? {
-      'title': 'Dancers for Music Video',
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    // Accept either a real OpportunityModel or a legacy Map
+    final OpportunityModel? liveOpp = args is OpportunityModel ? args : null;
+
+    // Fallback Map for when navigated without a real model (e.g. from mock cards)
+    final Map<String, dynamic> opp = args is Map<String, dynamic> ? args : {
+      'title': liveOpp?.title ?? 'Dancers for Music Video',
       'location': 'Mumbai, Maharashtra',
-      'category': 'AUDITION',
-      'compensation': 'Paid (₹15,000 - ₹20,000)',
+      'category': liveOpp?.category ?? 'AUDITION',
+      'compensation': liveOpp?.stipend ?? 'Paid (₹15,000 - ₹20,000)',
       'age': '18-25 yrs',
-      'duration': '3 days left',
-      'tags': ['Hip Hop', 'Contemporary', 'Female'],
+      'duration': liveOpp != null
+          ? 'Closes in ${liveOpp.deadline.difference(DateTime.now()).inDays} days'
+          : '3 days left',
+      'tags': [liveOpp?.category ?? 'Performance'],
       'imageUrl': 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
     };
 
@@ -254,7 +263,13 @@ class OpportunityDetailScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         final controller = context.read<EventController>();
-                        final form = controller.forms.isNotEmpty ? controller.forms.first : null;
+                        final auth = context.read<AuthController>();
+
+                        // Prefer the real form linked to this opportunity
+                        final form = liveOpp != null
+                            ? controller.getFormById(liveOpp.formId) ?? (controller.forms.isNotEmpty ? controller.forms.first : null)
+                            : (controller.forms.isNotEmpty ? controller.forms.first : null);
+
                         if (form != null) {
                           showModalBottomSheet(
                             context: context,
@@ -263,10 +278,11 @@ class OpportunityDetailScreen extends StatelessWidget {
                               height: MediaQuery.of(context).size.height * 0.85,
                               child: DynamicFormRenderer(
                                 form: form,
-                                opportunityId: 'opp_301',
-                                opportunityTitle: opp['title'] ?? 'Dancers for Music Video',
-                                eventId: 'evt_101',
+                                opportunityId: liveOpp?.opportunityId ?? 'opp_301',
+                                opportunityTitle: liveOpp?.title ?? opp['title'] ?? 'Opportunity',
+                                eventId: liveOpp?.eventId ?? 'evt_101',
                                 eventTitle: 'National Creative Fest 2026',
+                                studentId: auth.currentUserId.isNotEmpty ? auth.currentUserId : 'usr_demo',
                                 onSubmit: (submission) {
                                   controller.submitApplication(submission);
                                   Navigator.pop(ctx);

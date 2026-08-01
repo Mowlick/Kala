@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../events/presentation/screens/event_workspace_screen.dart';
+import '../../../opportunities/presentation/screens/opportunity_studio_screen.dart';
+import 'organizer_create_screen.dart';
 
 class OrganizerHubScreen extends StatelessWidget {
   const OrganizerHubScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final eventController = context.watch<EventController>();
+
     return Scaffold(
       backgroundColor: KalaColors.ivory,
       body: SafeArea(
@@ -15,7 +21,9 @@ class OrganizerHubScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
-              _buildTodaysPriorities(),
+              _buildTodaysPriorities(eventController),
+              _buildMyEventsSection(context, eventController),
+              _buildMyOpportunitiesSection(context, eventController),
               _buildRecruitmentSnapshot(),
               _buildRecommendedTalent(),
               _buildRecentActivity(),
@@ -127,7 +135,8 @@ class OrganizerHubScreen extends StatelessWidget {
   }
 
   // ─── TODAY'S PRIORITIES ──────────────────────────────────────────────────
-  Widget _buildTodaysPriorities() {
+  Widget _buildTodaysPriorities(EventController controller) {
+    final subCount = controller.submissions.length;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -149,14 +158,14 @@ class OrganizerHubScreen extends StatelessWidget {
                   'Tap to review',
                   subtitleColor: KalaColors.mediumGrey,
                 ),
-                Divider(height: 1, color: KalaColors.lightGrey),
+                const Divider(height: 1, color: KalaColors.lightGrey),
                 _priorityRow(
                   Icons.assignment_outlined,
-                  '8 applications require review today',
+                  '$subCount candidate application${subCount == 1 ? '' : 's'} require review',
                   'Tap to review',
-                  subtitleColor: KalaColors.mediumGrey,
+                  subtitleColor: KalaColors.burntOrange,
                 ),
-                Divider(height: 1, color: KalaColors.lightGrey),
+                const Divider(height: 1, color: KalaColors.lightGrey),
                 _priorityRow(
                   Icons.event_outlined,
                   'Your Music Fest audition closes',
@@ -167,8 +176,325 @@ class OrganizerHubScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 24),
         ],
+      ),
+    );
+  }
+
+  // ─── MY EVENTS SECTION ───────────────────────────────────────────────────
+  Widget _buildMyEventsSection(BuildContext context, EventController controller) {
+    final events = controller.events;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Text('📅 My Events', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                    child: Text('${events.length}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  _showViewAllEventsModal(context, controller);
+                },
+                child: const Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          if (events.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: KalaColors.lightGrey),
+              ),
+              child: Column(
+                children: [
+                  const Icon(Icons.event_note_outlined, size: 40, color: KalaColors.mediumGrey),
+                  const SizedBox(height: 8),
+                  const Text('You haven\'t created any events yet', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const SizedBox(height: 4),
+                  const Text('Host a festival, concert, workshop or open audition.', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                  const SizedBox(height: 14),
+                  ElevatedButton.icon(
+                    onPressed: () => OrganizerCreateScreen.show(context),
+                    icon: const Icon(Icons.add, size: 16),
+                    label: const Text('Create Event', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
+                  ),
+                ],
+              ),
+            )
+          else
+            SizedBox(
+              height: 160,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  final evt = events[index];
+                  final opps = controller.getOpportunitiesForEvent(evt.eventId);
+                  final subs = controller.submissions.where((s) => s.eventId == evt.eventId).length;
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => EventWorkspaceScreen(eventId: evt.eventId)),
+                      );
+                    },
+                    child: Container(
+                      width: 240,
+                      margin: const EdgeInsets.only(right: 14),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: KalaColors.lightGrey),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 3)),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                                child: Text(evt.category, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                              ),
+                              const Spacer(),
+                              Text('$subs applicants', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                            ],
+                          ),
+                          const Spacer(),
+                          Text(evt.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                          const SizedBox(height: 2),
+                          Text('${evt.venue} • ${opps.length} Gigs', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(Icons.touch_app_outlined, size: 12, color: KalaColors.burntOrange),
+                              const SizedBox(width: 4),
+                              const Text('Open Workspace ➔', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  // ─── MY OPPORTUNITIES SECTION ────────────────────────────────────────────
+  Widget _buildMyOpportunitiesSection(BuildContext context, EventController controller) {
+    final opps = controller.opportunities;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Text('🎯 My Opportunities', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(color: const Color(0xFF059669).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                    child: Text('${opps.length}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF059669))),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  _showViewAllOpportunitiesModal(context, controller);
+                },
+                child: const Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          if (opps.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: KalaColors.lightGrey),
+              ),
+              child: Column(
+                children: [
+                  const Icon(Icons.work_outline_rounded, size: 40, color: KalaColors.mediumGrey),
+                  const SizedBox(height: 8),
+                  const Text('Create your first opportunity', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const SizedBox(height: 4),
+                  const Text('Recruit singers, dancers, actors, crew or volunteers.', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                  const SizedBox(height: 14),
+                  ElevatedButton.icon(
+                    onPressed: () => OrganizerCreateScreen.show(context),
+                    icon: const Icon(Icons.add, size: 16),
+                    label: const Text('Create Opportunity', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
+                  ),
+                ],
+              ),
+            )
+          else
+            SizedBox(
+              height: 140,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: opps.length,
+                itemBuilder: (context, index) {
+                  final opp = opps[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => OpportunityStudioScreen(opportunityId: opp.opportunityId)),
+                      );
+                    },
+                    child: Container(
+                      width: 220,
+                      margin: const EdgeInsets.only(right: 14),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: KalaColors.lightGrey),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 3)),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(color: const Color(0xFF059669).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                                child: Text(opp.status, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF059669))),
+                              ),
+                              const Spacer(),
+                              Text('${opp.vacancies} vacancies', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+                            ],
+                          ),
+                          const Spacer(),
+                          Text(opp.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                          const SizedBox(height: 2),
+                          Text(opp.stipend, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  void _showViewAllEventsModal(BuildContext context, EventController controller) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (ctx) => Container(
+        height: MediaQuery.of(ctx).size.height * 0.75,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('📅 All Created Events', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: controller.events.length,
+                itemBuilder: (ctx, i) {
+                  final evt = controller.events[i];
+                  return ListTile(
+                    title: Text(evt.title, style: const TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold)),
+                    subtitle: Text('${evt.category} • ${evt.venue}'),
+                    trailing: const Icon(Icons.chevron_right, color: KalaColors.burntOrange),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => EventWorkspaceScreen(eventId: evt.eventId)));
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showViewAllOpportunitiesModal(BuildContext context, EventController controller) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (ctx) => Container(
+        height: MediaQuery.of(ctx).size.height * 0.75,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('🎯 All Created Opportunities', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: controller.opportunities.length,
+                itemBuilder: (ctx, i) {
+                  final opp = controller.opportunities[i];
+                  return ListTile(
+                    title: Text(opp.title, style: const TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold)),
+                    subtitle: Text('${opp.category} • ${opp.stipend}'),
+                    trailing: const Icon(Icons.chevron_right, color: KalaColors.burntOrange),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityStudioScreen(opportunityId: opp.opportunityId)));
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

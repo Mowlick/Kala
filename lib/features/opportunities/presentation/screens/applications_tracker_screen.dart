@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
 import '../../../events/presentation/controllers/event_controller.dart';
 import '../../../applications/domain/models/application_status.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 
 class ApplicationsTrackerScreen extends StatefulWidget {
   const ApplicationsTrackerScreen({super.key});
@@ -28,7 +29,16 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
   @override
   Widget build(BuildContext context) {
     final eventController = context.watch<EventController>();
-    final liveSubmissions = eventController.submissions;
+    final auth = context.watch<AuthController>();
+    // Filter to only this student's submissions
+    final studentId = auth.currentUserId;
+    final liveSubmissions = studentId.isNotEmpty
+        ? eventController.submissions.where((s) => s.studentId == studentId).toList()
+        : eventController.submissions; // fallback: show all if not logged in
+
+    // Check for special status
+    final hasSelected = liveSubmissions.any((s) => s.status == ApplicationStatus.selected);
+    final hasRejected = liveSubmissions.any((s) => s.status == ApplicationStatus.rejected);
 
     return Scaffold(
       backgroundColor: KalaColors.ivory,
@@ -47,6 +57,10 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               _buildSectionTitleWithSort('Recent Applications', 'Latest First'),
               const SizedBox(height: 16),
 
+              // Status banners
+              if (hasSelected) _buildStatusBanner(isSelected: true),
+              if (hasRejected && !hasSelected) _buildStatusBanner(isSelected: false),
+
               // Render Live Real-time Submissions
               ...liveSubmissions.map((sub) => Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
@@ -62,12 +76,12 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                       location: 'Mumbai',
                       appliedDate: 'Submitted recently',
                       statusTag: sub.status.label,
-                      statusColor: sub.status == ApplicationStatus.selected ? KalaColors.accentGreen : KalaColors.burntOrange,
-                      statusBgColor: (sub.status == ApplicationStatus.selected ? KalaColors.accentGreen : KalaColors.burntOrange).withValues(alpha: 0.1),
-                      statusIcon: Icons.star_border,
-                      totalStages: 8,
+                      statusColor: _statusColor(sub.status),
+                      statusBgColor: _statusColor(sub.status).withValues(alpha: 0.1),
+                      statusIcon: _statusIcon(sub.status),
+                      totalStages: 5,
                       completedStages: sub.status.stepOrder,
-                      stageColor: KalaColors.burntOrange,
+                      stageColor: _statusColor(sub.status),
                     ),
                   )),
               _buildApplicationCard(
@@ -133,6 +147,67 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // ── Status helpers ────────────────────────────────────────────────────────
+  Color _statusColor(ApplicationStatus status) {
+    switch (status) {
+      case ApplicationStatus.applied: return const Color(0xFF3B82F6); // Blue
+      case ApplicationStatus.underReview: return const Color(0xFFF59E0B); // Amber
+      case ApplicationStatus.interview: return const Color(0xFF8B5CF6); // Purple
+      case ApplicationStatus.selected: return KalaColors.accentGreen;   // Green
+      case ApplicationStatus.rejected: return const Color(0xFFEF4444);  // Red
+    }
+  }
+
+  IconData _statusIcon(ApplicationStatus status) {
+    switch (status) {
+      case ApplicationStatus.applied: return Icons.send_outlined;
+      case ApplicationStatus.underReview: return Icons.hourglass_top_outlined;
+      case ApplicationStatus.interview: return Icons.calendar_today_outlined;
+      case ApplicationStatus.selected: return Icons.check_circle_outline;
+      case ApplicationStatus.rejected: return Icons.cancel_outlined;
+    }
+  }
+
+  Widget _buildStatusBanner({required bool isSelected}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isSelected
+              ? [const Color(0xFF10B981), const Color(0xFF059669)]
+              : [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Icon(isSelected ? Icons.emoji_events_rounded : Icons.sentiment_dissatisfied_outlined,
+              color: Colors.white, size: 32),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isSelected ? '🎉 Congratulations! You\'re Selected!' : 'Keep Going — Don\'t Give Up',
+                  style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  isSelected
+                      ? 'The organizer has selected you. Check your inbox for next steps.'
+                      : 'This one wasn\'t a match, but more opportunities await you!',
+                  style: const TextStyle(fontSize: 12, color: Colors.white70, height: 1.4),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

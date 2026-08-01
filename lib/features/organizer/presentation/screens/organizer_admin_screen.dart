@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 
 class OrganizerAdminScreen extends StatelessWidget {
   const OrganizerAdminScreen({super.key});
@@ -14,7 +15,7 @@ class OrganizerAdminScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
+              _buildHeader(context),
               _buildOrgProfile(),
               _buildTrustMetrics(),
               _buildQuickActions(),
@@ -22,6 +23,23 @@ class OrganizerAdminScreen extends StatelessWidget {
               _buildTeamWorkspace(),
               _buildHiringAnalytics(),
               _buildRecentActivity(),
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    onPressed: () => _showLogoutConfirmationDialog(context),
+                    icon: const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 18),
+                    label: const Text('Log Out Organization Account', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.redAccent),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 100),
             ],
           ),
@@ -31,7 +49,7 @@ class OrganizerAdminScreen extends StatelessWidget {
   }
 
   // ─── HEADER ───────────────────────────────────────────────────────────────
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
       child: Row(
@@ -69,10 +87,67 @@ class OrganizerAdminScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(width: 8),
-          _iconButton(Icons.settings_outlined),
+          GestureDetector(
+            onTap: () => _showLogoutConfirmationDialog(context),
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+              ),
+              child: const Icon(Icons.logout_rounded, size: 18, color: Colors.redAccent),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _showLogoutConfirmationDialog(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.logout_rounded, color: Colors.redAccent, size: 22),
+            SizedBox(width: 8),
+            Text(
+              'Log Out',
+              style: TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold, fontSize: 18, color: KalaColors.charcoal),
+            ),
+          ],
+        ),
+        content: const Text(
+          'Are you sure you want to log out of your Organization account?',
+          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.charcoal),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel', style: TextStyle(color: KalaColors.mediumGrey, fontWeight: FontWeight.bold)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              elevation: 0,
+            ),
+            child: const Text('Log Out', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      final navigator = Navigator.of(context);
+      await context.read<AuthController>().signOut();
+      navigator.pushNamedAndRemoveUntil('/', (_) => false);
+    }
   }
 
   Widget _iconButton(IconData icon) {

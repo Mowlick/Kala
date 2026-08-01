@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../opportunities/domain/models/opportunity_model.dart';
 
-class DiscoverMarketplaceScreen extends StatelessWidget {
+class DiscoverMarketplaceScreen extends StatefulWidget {
   const DiscoverMarketplaceScreen({super.key});
 
   @override
+  State<DiscoverMarketplaceScreen> createState() => _DiscoverMarketplaceScreenState();
+}
+
+class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
+  String _selectedFilter = 'All';
+
+  @override
   Widget build(BuildContext context) {
+    final controller = context.watch<EventController>();
+    final allOpportunities = controller.opportunities;
+    final filtered = _selectedFilter == 'All'
+        ? allOpportunities
+        : allOpportunities.where((o) => o.category == _selectedFilter).toList();
+
     return Scaffold(
       backgroundColor: KalaColors.ivory,
       body: SafeArea(
@@ -25,6 +40,22 @@ class DiscoverMarketplaceScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _buildSavedOpportunitiesBox(),
               const SizedBox(height: 24),
+
+              // ── LIVE OPPORTUNITIES from EventController ──────────────────
+              if (filtered.isNotEmpty) ...[
+                _buildSectionTitle(
+                  '🔴 Live Opportunities',
+                  'Published right now — apply before they close',
+                ),
+                const SizedBox(height: 16),
+                ...filtered.map((opp) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _buildLiveOpportunityCard(context, opp),
+                )),
+                const SizedBox(height: 8),
+              ],
+
+              const SizedBox(height: 8),
               _buildSectionTitle(
                 'Recommended For You',
                 'Based on your profile & skills',
@@ -91,6 +122,109 @@ class DiscoverMarketplaceScreen extends StatelessWidget {
               const SizedBox(height: 40),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // ── Live opportunity card from EventController data ────────────────────────
+  Widget _buildLiveOpportunityCard(BuildContext context, OpportunityModel opp) {
+    final daysLeft = opp.deadline.difference(DateTime.now()).inDays;
+    final daysText = daysLeft > 0 ? 'Closes in $daysLeft day${daysLeft == 1 ? '' : 's'}' : 'Closing today!';
+    final statusColor = opp.status == 'Open' ? KalaColors.accentGreen : KalaColors.burntOrange;
+
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(
+        context,
+        '/opportunity-detail',
+        arguments: opp,
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: KalaColors.accentGreen.withValues(alpha: 0.4), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: KalaColors.accentGreen.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(width: 6, height: 6, decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle)),
+                      const SizedBox(width: 5),
+                      Text(opp.status, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: statusColor)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(opp.category, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                ),
+                const Spacer(),
+                Icon(Icons.verified, size: 16, color: KalaColors.burntOrange),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              opp.title,
+              style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.payments_outlined, size: 14, color: KalaColors.mediumGrey),
+                const SizedBox(width: 4),
+                Text(opp.stipend, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+                const SizedBox(width: 12),
+                const Icon(Icons.people_outline, size: 14, color: KalaColors.mediumGrey),
+                const SizedBox(width: 4),
+                Text('${opp.vacancies} spot${opp.vacancies == 1 ? '' : 's'}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.access_time_outlined, size: 13, color: KalaColors.burntOrange),
+                    const SizedBox(width: 4),
+                    Text(daysText, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: KalaColors.charcoal,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text('Apply Now', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

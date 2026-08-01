@@ -6,6 +6,7 @@ import '../../../organizer/presentation/widgets/broadcast_post_modal.dart';
 import '../../../organizer/presentation/screens/organizer_flow_screen.dart';
 import '../widgets/form_builder_widget.dart';
 import '../../domain/models/dynamic_form_model.dart';
+import '../widgets/opportunity_share_modal.dart';
 
 class OpportunityStudioScreen extends StatelessWidget {
   final String opportunityId;
@@ -32,6 +33,17 @@ class OpportunityStudioScreen extends StatelessWidget {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.share_outlined, color: KalaColors.burntOrange),
+            tooltip: 'Share Opportunity',
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => OpportunityShareModal(opportunity: opp),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.campaign_outlined, color: KalaColors.burntOrange),
             tooltip: 'Publish Announcement',
@@ -77,6 +89,22 @@ class OpportunityStudioScreen extends StatelessWidget {
                       _metricCol('6', 'Shortlisted'),
                       _metricCol('3', 'Vacancies'),
                     ],
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const OrganizerFlowScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.people_alt_rounded, size: 18),
+                    label: const Text('Review Applicants in Flow ATS ➔', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: KalaColors.burntOrange,
+                      minimumSize: const Size(double.infinity, 44),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                 ],
               ),

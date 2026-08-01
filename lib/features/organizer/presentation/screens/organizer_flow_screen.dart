@@ -19,8 +19,8 @@ class OrganizerFlowScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
-              _buildProjectDropdown(),
+              _buildHeader(context),
+              _buildProjectDropdown(eventController),
               _buildKanbanBoard(context, eventController, submissions),
               _buildUpcomingInterviews(),
               _buildQuickActions(),
@@ -34,11 +34,20 @@ class OrganizerFlowScreen extends StatelessWidget {
   }
 
   // ─── HEADER ───────────────────────────────────────────────────────────────
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    final canPop = Navigator.canPop(context);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
       child: Row(
         children: [
+          if (canPop) ...[
+            IconButton(
+              icon: const Icon(Icons.arrow_back, color: KalaColors.charcoal),
+              onPressed: () => Navigator.pop(context),
+            ),
+            const SizedBox(width: 4),
+          ],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +89,12 @@ class OrganizerFlowScreen extends StatelessWidget {
   }
 
   // ─── PROJECT DROPDOWN ─────────────────────────────────────────────────────
-  Widget _buildProjectDropdown() {
+  Widget _buildProjectDropdown(EventController eventController) {
+    final activeEvent = eventController.events.isNotEmpty
+        ? eventController.events.first
+        : null;
+    final title = activeEvent?.title ?? 'National Creative Fest 2026';
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Container(
@@ -103,9 +117,9 @@ class OrganizerFlowScreen extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                'Music Fest 2026',
+                title,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
               ),
             ),
             Container(
@@ -119,7 +133,7 @@ class OrganizerFlowScreen extends StatelessWidget {
                 children: [
                   Container(width: 6, height: 6, decoration: const BoxDecoration(color: KalaColors.accentGreen, shape: BoxShape.circle)),
                   const SizedBox(width: 4),
-                  Text('Active', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
+                  const Text('Active', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.accentGreen)),
                 ],
               ),
             ),
