@@ -11,11 +11,20 @@ import 'features/auth/presentation/controllers/auth_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize live Supabase client using project credentials
+  // Initialize Supabase client via environment config or project defaults
   try {
+    const supabaseUrl = String.fromEnvironment(
+      'SUPABASE_URL',
+      defaultValue: 'https://vezpmtuugcasoqzkrten.supabase.co',
+    );
+    const supabaseAnonKey = String.fromEnvironment(
+      'SUPABASE_ANON_KEY',
+      defaultValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenBtdHV1Z2Nhc29xemtydGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzODU3MzksImV4cCI6MjEwMDk2MTczOX0.Tdx4kgGfzxdpavAM-KgZC3b-lsj38-1-ZyT53N6HQAU',
+    );
+
     await Supabase.initialize(
-      url: 'https://vezpmtuugcasoqzkrten.supabase.co',
-      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenBtdHV1Z2Nhc29xemtydGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzODU3MzksImV4cCI6MjEwMDk2MTczOX0.Tdx4kgGfzxdpavAM-KgZC3b-lsj38-1-ZyT53N6HQAU',
+      url: supabaseUrl,
+      anonKey: supabaseAnonKey,
     );
   } catch (e) {
     debugPrint('Supabase client initialization fallback to offline mock mode: $e');
