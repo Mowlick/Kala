@@ -70,7 +70,11 @@ class CreationSuccessChecklistDialog extends StatelessWidget {
                     color: KalaColors.accentGreen.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check_circle, color: KalaColors.accentGreen, size: 28),
+                  child: const Icon(
+                    Icons.check_circle,
+                    color: KalaColors.accentGreen,
+                    size: 28,
+                  ),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -78,14 +82,26 @@ class CreationSuccessChecklistDialog extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isEvent ? 'Event Published! 🎉' : 'Opportunity Published! 🚀',
-                        style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                        isEvent
+                            ? 'Event Published! 🎉'
+                            : 'Opportunity Published! 🚀',
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                        ),
                       ),
                       Text(
                         entityTitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.burntOrange, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 12,
+                          color: KalaColors.burntOrange,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -97,7 +113,12 @@ class CreationSuccessChecklistDialog extends StatelessWidget {
             // Setup Progress Bar
             Text(
               'Setup Progress (${(progress * 100).toInt()}%)',
-              style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.mediumGrey),
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.mediumGrey,
+              ),
             ),
             const SizedBox(height: 6),
             ClipRRect(
@@ -113,54 +134,80 @@ class CreationSuccessChecklistDialog extends StatelessWidget {
 
             const Text(
               'Recommended Next Actions:',
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
             ),
             const SizedBox(height: 12),
 
-            ...items.map((item) => GestureDetector(
-                  onTap: item.onTap,
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: KalaColors.lightGrey),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          item.isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-                          color: item.isCompleted ? KalaColors.accentGreen : KalaColors.mediumGrey,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.title,
-                                style: TextStyle(
-                                  fontFamily: 'ZT_Nature',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: item.isCompleted ? KalaColors.mediumGrey : KalaColors.charcoal,
-                                  decoration: item.isCompleted ? TextDecoration.lineThrough : null,
-                                ),
-                              ),
-                              Text(
-                                item.description,
-                                style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(Icons.chevron_right, size: 18, color: KalaColors.mediumGrey),
-                      ],
-                    ),
+            ...items.map(
+              (item) => GestureDetector(
+                onTap: item.onTap,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
                   ),
-                )),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: KalaColors.lightGrey),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        item.isCompleted
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                        color: item.isCompleted
+                            ? KalaColors.accentGreen
+                            : KalaColors.mediumGrey,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title,
+                              style: TextStyle(
+                                fontFamily: 'ZT_Nature',
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: item.isCompleted
+                                    ? KalaColors.mediumGrey
+                                    : KalaColors.charcoal,
+                                decoration: item.isCompleted
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                              ),
+                            ),
+                            Text(
+                              item.description,
+                              style: const TextStyle(
+                                fontFamily: 'ZT_Nature',
+                                fontSize: 11,
+                                color: KalaColors.mediumGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: KalaColors.mediumGrey,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
 
             const SizedBox(height: 16),
             SizedBox(
@@ -173,11 +220,17 @@ class CreationSuccessChecklistDialog extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: KalaColors.burntOrange,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
                 child: Text(
                   isEvent ? 'Open Event Workspace' : 'Open Opportunity Studio',
-                  style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

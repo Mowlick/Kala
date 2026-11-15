@@ -43,11 +43,20 @@ class OrganizerTalentScreen extends StatelessWidget {
               children: [
                 Text(
                   'Talent',
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 28, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 Text(
                   'Discover the right creators for your next project.',
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 12,
+                    color: KalaColors.mediumGrey,
+                  ),
                 ),
               ],
             ),
@@ -94,12 +103,20 @@ class OrganizerTalentScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 'Search talent naturally... e.g. "Female singer from Delhi under 24"',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, color: KalaColors.mediumGrey),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 13,
+                  color: KalaColors.mediumGrey,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.mic_outlined, size: 18, color: KalaColors.mediumGrey),
+            const Icon(
+              Icons.mic_outlined,
+              size: 18,
+              color: KalaColors.mediumGrey,
+            ),
           ],
         ),
       ),
@@ -116,8 +133,24 @@ class OrganizerTalentScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Quick Filters', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-              Text('See All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              Text(
+                'Quick Filters',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
+              ),
+              Text(
+                'See All',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.burntOrange,
+                ),
+              ),
             ],
           ),
         ),
@@ -148,15 +181,22 @@ class OrganizerTalentScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: selected ? KalaColors.burntOrange : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: selected ? KalaColors.burntOrange : KalaColors.lightGrey),
+        border: Border.all(
+          color: selected ? KalaColors.burntOrange : KalaColors.lightGrey,
+        ),
       ),
       child: Column(
         children: [
-          Icon(icon, size: 20, color: selected ? Colors.white : KalaColors.charcoal),
+          Icon(
+            icon,
+            size: 20,
+            color: selected ? Colors.white : KalaColors.charcoal,
+          ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: selected ? Colors.white : KalaColors.charcoal,
@@ -187,7 +227,14 @@ class OrganizerTalentScreen extends StatelessWidget {
                 children: [
                   const Icon(Icons.tune, size: 14, color: KalaColors.charcoal),
                   const SizedBox(width: 4),
-                  Text('All Filters', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal)),
+                  Text(
+                    'All Filters',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 11,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -196,7 +243,11 @@ class OrganizerTalentScreen extends StatelessWidget {
             _filterTag('18 – 25'),
             _filterTag('Available Now'),
             const SizedBox(width: 8),
-            const Icon(Icons.keyboard_arrow_down, color: KalaColors.mediumGrey, size: 18),
+            const Icon(
+              Icons.keyboard_arrow_down,
+              color: KalaColors.mediumGrey,
+              size: 18,
+            ),
           ],
         ),
       ),
@@ -215,7 +266,14 @@ class OrganizerTalentScreen extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal)),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 11,
+              color: KalaColors.charcoal,
+            ),
+          ),
           const SizedBox(width: 4),
           const Icon(Icons.close, size: 12, color: KalaColors.mediumGrey),
         ],
@@ -310,7 +368,11 @@ class OrganizerTalentScreen extends StatelessWidget {
                     width: 90,
                     height: 90,
                     color: KalaColors.softBeige,
-                    child: const Icon(Icons.person, color: KalaColors.mediumGrey, size: 36),
+                    child: const Icon(
+                      Icons.person,
+                      color: KalaColors.mediumGrey,
+                      size: 36,
+                    ),
                   ),
                 ),
               ),
@@ -326,24 +388,59 @@ class OrganizerTalentScreen extends StatelessWidget {
                           child: Text(
                             name,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: KalaColors.charcoal,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const Icon(Icons.verified, color: KalaColors.burntOrange, size: 14),
+                        const Icon(
+                          Icons.verified,
+                          color: KalaColors.burntOrange,
+                          size: 14,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 2),
-                    Text(roles, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                    Text(
+                      roles,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 11,
+                        color: KalaColors.mediumGrey,
+                      ),
+                    ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.location_on_outlined, size: 11, color: KalaColors.mediumGrey),
+                        const Icon(
+                          Icons.location_on_outlined,
+                          size: 11,
+                          color: KalaColors.mediumGrey,
+                        ),
                         const SizedBox(width: 2),
-                        Flexible(child: Text(location, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey))),
+                        Flexible(
+                          child: Text(
+                            location,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 11,
+                              color: KalaColors.mediumGrey,
+                            ),
+                          ),
+                        ),
                         const SizedBox(width: 6),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: available
                                 ? KalaColors.accentGreen.withValues(alpha: 0.1)
@@ -351,11 +448,16 @@ class OrganizerTalentScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            available ? '● Available Now' : '● Available Tomorrow',
-                            style: TextStyle(fontFamily: 'ZT_Nature', 
+                            available
+                                ? '● Available Now'
+                                : '● Available Tomorrow',
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color: available ? KalaColors.accentGreen : Colors.orange,
+                              color: available
+                                  ? KalaColors.accentGreen
+                                  : Colors.orange,
                             ),
                           ),
                         ),
@@ -366,11 +468,32 @@ class OrganizerTalentScreen extends StatelessWidget {
                       children: [
                         const Icon(Icons.star, size: 11, color: Colors.amber),
                         const SizedBox(width: 2),
-                        Text(rating, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+                        Text(
+                          rating,
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 10,
+                            color: KalaColors.mediumGrey,
+                          ),
+                        ),
                         const SizedBox(width: 8),
-                        const Icon(Icons.bolt, size: 11, color: KalaColors.mediumGrey),
+                        const Icon(
+                          Icons.bolt,
+                          size: 11,
+                          color: KalaColors.mediumGrey,
+                        ),
                         const SizedBox(width: 2),
-                        Flexible(child: Text(response, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey))),
+                        Flexible(
+                          child: Text(
+                            response,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 10,
+                              color: KalaColors.mediumGrey,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -380,7 +503,12 @@ class OrganizerTalentScreen extends StatelessWidget {
               // Match %
               Text(
                 match,
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.burntOrange),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.burntOrange,
+                ),
               ),
             ],
           ),
@@ -389,22 +517,38 @@ class OrganizerTalentScreen extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: tags.map((t) => Container(
-                margin: const EdgeInsets.only(right: 6),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: KalaColors.softBeige,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(t, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal)),
-              )).toList(),
+              children: tags
+                  .map(
+                    (t) => Container(
+                      margin: const EdgeInsets.only(right: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: KalaColors.softBeige,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        t,
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 10,
+                          color: KalaColors.charcoal,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           const SizedBox(height: 12),
           // Action buttons
           Row(
             children: [
-              Expanded(child: _outlineBtn('View Portfolio', Icons.visibility_outlined)),
+              Expanded(
+                child: _outlineBtn('View Portfolio', Icons.visibility_outlined),
+              ),
               const SizedBox(width: 8),
               Expanded(child: _outlineBtn('Save', Icons.bookmark_outline)),
               const SizedBox(width: 8),
@@ -421,7 +565,15 @@ class OrganizerTalentScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.send, size: 14, color: Colors.white),
                       const SizedBox(width: 4),
-                      Text('Invite', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text(
+                        'Invite',
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -450,7 +602,12 @@ class OrganizerTalentScreen extends StatelessWidget {
             child: Text(
               label,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: KalaColors.charcoal,
+              ),
             ),
           ),
         ],
@@ -463,17 +620,44 @@ class OrganizerTalentScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _sectionHeader('Trending Creators')),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _sectionHeader('Trending Creators'),
+        ),
         const SizedBox(height: 12),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              _trendingCard('Nithya Kapoor', 'Dancer', '94%', '🔥 Trending', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150'),
-              _trendingCard('Arjun Malik', 'Music Producer', '91%', '⭐ Top Rated', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150'),
-              _trendingCard('Meera Iyer', 'Filmmaker', '93%', '🏆 Award Winner', 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80&w=150'),
-              _trendingCard('Vivaan S.', 'Content Creator', '89%', '🚀 Rising Star', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=150'),
+              _trendingCard(
+                'Nithya Kapoor',
+                'Dancer',
+                '94%',
+                '🔥 Trending',
+                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150',
+              ),
+              _trendingCard(
+                'Arjun Malik',
+                'Music Producer',
+                '91%',
+                '⭐ Top Rated',
+                'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150',
+              ),
+              _trendingCard(
+                'Meera Iyer',
+                'Filmmaker',
+                '93%',
+                '🏆 Award Winner',
+                'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80&w=150',
+              ),
+              _trendingCard(
+                'Vivaan S.',
+                'Content Creator',
+                '89%',
+                '🚀 Rising Star',
+                'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=150',
+              ),
             ],
           ),
         ),
@@ -482,7 +666,13 @@ class OrganizerTalentScreen extends StatelessWidget {
     );
   }
 
-  Widget _trendingCard(String name, String role, String match, String badge, String imgUrl) {
+  Widget _trendingCard(
+    String name,
+    String role,
+    String match,
+    String badge,
+    String imgUrl,
+  ) {
     return Container(
       width: 110,
       margin: const EdgeInsets.only(right: 12),
@@ -492,7 +682,9 @@ class OrganizerTalentScreen extends StatelessWidget {
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(colors: [KalaColors.burntOrange, Colors.orange]),
+              gradient: const LinearGradient(
+                colors: [KalaColors.burntOrange, Colors.orange],
+              ),
             ),
             child: CircleAvatar(
               radius: 36,
@@ -502,11 +694,48 @@ class OrganizerTalentScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
-          Text('$match Match', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
+          ),
+          Text(
+            role,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 10,
+              color: KalaColors.mediumGrey,
+            ),
+          ),
+          Text(
+            '$match Match',
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.burntOrange,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(badge, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.charcoal)),
+          Text(
+            badge,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 9,
+              color: KalaColors.charcoal,
+            ),
+          ),
         ],
       ),
     );
@@ -517,17 +746,42 @@ class OrganizerTalentScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _sectionHeader('Recently Available')),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _sectionHeader('Recently Available'),
+        ),
         const SizedBox(height: 12),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              _availableAvatar('Anjali Singh', 'Vocalist', '● Available', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100', isNew: true),
-              _availableAvatar('Dev Arora', 'Cinematographer', '● Available Now', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100'),
-              _availableAvatar('Ishita Rao', 'Graphic Designer', '● Available', 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80&w=100', isNew: true),
-              _availableAvatar('Tanishk Mehta', 'Editor', '● Available', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=100'),
+              _availableAvatar(
+                'Anjali Singh',
+                'Vocalist',
+                '● Available',
+                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
+                isNew: true,
+              ),
+              _availableAvatar(
+                'Dev Arora',
+                'Cinematographer',
+                '● Available Now',
+                'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100',
+              ),
+              _availableAvatar(
+                'Ishita Rao',
+                'Graphic Designer',
+                '● Available',
+                'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80&w=100',
+                isNew: true,
+              ),
+              _availableAvatar(
+                'Tanishk Mehta',
+                'Editor',
+                '● Available',
+                'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=100',
+              ),
             ],
           ),
         ),
@@ -536,7 +790,13 @@ class OrganizerTalentScreen extends StatelessWidget {
     );
   }
 
-  Widget _availableAvatar(String name, String role, String status, String imgUrl, {bool isNew = false}) {
+  Widget _availableAvatar(
+    String name,
+    String role,
+    String status,
+    String imgUrl, {
+    bool isNew = false,
+  }) {
     return Container(
       width: 90,
       margin: const EdgeInsets.only(right: 12),
@@ -555,17 +815,60 @@ class OrganizerTalentScreen extends StatelessWidget {
                   top: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    decoration: BoxDecoration(color: KalaColors.burntOrange, borderRadius: BorderRadius.circular(6)),
-                    child: Text('NEW', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 7, fontWeight: FontWeight.bold, color: Colors.white)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: KalaColors.burntOrange,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'NEW',
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 7,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
             ],
           ),
           const SizedBox(height: 6),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-          Text(role, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey)),
-          Text(status, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.accentGreen)),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
+          ),
+          Text(
+            role,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 9,
+              color: KalaColors.mediumGrey,
+            ),
+          ),
+          Text(
+            status,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 9,
+              color: KalaColors.accentGreen,
+            ),
+          ),
         ],
       ),
     );
@@ -576,7 +879,10 @@ class OrganizerTalentScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _sectionHeader('Talent Collections')),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _sectionHeader('Talent Collections'),
+        ),
         const SizedBox(height: 12),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -609,9 +915,26 @@ class OrganizerTalentScreen extends StatelessWidget {
         children: [
           Icon(Icons.folder_outlined, color: KalaColors.burntOrange, size: 28),
           const SizedBox(height: 8),
-          Text(title, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+          Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(count, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(
+            count,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 10,
+              color: KalaColors.mediumGrey,
+            ),
+          ),
         ],
       ),
     );
@@ -621,11 +944,30 @@ class OrganizerTalentScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
+        Flexible(
+          child: Text(
+            title,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
+          ),
+        ),
         if (showViewAll)
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text(
+              'View All',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.burntOrange,
+              ),
+            ),
           ),
       ],
     );

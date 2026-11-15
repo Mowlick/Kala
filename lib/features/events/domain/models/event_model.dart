@@ -7,6 +7,7 @@ class EventModel {
   final String organizationId;
   final String organizationName;
   final String organizationLogo;
+  final String organizerId;
   final bool isVerified;
   final String title;
   final String description;
@@ -30,6 +31,7 @@ class EventModel {
     required this.organizationId,
     required this.organizationName,
     required this.organizationLogo,
+    this.organizerId = '',
     this.isVerified = true,
     required this.title,
     required this.description,
@@ -55,6 +57,7 @@ class EventModel {
       organizationId: json['organization_id'] ?? '',
       organizationName: json['organization_name'] ?? '',
       organizationLogo: json['organization_logo'] ?? '',
+      organizerId: json['organizer_id']?.toString() ?? '',
       isVerified: json['is_verified'] ?? true,
       title: json['title'] ?? '',
       description: json['description'] ?? '',
@@ -76,17 +79,23 @@ class EventModel {
         orElse: () => EventStatus.registrationOpen,
       ),
       gallery: List<String>.from(json['gallery'] ?? []),
-      schedule: (json['schedule'] as List<dynamic>?)
+      schedule:
+          (json['schedule'] as List<dynamic>?)
               ?.map((item) => ScheduleModel.fromJson(item))
               .toList() ??
           [],
-      announcements: (json['announcements'] as List<dynamic>?)
+      announcements:
+          (json['announcements'] as List<dynamic>?)
               ?.map((item) => AnnouncementModel.fromJson(item))
               .toList() ??
           [],
       opportunitiesCount: json['opportunities_count'] ?? 0,
-      publishedAt: json['published_at'] != null ? DateTime.parse(json['published_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      publishedAt: json['published_at'] != null
+          ? DateTime.parse(json['published_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
     );
   }
 
@@ -96,6 +105,7 @@ class EventModel {
       'organization_id': organizationId,
       'organization_name': organizationName,
       'organization_logo': organizationLogo,
+      'organizer_id': organizerId,
       'is_verified': isVerified,
       'title': title,
       'description': description,

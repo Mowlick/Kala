@@ -11,23 +11,33 @@ import 'features/auth/presentation/controllers/auth_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Supabase client via environment config or project defaults
-  try {
-    const supabaseUrl = String.fromEnvironment(
-      'SUPABASE_URL',
-      defaultValue: 'https://vezpmtuugcasoqzkrten.supabase.co',
-    );
-    const supabaseAnonKey = String.fromEnvironment(
-      'SUPABASE_ANON_KEY',
-      defaultValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenBtdHV1Z2Nhc29xemtydGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzODU3MzksImV4cCI6MjEwMDk2MTczOX0.Tdx4kgGfzxdpavAM-KgZC3b-lsj38-1-ZyT53N6HQAU',
-    );
+  // Supabase credentials default to the project's values and can be
+  // overridden with build-time --dart-define variables:
+  //   flutter run --dart-define=SUPABASE_URL=<your-url> \
+  //               --dart-define=SUPABASE_ANON_KEY=<your-anon-key>
+  // See README.md for full setup instructions.
+  const supabaseUrl = String.fromEnvironment(
+    'SUPABASE_URL',
+    defaultValue: 'https://vezpmtuugcasoqzkrten.supabase.co',
+  );
+  const supabaseAnonKey = String.fromEnvironment(
+    'SUPABASE_ANON_KEY',
+    defaultValue:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenBtdHV1Z2Nhc29xemtydGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzODU3MzksImV4cCI6MjEwMDk2MTczOX0.Tdx4kgGfzxdpavAM-KgZC3b-lsj38-1-ZyT53N6HQAU',
+  );
 
-    await Supabase.initialize(
-      url: supabaseUrl,
-      anonKey: supabaseAnonKey,
+  if (supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty) {
+    try {
+      await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+    } catch (e) {
+      // Log a safe, non-sensitive message. Do not log credentials.
+      debugPrint('Supabase initialization error. Running in offline mode.');
+    }
+  } else {
+    // No credentials provided — app runs in offline/mock mode.
+    debugPrint(
+      'SUPABASE_URL / SUPABASE_ANON_KEY not set. Running in offline mode.',
     );
-  } catch (e) {
-    debugPrint('Supabase client initialization fallback to offline mock mode: $e');
   }
 
   runApp(const KalaApp());
@@ -49,7 +59,7 @@ class KalaApp extends StatelessWidget {
         title: 'KALĀ',
         debugShowCheckedModeBanner: false,
         theme: KalaTheme.lightTheme,
-        initialRoute: AppRouter.initialRoute,
+        initialRoute: AppRoutes.splash,
         routes: AppRouter.routes,
       ),
     );

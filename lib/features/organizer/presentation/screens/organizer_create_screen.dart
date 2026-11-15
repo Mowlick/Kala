@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../events/presentation/controllers/event_controller.dart';
 import '../../../events/domain/models/event_model.dart';
 import '../../../events/domain/models/event_status.dart';
@@ -42,7 +43,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
   String _eventCreationMode = 'Blank Event'; // 'Blank Event' or 'Use Template'
 
   // Opportunity Flow State
-  String _selectedSetupMode = 'Quick Create'; // 'Quick Create' or 'Advanced Create'
+  String _selectedSetupMode =
+      'Quick Create'; // 'Quick Create' or 'Advanced Create'
   String _selectedTab = 'Recently Created';
   // Step 3 Details State
   String _selectedCategory = 'College Festival';
@@ -50,10 +52,25 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
   final TextEditingController _venueController = TextEditingController();
   final TextEditingController _stipendController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _vacanciesController = TextEditingController(text: '3');
+  final TextEditingController _eligibilityController = TextEditingController();
+  final TextEditingController _vacanciesController = TextEditingController(
+    text: '3',
+  );
   final List<FormFieldSchema> _customFormFields = [
-    FormFieldSchema(id: 'q1', type: FormFieldType.text, label: 'Stage / Artist Name', placeholder: 'e.g. Aarav Sharma', isRequired: true),
-    FormFieldSchema(id: 'q2', type: FormFieldType.mediaUrl, label: 'Performance / Audio Reel Link', placeholder: 'YouTube / SoundCloud / Drive URL', isRequired: true),
+    FormFieldSchema(
+      id: 'q1',
+      type: FormFieldType.text,
+      label: 'Stage / Artist Name',
+      placeholder: 'e.g. Aarav Sharma',
+      isRequired: true,
+    ),
+    FormFieldSchema(
+      id: 'q2',
+      type: FormFieldType.mediaUrl,
+      label: 'Performance / Audio Reel Link',
+      placeholder: 'YouTube / SoundCloud / Drive URL',
+      isRequired: true,
+    ),
   ];
 
   void _goBack() {
@@ -76,6 +93,7 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
     _venueController.dispose();
     _stipendController.dispose();
     _descriptionController.dispose();
+    _eligibilityController.dispose();
     _vacanciesController.dispose();
     super.dispose();
   }
@@ -111,12 +129,18 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
 
               // Navigation Header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     if (_currentStep > 0)
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: KalaColors.charcoal),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: KalaColors.charcoal,
+                        ),
                         onPressed: _goBack,
                       ),
                     Expanded(
@@ -187,12 +211,18 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
   String _getStepHeaderTitle() {
     if (_currentStep == 0) return 'What would you like to create?';
     if (_currentStep == 3) {
-      return _selectedEntityType == 'Event' ? 'Configure Event Details' : 'Configure Opportunity & Form';
+      return _selectedEntityType == 'Event'
+          ? 'Configure Event Details'
+          : 'Configure Opportunity & Form';
     }
     if (_selectedEntityType == 'Event') {
-      return _currentStep == 1 ? 'Choose Event Creation Method' : 'Select Event Category';
+      return _currentStep == 1
+          ? 'Choose Event Creation Method'
+          : 'Select Event Category';
     } else if (_selectedEntityType == 'Opportunity') {
-      return _currentStep == 1 ? 'How would you like to create it?' : 'Choose Opportunity Type';
+      return _currentStep == 1
+          ? 'How would you like to create it?'
+          : 'Choose Opportunity Type';
     }
     return 'Create';
   }
@@ -289,7 +319,11 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
       children: [
         const Text(
           'Choose how you want to start building your event:',
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, color: KalaColors.mediumGrey),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            color: KalaColors.mediumGrey,
+          ),
         ),
         const SizedBox(height: 16),
 
@@ -299,7 +333,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           subtitle: 'Start from scratch with custom details.',
           badgeColor: KalaColors.burntOrange,
           badgeBgColor: KalaColors.burntOrange.withValues(alpha: 0.1),
-          description: 'Define your custom banner, description, venue, and multi-role opportunities.',
+          description:
+              'Define your custom banner, description, venue, and multi-role opportunities.',
           onTap: () {
             setState(() {
               _eventCreationMode = 'Blank Event';
@@ -316,7 +351,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           subtitle: 'Pre-filled for College Fests, Concerts & Masterclasses.',
           badgeColor: const Color(0xFFD97706),
           badgeBgColor: const Color(0xFFFEF3C7),
-          description: 'Includes pre-built schedules, announcements, and audition role templates.',
+          description:
+              'Includes pre-built schedules, announcements, and audition role templates.',
           onTap: () {
             setState(() {
               _eventCreationMode = 'Use Template';
@@ -331,11 +367,31 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
   // ─── EVENT FLOW: STEP 2 (Category Selection) ─────────────────────────────
   Widget _buildEventStep2CategoryContent(BuildContext context) {
     final List<Map<String, String>> categories = [
-      {'title': 'College Festival', 'desc': 'Multi-tier cultural & technical university fests', 'emoji': '🎓'},
-      {'title': 'Concert & Live Gig', 'desc': 'Musical performances & band showcases', 'emoji': '🎤'},
-      {'title': 'Workshop Series', 'desc': 'Training sessions & masterclasses', 'emoji': '🎨'},
-      {'title': 'Conference & Summit', 'desc': 'Keynotes, panels & networking summits', 'emoji': '💼'},
-      {'title': 'Community Event', 'desc': 'Local jams, open mics & meetups', 'emoji': '🤝'},
+      {
+        'title': 'College Festival',
+        'desc': 'Multi-tier cultural & technical university fests',
+        'emoji': '🎓',
+      },
+      {
+        'title': 'Concert & Live Gig',
+        'desc': 'Musical performances & band showcases',
+        'emoji': '🎤',
+      },
+      {
+        'title': 'Workshop Series',
+        'desc': 'Training sessions & masterclasses',
+        'emoji': '🎨',
+      },
+      {
+        'title': 'Conference & Summit',
+        'desc': 'Keynotes, panels & networking summits',
+        'emoji': '💼',
+      },
+      {
+        'title': 'Community Event',
+        'desc': 'Local jams, open mics & meetups',
+        'emoji': '🤝',
+      },
       {'title': 'Other', 'desc': 'Custom event experiences', 'emoji': '✨'},
     ];
 
@@ -347,27 +403,40 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-              child: Text('Method: $_eventCreationMode', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              decoration: BoxDecoration(
+                color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Method: $_eventCreationMode',
+                style: const TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.burntOrange,
+                ),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 16),
 
-        ...categories.map((cat) => _buildTypeGridItem(
-              cat['emoji']!,
-              cat['title']!,
-              cat['desc']!,
-              onTap: () {
-                setState(() {
-                  _selectedCategory = cat['title']!;
-                  _titleController.text = '${cat['title']} ($_eventCreationMode)';
-                  _venueController.text = 'Main Stage / NCPA Auditorium';
-                  _descriptionController.text = cat['desc']!;
-                  _currentStep = 3;
-                });
-              },
-            )),
+        ...categories.map(
+          (cat) => _buildTypeGridItem(
+            cat['emoji']!,
+            cat['title']!,
+            cat['desc']!,
+            onTap: () {
+              setState(() {
+                _selectedCategory = cat['title']!;
+                _titleController.text = '${cat['title']} ($_eventCreationMode)';
+                _venueController.text = 'Main Stage / NCPA Auditorium';
+                _descriptionController.text = cat['desc']!;
+                _currentStep = 3;
+              });
+            },
+          ),
+        ),
       ],
     );
   }
@@ -380,7 +449,11 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
       children: [
         const Text(
           'Select your preferred creation experience:',
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, color: KalaColors.mediumGrey),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            color: KalaColors.mediumGrey,
+          ),
         ),
         const SizedBox(height: 16),
 
@@ -390,7 +463,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           subtitle: '2-minute setup, essential fields only.',
           badgeColor: Colors.amber.shade800,
           badgeBgColor: Colors.amber.shade50,
-          description: 'Best for urgent gigs, fast open calls, and basic application requirements.',
+          description:
+              'Best for urgent gigs, fast open calls, and basic application requirements.',
           onTap: () {
             setState(() {
               _selectedSetupMode = 'Quick Create';
@@ -407,7 +481,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           subtitle: 'Full customization with dynamic forms, schedules, etc.',
           badgeColor: KalaColors.burntOrange,
           badgeBgColor: KalaColors.burntOrange.withValues(alpha: 0.1),
-          description: 'Includes multi-question dynamic form builder, custom screening stages, and schedule timeline.',
+          description:
+              'Includes multi-question dynamic form builder, custom screening stages, and schedule timeline.',
           onTap: () {
             setState(() {
               _selectedSetupMode = 'Advanced Create';
@@ -422,13 +497,41 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
   // ─── OPPORTUNITY FLOW: STEP 2 (Choose Type) ─────────────────────────────
   Widget _buildOpportunityStep2TypeContent(BuildContext context) {
     final List<Map<String, String>> oppTypes = [
-      {'title': 'Audition', 'desc': 'Singers, musicians & stage performers', 'emoji': '🎤'},
-      {'title': 'Open Casting', 'desc': 'Actors, models & screen talent', 'emoji': '🎬'},
-      {'title': 'Competition', 'desc': 'Contests, hackathons & battles', 'emoji': '🏆'},
-      {'title': 'Internship', 'desc': 'Mentorship & industry internships', 'emoji': '🎓'},
-      {'title': 'Workshop', 'desc': 'Training sessions & masterclasses', 'emoji': '🎨'},
-      {'title': 'Collaboration', 'desc': 'Joint projects & band partnerships', 'emoji': '🤝'},
-      {'title': 'Volunteer', 'desc': 'Event crew & management volunteers', 'emoji': '🙋'},
+      {
+        'title': 'Audition',
+        'desc': 'Singers, musicians & stage performers',
+        'emoji': '🎤',
+      },
+      {
+        'title': 'Open Casting',
+        'desc': 'Actors, models & screen talent',
+        'emoji': '🎬',
+      },
+      {
+        'title': 'Competition',
+        'desc': 'Contests, hackathons & battles',
+        'emoji': '🏆',
+      },
+      {
+        'title': 'Internship',
+        'desc': 'Mentorship & industry internships',
+        'emoji': '🎓',
+      },
+      {
+        'title': 'Workshop',
+        'desc': 'Training sessions & masterclasses',
+        'emoji': '🎨',
+      },
+      {
+        'title': 'Collaboration',
+        'desc': 'Joint projects & band partnerships',
+        'emoji': '🤝',
+      },
+      {
+        'title': 'Volunteer',
+        'desc': 'Event crew & management volunteers',
+        'emoji': '🙋',
+      },
       {'title': 'Other', 'desc': 'Custom creative opportunities', 'emoji': '✨'},
     ];
 
@@ -440,27 +543,40 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-              child: Text('Mode: $_selectedSetupMode', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              decoration: BoxDecoration(
+                color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Mode: $_selectedSetupMode',
+                style: const TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.burntOrange,
+                ),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 16),
 
-        ...oppTypes.map((type) => _buildTypeGridItem(
-              type['emoji']!,
-              type['title']!,
-              type['desc']!,
-              onTap: () {
-                setState(() {
-                  _selectedCategory = type['title']!;
-                  _titleController.text = '${type['title']} Call';
-                  _stipendController.text = 'Paid / Stipend + Certificate';
-                  _descriptionController.text = type['desc']!;
-                  _currentStep = 3;
-                });
-              },
-            )),
+        ...oppTypes.map(
+          (type) => _buildTypeGridItem(
+            type['emoji']!,
+            type['title']!,
+            type['desc']!,
+            onTap: () {
+              setState(() {
+                _selectedCategory = type['title']!;
+                _titleController.text = '${type['title']} Call';
+                _stipendController.text = 'Paid / Stipend + Certificate';
+                _descriptionController.text = type['desc']!;
+                _currentStep = 3;
+              });
+            },
+          ),
+        ),
       ],
     );
   }
@@ -477,47 +593,128 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-              child: Text('Category: $_selectedCategory', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              decoration: BoxDecoration(
+                color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Category: $_selectedCategory',
+                style: const TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.burntOrange,
+                ),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 16),
 
         // Title Input
-        const Text('Title', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        const Text(
+          'Title',
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
         const SizedBox(height: 6),
         TextField(
           controller: _titleController,
           style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14),
           decoration: InputDecoration(
-            hintText: isEvent ? 'e.g. National Cultural Fest 2026' : 'e.g. Lead Vocalist Audition',
+            hintText: isEvent
+                ? 'e.g. National Cultural Fest 2026'
+                : 'e.g. Lead Vocalist Audition',
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: KalaColors.lightGrey)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: KalaColors.lightGrey),
+            ),
           ),
         ),
         const SizedBox(height: 14),
 
         // Venue / Stipend Input
-        Text(isEvent ? 'Venue & Location' : 'Stipend / Compensation', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        Text(
+          isEvent ? 'Venue & Location' : 'Stipend / Compensation',
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
         const SizedBox(height: 6),
         TextField(
           controller: isEvent ? _venueController : _stipendController,
           style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14),
           decoration: InputDecoration(
-            hintText: isEvent ? 'e.g. NCPA Auditorium, Mumbai' : 'e.g. ₹15,000 / Gig + Certificate',
+            hintText: isEvent
+                ? 'e.g. NCPA Auditorium, Mumbai'
+                : 'e.g. ₹15,000 / Gig + Certificate',
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: KalaColors.lightGrey)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: KalaColors.lightGrey),
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+
+        // Eligibility Input
+        const Text(
+          'Eligibility',
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
+        const SizedBox(height: 6),
+        TextField(
+          controller: _eligibilityController,
+          style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14),
+          decoration: InputDecoration(
+            hintText: 'e.g. 18-25 yrs, college students only',
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: KalaColors.lightGrey),
+            ),
           ),
         ),
         const SizedBox(height: 14),
 
         // Description Input
-        const Text('Description', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        const Text(
+          'Description',
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
         const SizedBox(height: 6),
         TextField(
           controller: _descriptionController,
@@ -528,7 +725,10 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
             filled: true,
             fillColor: Colors.white,
             contentPadding: const EdgeInsets.all(14),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: KalaColors.lightGrey)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: KalaColors.lightGrey),
+            ),
           ),
         ),
         const SizedBox(height: 20),
@@ -539,11 +739,31 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('📋 Application Form Fields', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            const Text(
+              '📋 Application Form Fields',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
+            ),
             TextButton.icon(
               onPressed: () => _showAddCustomQuestionDialog(context),
-              icon: const Icon(Icons.add_circle_outline, size: 16, color: KalaColors.burntOrange),
-              label: const Text('+ Add Question', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+              icon: const Icon(
+                Icons.add_circle_outline,
+                size: 16,
+                color: KalaColors.burntOrange,
+              ),
+              label: const Text(
+                '+ Add Question',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.burntOrange,
+                ),
+              ),
             ),
           ],
         ),
@@ -564,21 +784,51 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), shape: BoxShape.circle),
-                  child: Text('${idx + 1}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                  decoration: BoxDecoration(
+                    color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '${idx + 1}',
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.burntOrange,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(q.label, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-                      Text('Type: ${q.type.name} • ${q.isRequired ? "Required" : "Optional"}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+                      Text(
+                        q.label,
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                        ),
+                      ),
+                      Text(
+                        'Type: ${q.type.name} • ${q.isRequired ? "Required" : "Optional"}',
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 10,
+                          color: KalaColors.mediumGrey,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, size: 18, color: Colors.redAccent),
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    size: 18,
+                    color: Colors.redAccent,
+                  ),
                   onPressed: () {
                     setState(() {
                       _customFormFields.removeAt(idx);
@@ -602,13 +852,18 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                   ? _titleController.text.trim()
                   : '$_selectedCategory (${isEvent ? _eventCreationMode : _selectedSetupMode})';
               final venueOrStipend = isEvent
-                  ? (_venueController.text.trim().isNotEmpty ? _venueController.text.trim() : 'NCPA Auditorium, Mumbai')
-                  : (_stipendController.text.trim().isNotEmpty ? _stipendController.text.trim() : 'Paid / Stipend + Certificate');
+                  ? (_venueController.text.trim().isNotEmpty
+                        ? _venueController.text.trim()
+                        : 'NCPA Auditorium, Mumbai')
+                  : (_stipendController.text.trim().isNotEmpty
+                        ? _stipendController.text.trim()
+                        : 'Paid / Stipend + Certificate');
               final desc = _descriptionController.text.trim().isNotEmpty
                   ? _descriptionController.text.trim()
                   : 'Open call for creative performers and talent.';
 
               final eventController = context.read<EventController>();
+              final authController = context.read<AuthController>();
               final navigator = Navigator.of(context);
 
               PublishReviewConfirmationModal.show(
@@ -620,12 +875,15 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                 description: desc,
                 onConfirmPublish: (broadcastNow) {
                   if (isEvent) {
-                    final newEventId = 'evt_${DateTime.now().millisecondsSinceEpoch}';
+                    final newEventId =
+                        'evt_${DateTime.now().millisecondsSinceEpoch}';
                     final newEvent = EventModel(
                       eventId: newEventId,
-                      organizationId: 'org_current',
-                      organizationName: 'My Organization',
-                      organizationLogo: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+                      organizationId: authController.organizationId ?? '',
+                      organizationName: authController.organizationDisplayName,
+                      organizationLogo:
+                          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+                      organizerId: authController.currentUserId,
                       title: title,
                       description: desc,
                       category: _selectedCategory,
@@ -634,51 +892,121 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                       status: EventStatus.registrationOpen,
                       startDate: DateTime.now().add(const Duration(days: 14)),
                       endDate: DateTime.now().add(const Duration(days: 16)),
-                      registrationDeadline: DateTime.now().add(const Duration(days: 7)),
-                      bannerUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
+                      registrationDeadline: DateTime.now().add(
+                        const Duration(days: 7),
+                      ),
+                      bannerUrl:
+                          'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
                       publishedAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     );
 
-                    eventController.addEvent(newEvent);
+                    eventController.addEvent(newEvent).then((persisted) {
+                      if (!persisted && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                              eventController.lastError ??
+                                  'Could not publish the event. Please try again.',
+                            ),
+                          ),
+                        );
+                      }
+                    });
                     navigator.pop(); // Pop Create sheet
 
                     if (broadcastNow) {
-                      BroadcastPostModal.show(navigator.context, initialEventId: newEventId);
+                      BroadcastPostModal.show(
+                        navigator.context,
+                        initialEventId: newEventId,
+                      );
                     } else {
                       CreationSuccessChecklistDialog.show(
                         navigator.context,
                         entityTitle: newEvent.title,
                         isEvent: true,
                         items: [
-                          ChecklistItem(title: 'Event Created', description: 'Basic info & workspace initialized', isCompleted: true),
-                          ChecklistItem(title: 'Add First Opportunity', description: 'Recruit singers, dancers, or volunteers', isCompleted: false),
-                          ChecklistItem(title: 'Build Event Schedule', description: 'Add keynotes, audition & workshop slots', isCompleted: false),
-                          ChecklistItem(title: 'Publish Announcement', description: 'Broadcast event launch to students', isCompleted: false),
+                          ChecklistItem(
+                            title: 'Event Created',
+                            description: 'Basic info & workspace initialized',
+                            isCompleted: true,
+                          ),
+                          ChecklistItem(
+                            title: 'Add First Opportunity',
+                            description:
+                                'Recruit singers, dancers, or volunteers',
+                            isCompleted: false,
+                          ),
+                          ChecklistItem(
+                            title: 'Build Event Schedule',
+                            description:
+                                'Add keynotes, audition & workshop slots',
+                            isCompleted: false,
+                          ),
+                          ChecklistItem(
+                            title: 'Publish Announcement',
+                            description: 'Broadcast event launch to students',
+                            isCompleted: false,
+                          ),
                         ],
                         onContinue: () {
                           navigator.push(
                             MaterialPageRoute(
-                              builder: (_) => EventWorkspaceScreen(eventId: newEventId, initialTabIndex: 1),
+                              builder: (_) => EventWorkspaceScreen(
+                                eventId: newEventId,
+                                initialTabIndex: 1,
+                              ),
                             ),
                           );
                         },
                       );
                     }
                   } else {
-                    final newOppId = 'opp_${DateTime.now().millisecondsSinceEpoch}';
-                    final newFormId = 'form_${DateTime.now().millisecondsSinceEpoch}';
-                    final parentEvent = eventController.events.isNotEmpty ? eventController.events.first : null;
+                    // Validation: must be signed in as an organizer before
+                    // anything is written to Supabase.
+                    if (!authController.isLoggedIn) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text(
+                            'Please sign in as an organizer to publish.',
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+
+                    final newOppId =
+                        'opp_${DateTime.now().millisecondsSinceEpoch}';
+                    final newFormId =
+                        'form_${DateTime.now().millisecondsSinceEpoch}';
+                    // Link to one of THIS organizer's events when available;
+                    // never a hardcoded/mock event id.
+                    final myEvents = eventController.eventsForOrganizer(
+                      authController.currentUserId,
+                    );
+                    final parentEvent = myEvents.isNotEmpty
+                        ? myEvents.last
+                        : null;
 
                     final newOpp = OpportunityModel(
                       opportunityId: newOppId,
-                      eventId: parentEvent?.eventId ?? 'evt_101',
+                      eventId: parentEvent?.eventId ?? '',
+                      organizerId: authController.currentUserId,
                       title: title,
+                      description: desc,
                       category: _selectedCategory,
                       vacancies: int.tryParse(_vacanciesController.text) ?? 3,
                       deadline: DateTime.now().add(const Duration(days: 7)),
                       formId: newFormId,
                       stipend: venueOrStipend,
+                      eligibility: _eligibilityController.text.trim(),
+                      requirements: desc
+                          .split('\n')
+                          .map((line) => line.trim())
+                          .where((line) => line.isNotEmpty)
+                          .toList(),
                       status: 'Open',
                       publishedAt: DateTime.now(),
                       updatedAt: DateTime.now(),
@@ -691,26 +1019,59 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                       createdAt: DateTime.now(),
                     );
 
-                    eventController.addOpportunity(newOpp);
-                    eventController.saveForm(newForm);
+                    // Persist the form first so the opportunity's form_id FK
+                    // resolves, then the opportunity itself.
+                    eventController.saveForm(newForm).then((formSaved) {
+                      eventController.addOpportunity(newOpp).then((oppSaved) {
+                        if (!oppSaved && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              content: Text(
+                                eventController.lastError ??
+                                    'Could not publish the opportunity. Please try again.',
+                              ),
+                            ),
+                          );
+                        }
+                      });
+                    });
                     navigator.pop(); // Pop Create sheet
 
                     if (broadcastNow) {
-                      BroadcastPostModal.show(navigator.context, initialOpportunityId: newOppId);
+                      BroadcastPostModal.show(
+                        navigator.context,
+                        initialOpportunityId: newOppId,
+                      );
                     } else {
                       CreationSuccessChecklistDialog.show(
                         navigator.context,
                         entityTitle: newOpp.title,
                         isEvent: false,
                         items: [
-                          ChecklistItem(title: 'Opportunity Published', description: 'Listing active on marketplace', isCompleted: true),
-                          ChecklistItem(title: 'Review Applications', description: 'Inspect candidate portfolios in Flow', isCompleted: false),
-                          ChecklistItem(title: 'Send Applicant Announcement', description: 'Notify candidates about interview schedules', isCompleted: false),
+                          ChecklistItem(
+                            title: 'Opportunity Published',
+                            description: 'Listing active on marketplace',
+                            isCompleted: true,
+                          ),
+                          ChecklistItem(
+                            title: 'Review Applications',
+                            description: 'Inspect candidate portfolios in Flow',
+                            isCompleted: false,
+                          ),
+                          ChecklistItem(
+                            title: 'Send Applicant Announcement',
+                            description:
+                                'Notify candidates about interview schedules',
+                            isCompleted: false,
+                          ),
                         ],
                         onContinue: () {
                           navigator.push(
                             MaterialPageRoute(
-                              builder: (_) => OpportunityStudioScreen(opportunityId: newOppId),
+                              builder: (_) => OpportunityStudioScreen(
+                                opportunityId: newOppId,
+                              ),
                             ),
                           );
                         },
@@ -721,10 +1082,19 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               );
             },
             icon: const Icon(Icons.rocket_launch_rounded, size: 20),
-            label: const Text('Review & Publish 🚀', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold)),
+            label: const Text(
+              'Review & Publish 🚀',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: KalaColors.burntOrange,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
             ),
           ),
         ),
@@ -739,15 +1109,29 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setModalState) => Padding(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).viewInsets.bottom + 20),
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Add Form Question', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                'Add Form Question',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 14),
               TextField(
                 controller: qController,
@@ -756,19 +1140,25 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                   hintText: 'e.g. Portfolio Drive Link / Vocal Range / Age',
                   filled: true,
                   fillColor: KalaColors.ivory,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               const SizedBox(height: 14),
               DropdownButtonFormField<FormFieldType>(
-                value: selectedType,
+                initialValue: selectedType,
                 decoration: InputDecoration(
                   labelText: 'Field Type',
                   filled: true,
                   fillColor: KalaColors.ivory,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                items: FormFieldType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.name))).toList(),
+                items: FormFieldType.values
+                    .map((t) => DropdownMenuItem(value: t, child: Text(t.name)))
+                    .toList(),
                 onChanged: (val) {
                   if (val != null) setModalState(() => selectedType = val);
                 },
@@ -794,8 +1184,13 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
                       Navigator.pop(ctx);
                     }
                   },
-                  style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
-                  child: const Text('Add Question to Form', style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: KalaColors.burntOrange,
+                  ),
+                  child: const Text(
+                    'Add Question to Form',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],
@@ -838,21 +1233,46 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
             Container(
               width: 50,
               height: 50,
-              decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(14)),
-              child: Center(child: Text(iconText, style: const TextStyle(fontSize: 24))),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Center(
+                child: Text(iconText, style: const TextStyle(fontSize: 24)),
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 3),
-                  Text(subtitle, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey, height: 1.3)),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 12,
+                      color: KalaColors.mediumGrey,
+                      height: 1.3,
+                    ),
+                  ),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: KalaColors.mediumGrey, size: 22),
+            const Icon(
+              Icons.chevron_right,
+              color: KalaColors.mediumGrey,
+              size: 22,
+            ),
           ],
         ),
       ),
@@ -875,7 +1295,10 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: badgeColor.withValues(alpha: 0.4), width: 1.5),
+          border: Border.all(
+            color: badgeColor.withValues(alpha: 0.4),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
               color: badgeColor.withValues(alpha: 0.05),
@@ -890,25 +1313,64 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(color: badgeBgColor, borderRadius: BorderRadius.circular(20)),
-                  child: Text(badge, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: badgeColor)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: badgeBgColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    badge,
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: badgeColor,
+                    ),
+                  ),
                 ),
                 const Spacer(),
-                const Icon(Icons.arrow_forward_ios, size: 14, color: KalaColors.mediumGrey),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: KalaColors.mediumGrey,
+                ),
               ],
             ),
             const SizedBox(height: 12),
-            Text(subtitle, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text(description, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey, height: 1.3)),
+            Text(
+              description,
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 11,
+                color: KalaColors.mediumGrey,
+                height: 1.3,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTypeGridItem(String emoji, String title, String description, {required VoidCallback onTap}) {
+  Widget _buildTypeGridItem(
+    String emoji,
+    String title,
+    String description, {
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -927,13 +1389,32 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(description, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 11,
+                      color: KalaColors.mediumGrey,
+                    ),
+                  ),
                 ],
               ),
             ),
-            const Icon(Icons.add_circle_outline, color: KalaColors.burntOrange, size: 20),
+            const Icon(
+              Icons.add_circle_outline,
+              color: KalaColors.burntOrange,
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -963,7 +1444,10 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
     );
   }
 
-  Widget _buildTabContent(BuildContext context, EventController eventController) {
+  Widget _buildTabContent(
+    BuildContext context,
+    EventController eventController,
+  ) {
     if (_selectedTab == 'Recently Created') {
       final events = eventController.events;
       final opps = eventController.opportunities;
@@ -981,7 +1465,14 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
             children: [
               Icon(Icons.history, color: KalaColors.mediumGrey, size: 20),
               SizedBox(width: 10),
-              Text('No items created recently', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+              Text(
+                'No items created recently',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  color: KalaColors.mediumGrey,
+                ),
+              ),
             ],
           ),
         );
@@ -991,24 +1482,42 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            ...events.map((evt) => _recentCard(
-              title: evt.title,
-              subtitle: '📅 Event • ${evt.category}',
-              imgUrl: evt.bannerUrl,
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => EventWorkspaceScreen(eventId: evt.eventId)));
-              },
-            )),
-            ...opps.map((opp) => _recentCard(
-              title: opp.title,
-              subtitle: '🎯 Gig • ${opp.stipend}',
-              imgUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=300',
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityStudioScreen(opportunityId: opp.opportunityId)));
-              },
-            )),
+            ...events.map(
+              (evt) => _recentCard(
+                title: evt.title,
+                subtitle: '📅 Event • ${evt.category}',
+                imgUrl: evt.bannerUrl,
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          EventWorkspaceScreen(eventId: evt.eventId),
+                    ),
+                  );
+                },
+              ),
+            ),
+            ...opps.map(
+              (opp) => _recentCard(
+                title: opp.title,
+                subtitle: '🎯 Gig • ${opp.stipend}',
+                imgUrl:
+                    'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=300',
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => OpportunityStudioScreen(
+                        opportunityId: opp.opportunityId,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       );
@@ -1023,9 +1532,20 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
         ),
         child: const Row(
           children: [
-            Icon(Icons.edit_note_outlined, color: KalaColors.mediumGrey, size: 20),
+            Icon(
+              Icons.edit_note_outlined,
+              color: KalaColors.mediumGrey,
+              size: 20,
+            ),
             SizedBox(width: 10),
-            Text('No saved drafts. All creations auto-save.', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+            Text(
+              'No saved drafts. All creations auto-save.',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 12,
+                color: KalaColors.mediumGrey,
+              ),
+            ),
           ],
         ),
       );
@@ -1038,7 +1558,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
             _recentCard(
               title: 'College Fest Audition',
               subtitle: '⭐ Event Template',
-              imgUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=300',
+              imgUrl:
+                  'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=300',
               onTap: () {
                 setState(() {
                   _selectedEntityType = 'Event';
@@ -1050,7 +1571,8 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
             _recentCard(
               title: 'Lead Vocalist Call',
               subtitle: '⭐ Opportunity Template',
-              imgUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=300',
+              imgUrl:
+                  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=300',
               onTap: () {
                 setState(() {
                   _selectedEntityType = 'Opportunity';
@@ -1074,7 +1596,9 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
         decoration: BoxDecoration(
           color: isSelected ? KalaColors.burntOrange : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? KalaColors.burntOrange : KalaColors.lightGrey),
+          border: Border.all(
+            color: isSelected ? KalaColors.burntOrange : KalaColors.lightGrey,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -1116,13 +1640,20 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(14),
+              ),
               child: Image.network(
                 imgUrl,
                 height: 90,
                 width: 170,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(height: 90, width: 170, color: KalaColors.softBeige, child: const Icon(Icons.image, color: KalaColors.mediumGrey)),
+                errorBuilder: (_, __, ___) => Container(
+                  height: 90,
+                  width: 170,
+                  color: KalaColors.softBeige,
+                  child: const Icon(Icons.image, color: KalaColors.mediumGrey),
+                ),
               ),
             ),
             Padding(
@@ -1130,9 +1661,28 @@ class _OrganizerCreateScreenState extends State<OrganizerCreateScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 10,
+                      color: KalaColors.mediumGrey,
+                    ),
+                  ),
                 ],
               ),
             ),

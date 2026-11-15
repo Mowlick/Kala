@@ -20,9 +20,9 @@ class OnboardingProgressBar extends StatelessWidget {
         Text(
           'Step $currentStep of $totalSteps',
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: KalaColors.burntOrange,
-                fontWeight: FontWeight.bold,
-              ),
+            color: KalaColors.burntOrange,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         // Progress segments
@@ -30,15 +30,15 @@ class OnboardingProgressBar extends StatelessWidget {
           children: List.generate(totalSteps, (index) {
             final stepNum = index + 1;
             final isActive = stepNum <= currentStep;
-            
+
             return Expanded(
               child: Container(
                 height: 4,
-                margin: EdgeInsets.only(
-                  right: index == totalSteps - 1 ? 0 : 8,
-                ),
+                margin: EdgeInsets.only(right: index == totalSteps - 1 ? 0 : 8),
                 decoration: BoxDecoration(
-                  color: isActive ? KalaColors.burntOrange : KalaColors.softBeige,
+                  color: isActive
+                      ? KalaColors.burntOrange
+                      : KalaColors.softBeige,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

@@ -1,11 +1,4 @@
-enum FormFieldType {
-  text,
-  longText,
-  dropdown,
-  checkbox,
-  fileUpload,
-  mediaUrl,
-}
+enum FormFieldType { text, longText, dropdown, checkbox, fileUpload, mediaUrl }
 
 class FormFieldSchema {
   final String id;

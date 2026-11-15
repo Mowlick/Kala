@@ -33,7 +33,10 @@ class OnboardingLaptopLayout extends StatelessWidget {
             Expanded(
               flex: 4,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 40),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 48,
+                  vertical: 40,
+                ),
                 color: KalaColors.ivory,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,15 +47,23 @@ class OnboardingLaptopLayout extends StatelessWidget {
                         onTap: onBackPressed,
                         borderRadius: BorderRadius.circular(8),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 4.0,
+                          ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.arrow_back, size: 20, color: KalaColors.charcoal),
+                              const Icon(
+                                Icons.arrow_back,
+                                size: 20,
+                                color: KalaColors.charcoal,
+                              ),
                               const SizedBox(width: 8),
                               Text(
                                 'Back',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: KalaColors.charcoal,
                                     ),
@@ -72,7 +83,8 @@ class OnboardingLaptopLayout extends StatelessWidget {
                               // Title & Subtitle
                               Text(
                                 title,
-                                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                style: Theme.of(context).textTheme.displaySmall
+                                    ?.copyWith(
                                       color: KalaColors.charcoal,
                                       fontSize: 36,
                                       height: 1.2,
@@ -87,7 +99,8 @@ class OnboardingLaptopLayout extends StatelessWidget {
                               const SizedBox(height: 16),
                               Text(
                                 subtitle,
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
                                       color: KalaColors.mediumGrey,
                                       fontSize: 15,
                                       height: 1.5,
@@ -96,16 +109,23 @@ class OnboardingLaptopLayout extends StatelessWidget {
                               const SizedBox(height: 32),
                               // Illustration area
                               Center(
-                                child: illustration ??
+                                child:
+                                    illustration ??
                                     Container(
                                       height: 200,
                                       width: 250,
                                       decoration: BoxDecoration(
-                                        color: KalaColors.softBeige.withValues(alpha: 0.5),
+                                        color: KalaColors.softBeige.withValues(
+                                          alpha: 0.5,
+                                        ),
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       child: const Center(
-                                        child: Icon(Icons.palette_outlined, size: 64, color: KalaColors.burntOrange),
+                                        child: Icon(
+                                          Icons.palette_outlined,
+                                          size: 64,
+                                          color: KalaColors.burntOrange,
+                                        ),
                                       ),
                                     ),
                               ),
@@ -118,16 +138,19 @@ class OnboardingLaptopLayout extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Vertical Divider
             Container(width: 1, color: KalaColors.softBeige),
-            
+
             // Right Panel (Expanded)
             Expanded(
               flex: 6,
               child: Container(
                 color: KalaColors.ivory,
-                padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 40),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 64,
+                  vertical: 40,
+                ),
                 child: Column(
                   children: [
                     // Top Header: Step Indicator & Help
@@ -135,7 +158,9 @@ class OnboardingLaptopLayout extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(width: 100), // Balance the Need Help text
+                        const SizedBox(
+                          width: 100,
+                        ), // Balance the Need Help text
                         SizedBox(
                           width: 350,
                           child: OnboardingProgressBar(currentStep: stepNumber),
@@ -144,19 +169,24 @@ class OnboardingLaptopLayout extends StatelessWidget {
                           children: [
                             Text(
                               'Need help?',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: KalaColors.charcoal,
                                   ),
                             ),
                             const SizedBox(width: 8),
-                            const Icon(Icons.help_outline, size: 18, color: KalaColors.charcoal),
+                            const Icon(
+                              Icons.help_outline,
+                              size: 18,
+                              color: KalaColors.charcoal,
+                            ),
                           ],
                         ),
                       ],
                     ),
                     const SizedBox(height: 48),
-                    
+
                     // Main Form Content
                     Expanded(
                       child: Center(
@@ -166,9 +196,9 @@ class OnboardingLaptopLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Bottom Right Continue Button
                     Align(
                       alignment: Alignment.bottomRight,

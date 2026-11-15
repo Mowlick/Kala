@@ -28,13 +28,31 @@ class OpportunityStudioScreen extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(opp.title, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold)),
-            const Text('Opportunity Studio', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+            Text(
+              opp.title,
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              'Opportunity Studio',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 11,
+                color: KalaColors.burntOrange,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.share_outlined, color: KalaColors.burntOrange),
+            icon: const Icon(
+              Icons.share_outlined,
+              color: KalaColors.burntOrange,
+            ),
             tooltip: 'Share Opportunity',
             onPressed: () {
               showModalBottomSheet(
@@ -45,10 +63,16 @@ class OpportunityStudioScreen extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.campaign_outlined, color: KalaColors.burntOrange),
+            icon: const Icon(
+              Icons.campaign_outlined,
+              color: KalaColors.burntOrange,
+            ),
             tooltip: 'Publish Announcement',
             onPressed: () {
-              BroadcastPostModal.show(context, initialOpportunityId: opp.opportunityId);
+              BroadcastPostModal.show(
+                context,
+                initialOpportunityId: opp.opportunityId,
+              );
             },
           ),
         ],
@@ -73,11 +97,33 @@ class OpportunityStudioScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-                        child: Text(opp.status.toUpperCase(), style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          opp.status.toUpperCase(),
+                          style: const TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: KalaColors.burntOrange,
+                          ),
+                        ),
                       ),
-                      Text('Stipend: ${opp.stipend}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                      Text(
+                        'Stipend: ${opp.stipend}',
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 14),
@@ -95,15 +141,26 @@ class OpportunityStudioScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const OrganizerFlowScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => const OrganizerFlowScreen(),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.people_alt_rounded, size: 18),
-                    label: const Text('Review Applicants in Flow ATS ➔', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold)),
+                    label: const Text(
+                      'Review Applicants in Flow ATS ➔',
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: KalaColors.burntOrange,
                       minimumSize: const Size(double.infinity, 44),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ],
@@ -111,7 +168,15 @@ class OpportunityStudioScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            const Text('Studio Actions & Controls', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            const Text(
+              'Studio Actions & Controls',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
+            ),
             const SizedBox(height: 12),
 
             // Action 1: ATS Kanban Pipeline
@@ -119,9 +184,15 @@ class OpportunityStudioScreen extends StatelessWidget {
               context: context,
               icon: Icons.view_kanban_outlined,
               title: 'Applicant Flow & Pipeline',
-              subtitle: 'Review candidates through the 10-stage recruitment pipeline',
+              subtitle:
+                  'Review candidates through the 10-stage recruitment pipeline',
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const OrganizerFlowScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const OrganizerFlowScreen(),
+                  ),
+                );
               },
             ),
 
@@ -130,9 +201,12 @@ class OpportunityStudioScreen extends StatelessWidget {
               context: context,
               icon: Icons.edit_note_outlined,
               title: 'Edit Dynamic Application Form',
-              subtitle: form != null ? 'Currently: ${form.title} (${form.fields.length} fields)' : 'Build custom questions & upload rules',
+              subtitle: form != null
+                  ? 'Currently: ${form.title} (${form.fields.length} fields)'
+                  : 'Build custom questions & upload rules',
               onTap: () {
-                final formToEdit = form ??
+                final formToEdit =
+                    form ??
                     DynamicFormModel(
                       formId: opp.formId,
                       title: '${opp.title} Form',
@@ -162,7 +236,10 @@ class OpportunityStudioScreen extends StatelessWidget {
               title: 'Broadcast Announcement to Applicants',
               subtitle: 'Send results, deadline updates, or interview details',
               onTap: () {
-                BroadcastPostModal.show(context, initialOpportunityId: opp.opportunityId);
+                BroadcastPostModal.show(
+                  context,
+                  initialOpportunityId: opp.opportunityId,
+                );
               },
             ),
           ],
@@ -174,9 +251,24 @@ class OpportunityStudioScreen extends StatelessWidget {
   Widget _metricCol(String val, String label) {
     return Column(
       children: [
-        Text(val, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+        Text(
+          val,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.burntOrange,
+          ),
+        ),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 10,
+            color: KalaColors.mediumGrey,
+          ),
+        ),
       ],
     );
   }
@@ -199,11 +291,29 @@ class OpportunityStudioScreen extends StatelessWidget {
         onTap: onTap,
         leading: Container(
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color: KalaColors.burntOrange.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
           child: Icon(icon, color: KalaColors.burntOrange, size: 20),
         ),
-        title: Text(title, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-        subtitle: Text(subtitle, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 11,
+            color: KalaColors.mediumGrey,
+          ),
+        ),
         trailing: const Icon(Icons.chevron_right, color: KalaColors.mediumGrey),
       ),
     );

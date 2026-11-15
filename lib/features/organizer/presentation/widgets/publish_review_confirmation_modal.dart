@@ -44,10 +44,12 @@ class PublishReviewConfirmationModal extends StatefulWidget {
   }
 
   @override
-  State<PublishReviewConfirmationModal> createState() => _PublishReviewConfirmationModalState();
+  State<PublishReviewConfirmationModal> createState() =>
+      _PublishReviewConfirmationModalState();
 }
 
-class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmationModal> {
+class _PublishReviewConfirmationModalState
+    extends State<PublishReviewConfirmationModal> {
   bool _broadcastNow = true;
 
   @override
@@ -83,7 +85,11 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                   color: KalaColors.burntOrange.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.rocket_launch_rounded, color: KalaColors.burntOrange, size: 22),
+                child: const Icon(
+                  Icons.rocket_launch_rounded,
+                  color: KalaColors.burntOrange,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -92,11 +98,20 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                   children: [
                     Text(
                       'Review & Confirm ${widget.entityType}',
-                      style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: KalaColors.charcoal,
+                      ),
                     ),
                     const Text(
                       'Confirm details before publishing to marketplace',
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 12,
+                        color: KalaColors.mediumGrey,
+                      ),
                     ),
                   ],
                 ),
@@ -119,26 +134,42 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: KalaColors.burntOrange.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         widget.category,
-                        style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange),
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.burntOrange,
+                        ),
                       ),
                     ),
                     const Spacer(),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF059669).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(
                         'Ready to Publish',
-                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF059669)),
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF059669),
+                        ),
                       ),
                     ),
                   ],
@@ -146,12 +177,21 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                 const SizedBox(height: 12),
                 Text(
                   widget.title,
-                  style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   widget.detailSubtitle,
-                  style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 12,
+                    color: KalaColors.mediumGrey,
+                  ),
                 ),
                 if (widget.description.isNotEmpty) ...[
                   const SizedBox(height: 8),
@@ -159,7 +199,11 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                     widget.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal),
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 11,
+                      color: KalaColors.charcoal,
+                    ),
                   ),
                 ],
               ],
@@ -177,7 +221,11 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
             ),
             child: Row(
               children: [
-                const Icon(Icons.campaign_outlined, color: KalaColors.burntOrange, size: 22),
+                const Icon(
+                  Icons.campaign_outlined,
+                  color: KalaColors.burntOrange,
+                  size: 22,
+                ),
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Column(
@@ -185,11 +233,20 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                     children: [
                       Text(
                         'Broadcast Post Announcement',
-                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                        ),
                       ),
                       Text(
                         'Notify students on discovery feed immediately',
-                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 10,
+                          color: KalaColors.mediumGrey,
+                        ),
                       ),
                     ],
                   ),
@@ -212,9 +269,19 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                   onPressed: () => Navigator.pop(context),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
-                  child: const Text('Cancel / Edit', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, color: KalaColors.charcoal, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Cancel / Edit',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      color: KalaColors.charcoal,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -226,11 +293,20 @@ class _PublishReviewConfirmationModalState extends State<PublishReviewConfirmati
                     widget.onConfirmPublish(_broadcastNow);
                   },
                   icon: const Icon(Icons.check_circle_outline, size: 18),
-                  label: Text('Publish ${widget.entityType}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold)),
+                  label: Text(
+                    'Publish ${widget.entityType}',
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: KalaColors.burntOrange,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                 ),
               ),

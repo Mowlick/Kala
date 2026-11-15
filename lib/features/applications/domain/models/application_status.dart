@@ -1,10 +1,4 @@
-enum ApplicationStatus {
-  applied,
-  underReview,
-  interview,
-  selected,
-  rejected,
-}
+enum ApplicationStatus { applied, underReview, interview, selected, rejected }
 
 extension ApplicationStatusExtension on ApplicationStatus {
   String get label {
@@ -39,11 +33,15 @@ extension ApplicationStatusExtension on ApplicationStatus {
 
   static ApplicationStatus fromString(String status) {
     final lower = status.toLowerCase().replaceAll(' ', '');
-    if (lower.contains('review') || lower.contains('portfolio') || lower.contains('doc')) {
+    if (lower.contains('review') ||
+        lower.contains('portfolio') ||
+        lower.contains('doc')) {
       return ApplicationStatus.underReview;
     } else if (lower.contains('interview')) {
       return ApplicationStatus.interview;
-    } else if (lower.contains('select') || lower.contains('confirm') || lower.contains('complete')) {
+    } else if (lower.contains('select') ||
+        lower.contains('confirm') ||
+        lower.contains('complete')) {
       return ApplicationStatus.selected;
     } else if (lower.contains('reject') || lower.contains('withdraw')) {
       return ApplicationStatus.rejected;

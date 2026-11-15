@@ -15,10 +15,10 @@ class ProfileDetailsScreen extends StatefulWidget {
 class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  
+
   String _selectedCity = 'Mumbai, India';
   String _selectedExperience = 'Intermediate';
-  
+
   final List<String> _skillsList = [
     'Singing',
     'Songwriting',
@@ -26,7 +26,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     'Piano',
     'Beatboxing',
     'Music Production',
-    'Other'
+    'Other',
   ];
   final List<String> _selectedSkills = ['Singing', 'Songwriting'];
 
@@ -36,7 +36,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   final List<Map<String, dynamic>> _openToOptions = [
     {'title': 'Collaborations', 'icon': Icons.people_outline},
     {'title': 'Gigs', 'icon': Icons.music_note_outlined},
-    {'title': 'Full-time Opportunities', 'icon': Icons.business_center_outlined},
+    {
+      'title': 'Full-time Opportunities',
+      'icon': Icons.business_center_outlined,
+    },
     {'title': 'Internships', 'icon': Icons.school_outlined},
   ];
   final List<String> _selectedOpenTo = ['Collaborations', 'Gigs'];
@@ -80,22 +83,31 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     );
   }
 
-  Widget _buildLaptopLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildLaptopLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return OnboardingLaptopLayout(
       title: 'Tell us about\nyourself',
-      subtitle: 'Add a few details to get better\nopportunities and connections.',
+      subtitle:
+          'Add a few details to get better\nopportunities and connections.',
       stepNumber: 2,
-      illustration: Image.asset('assets/images/onboarding/illustration_2.png'),
+      illustration: Image.asset('assets/images/onboarding/illustration_2.webp'),
       onBackPressed: () => controller.prevStep(context),
       continueButton: ElevatedButton(
         onPressed: () => _onContinue(controller),
         style: ElevatedButton.styleFrom(
           backgroundColor: KalaColors.burntOrange,
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
           elevation: 0,
         ),
-        child: const Text('Continue', style: TextStyle(fontWeight: FontWeight.bold)),
+        child: const Text(
+          'Continue',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -104,7 +116,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildMobileLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -120,7 +135,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 8.0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -134,8 +152,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       Text(
                         'Add a few details to get better opportunities and connections.',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: KalaColors.mediumGrey,
-                            ),
+                          color: KalaColors.mediumGrey,
+                        ),
                       ),
                       const SizedBox(height: 24),
                       _buildFormContent(context),
@@ -144,7 +162,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         onPressed: () => _onContinue(controller),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: const Text('Continue'),
                       ),
@@ -166,10 +186,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Name field
-          Text(
-            'Name',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
+          Text('Name', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           TextFormField(
             controller: _nameController,
@@ -196,10 +213,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           const SizedBox(height: 20),
 
           // City Dropdown
-          Text(
-            'City',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
+          Text('City', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: _selectedCity,
@@ -215,19 +229,20 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                 borderSide: const BorderSide(color: KalaColors.softBeige),
               ),
             ),
-            items: <String>[
-              'Mumbai, India',
-              'Delhi, India',
-              'Bangalore, India',
-              'Chennai, India',
-              'Kolkata, India',
-              'Pune, India',
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            items:
+                <String>[
+                  'Mumbai, India',
+                  'Delhi, India',
+                  'Bangalore, India',
+                  'Chennai, India',
+                  'Kolkata, India',
+                  'Pune, India',
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
             onChanged: (String? newValue) {
               if (newValue != null) {
                 setState(() {
@@ -261,16 +276,22 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       color: isSelected ? KalaColors.burntOrange : Colors.white,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: isSelected ? KalaColors.burntOrange : KalaColors.softBeige,
+                        color: isSelected
+                            ? KalaColors.burntOrange
+                            : KalaColors.softBeige,
                       ),
                     ),
                     child: Center(
                       child: Text(
                         level,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: isSelected ? Colors.white : KalaColors.charcoal,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            ),
+                          color: isSelected
+                              ? Colors.white
+                              : KalaColors.charcoal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
                       ),
                     ),
                   ),
@@ -311,18 +332,27 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       if (isSelected) ...[
                         const SizedBox(width: 4),
                         const Icon(Icons.check, size: 14, color: Colors.white),
-                      ]
+                      ],
                     ],
                   ),
-                  backgroundColor: isSelected ? KalaColors.burntOrange : Colors.white,
+                  backgroundColor: isSelected
+                      ? KalaColors.burntOrange
+                      : Colors.white,
                   labelStyle: TextStyle(
                     color: isSelected ? Colors.white : KalaColors.charcoal,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                   side: BorderSide(
-                    color: isSelected ? KalaColors.burntOrange : KalaColors.softBeige,
+                    color: isSelected
+                        ? KalaColors.burntOrange
+                        : KalaColors.softBeige,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                 ),
               );
             }).toList(),
@@ -330,10 +360,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           const SizedBox(height: 20),
 
           // Languages
-          Text(
-            'Languages',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
+          Text('Languages', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -358,18 +385,27 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       if (isSelected) ...[
                         const SizedBox(width: 4),
                         const Icon(Icons.check, size: 14, color: Colors.white),
-                      ]
+                      ],
                     ],
                   ),
-                  backgroundColor: isSelected ? KalaColors.burntOrange : Colors.white,
+                  backgroundColor: isSelected
+                      ? KalaColors.burntOrange
+                      : Colors.white,
                   labelStyle: TextStyle(
                     color: isSelected ? Colors.white : KalaColors.charcoal,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                   side: BorderSide(
-                    color: isSelected ? KalaColors.burntOrange : KalaColors.softBeige,
+                    color: isSelected
+                        ? KalaColors.burntOrange
+                        : KalaColors.softBeige,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                 ),
               );
             }).toList(),
@@ -377,10 +413,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           const SizedBox(height: 20),
 
           // I'm open to
-          Text(
-            "I'm open to",
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
+          Text("I'm open to", style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           LayoutBuilder(
             builder: (context, constraints) {
@@ -418,7 +451,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: isSelected ? KalaColors.burntOrange : KalaColors.softBeige,
+                          color: isSelected
+                              ? KalaColors.burntOrange
+                              : KalaColors.softBeige,
                           width: isSelected ? 1.5 : 1,
                         ),
                       ),
@@ -428,19 +463,30 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               children: [
                                 Icon(
                                   icon,
-                                  color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal,
+                                  color: isSelected
+                                      ? KalaColors.burntOrange
+                                      : KalaColors.charcoal,
                                   size: 24,
                                 ),
                                 const SizedBox(height: 8),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4.0,
+                                  ),
                                   child: Text(
                                     shortTitle,
                                     textAlign: TextAlign.center,
-                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                          color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          color: isSelected
+                                              ? KalaColors.burntOrange
+                                              : KalaColors.charcoal,
                                           fontSize: 11,
-                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
                                         ),
                                   ),
                                 ),
@@ -451,17 +497,24 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               children: [
                                 Icon(
                                   icon,
-                                  color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal,
+                                  color: isSelected
+                                      ? KalaColors.burntOrange
+                                      : KalaColors.charcoal,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   shortTitle,
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                        color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal,
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(
+                                        color: isSelected
+                                            ? KalaColors.burntOrange
+                                            : KalaColors.charcoal,
                                         fontSize: 11,
-                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                        fontWeight: isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
                                       ),
                                 ),
                               ],
@@ -470,7 +523,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   );
                 }).toList(),
               );
-            }
+            },
           ),
         ],
       ),

@@ -2,25 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
 import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../applications/domain/models/application_status.dart';
 import '../../../opportunities/domain/models/opportunity_model.dart';
 
 class DiscoverMarketplaceScreen extends StatefulWidget {
   const DiscoverMarketplaceScreen({super.key});
 
   @override
-  State<DiscoverMarketplaceScreen> createState() => _DiscoverMarketplaceScreenState();
+  State<DiscoverMarketplaceScreen> createState() =>
+      _DiscoverMarketplaceScreenState();
 }
 
 class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
-  String _selectedFilter = 'All';
+  final String _selectedFilter = 'All';
 
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<EventController>();
+    final auth = context.watch<AuthController>();
     final allOpportunities = controller.opportunities;
     final filtered = _selectedFilter == 'All'
         ? allOpportunities
         : allOpportunities.where((o) => o.category == _selectedFilter).toList();
+    final mySubmissions = auth.currentUserId.isNotEmpty
+        ? controller.submissions
+              .where((s) => s.studentId == auth.currentUserId)
+              .toList()
+        : controller.submissions;
+    final underReview = mySubmissions
+        .where(
+          (s) =>
+              s.status == ApplicationStatus.underReview ||
+              s.status == ApplicationStatus.interview,
+        )
+        .length;
+    final shortlisted = mySubmissions
+        .where((s) => s.status == ApplicationStatus.selected)
+        .length;
 
     return Scaffold(
       backgroundColor: KalaColors.ivory,
@@ -36,58 +55,45 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               const SizedBox(height: 16),
               _buildFilterChipsRow(),
               const SizedBox(height: 24),
-              _buildYourApplicationsBox(),
+              _buildYourApplicationsBox(
+                underReview,
+                shortlisted,
+                mySubmissions.length,
+              ),
               const SizedBox(height: 16),
               _buildSavedOpportunitiesBox(),
               const SizedBox(height: 24),
 
-              // ── LIVE OPPORTUNITIES from EventController ──────────────────
-              if (filtered.isNotEmpty) ...[
+              // ── LIVE OPPORTUNITIES from EventController (Supabase-backed) ──
+              if (controller.isLoadingData && filtered.isEmpty) ...[
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32.0),
+                    child: CircularProgressIndicator(
+                      color: KalaColors.burntOrange,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ] else if (filtered.isEmpty) ...[
+                _buildEmptyState(),
+                const SizedBox(height: 24),
+              ] else ...[
                 _buildSectionTitle(
                   '🔴 Live Opportunities',
                   'Published right now — apply before they close',
                 ),
                 const SizedBox(height: 16),
-                ...filtered.map((opp) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _buildLiveOpportunityCard(context, opp),
-                )),
+                ...filtered.map(
+                  (opp) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildLiveOpportunityCard(context, opp),
+                  ),
+                ),
                 const SizedBox(height: 8),
               ],
 
               const SizedBox(height: 8),
-              _buildSectionTitle(
-                'Recommended For You',
-                'Based on your profile & skills',
-              ),
-              const SizedBox(height: 16),
-              _buildOpportunityCard(
-                title: 'National ... Lead Actor — Street Play',
-                isVerified: true,
-                matchPercentage: '92% Match',
-                tags: ['Acting', 'Stage Direction', 'Hindi'],
-                location: 'New Delhi',
-                pay: '₹ 8K-10K / mo',
-                applicants: '47 applied',
-                daysLeft: 'Closes in 5 days',
-              ),
-              const SizedBox(height: 24),
-              _buildSectionTitle(
-                'Trending Now',
-                'Highest engagement this week',
-              ),
-              const SizedBox(height: 16),
-              _buildOpportunityCard(
-                title: 'Zee Music Company ... Playback Singer (Hindi)',
-                isVerified: true,
-                matchPercentage: '87% Match',
-                tags: ['Playback Singing', 'Hindi', 'Classical'],
-                location: 'Mumbai, Remote',
-                pay: '₹ 15K-20K / mo',
-                applicants: '112 applied',
-                daysLeft: 'Closes in 7 days',
-              ),
-              const SizedBox(height: 24),
               _buildSectionTitle(
                 'Discover Organizations',
                 'Production houses, colleges, studios',
@@ -130,21 +136,25 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
   // ── Live opportunity card from EventController data ────────────────────────
   Widget _buildLiveOpportunityCard(BuildContext context, OpportunityModel opp) {
     final daysLeft = opp.deadline.difference(DateTime.now()).inDays;
-    final daysText = daysLeft > 0 ? 'Closes in $daysLeft day${daysLeft == 1 ? '' : 's'}' : 'Closing today!';
-    final statusColor = opp.status == 'Open' ? KalaColors.accentGreen : KalaColors.burntOrange;
+    final daysText = daysLeft > 0
+        ? 'Closes in $daysLeft day${daysLeft == 1 ? '' : 's'}'
+        : 'Closing today!';
+    final statusColor = opp.status == 'Open'
+        ? KalaColors.accentGreen
+        : KalaColors.burntOrange;
 
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        '/opportunity-detail',
-        arguments: opp,
-      ),
+      onTap: () =>
+          Navigator.pushNamed(context, '/opportunity-detail', arguments: opp),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: KalaColors.accentGreen.withValues(alpha: 0.4), width: 1.5),
+          border: Border.all(
+            color: KalaColors.accentGreen.withValues(alpha: 0.4),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
               color: KalaColors.accentGreen.withValues(alpha: 0.08),
@@ -159,7 +169,10 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(6),
@@ -167,20 +180,46 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(width: 6, height: 6, decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle)),
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: statusColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                       const SizedBox(width: 5),
-                      Text(opp.status, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: statusColor)),
+                      Text(
+                        opp.status,
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: statusColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: KalaColors.burntOrange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Text(opp.category, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                  child: Text(
+                    opp.category,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.burntOrange,
+                    ),
+                  ),
                 ),
                 const Spacer(),
                 Icon(Icons.verified, size: 16, color: KalaColors.burntOrange),
@@ -189,18 +228,45 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
             const SizedBox(height: 12),
             Text(
               opp.title,
-              style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.payments_outlined, size: 14, color: KalaColors.mediumGrey),
+                const Icon(
+                  Icons.payments_outlined,
+                  size: 14,
+                  color: KalaColors.mediumGrey,
+                ),
                 const SizedBox(width: 4),
-                Text(opp.stipend, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+                Text(
+                  opp.stipend,
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 12,
+                    color: KalaColors.mediumGrey,
+                  ),
+                ),
                 const SizedBox(width: 12),
-                const Icon(Icons.people_outline, size: 14, color: KalaColors.mediumGrey),
+                const Icon(
+                  Icons.people_outline,
+                  size: 14,
+                  color: KalaColors.mediumGrey,
+                ),
                 const SizedBox(width: 4),
-                Text('${opp.vacancies} spot${opp.vacancies == 1 ? '' : 's'}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+                Text(
+                  '${opp.vacancies} spot${opp.vacancies == 1 ? '' : 's'}',
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 12,
+                    color: KalaColors.mediumGrey,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -209,18 +275,41 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.access_time_outlined, size: 13, color: KalaColors.burntOrange),
+                    const Icon(
+                      Icons.access_time_outlined,
+                      size: 13,
+                      color: KalaColors.burntOrange,
+                    ),
                     const SizedBox(width: 4),
-                    Text(daysText, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+                    Text(
+                      daysText,
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 12,
+                        color: KalaColors.burntOrange,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 7,
+                  ),
                   decoration: BoxDecoration(
                     color: KalaColors.charcoal,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text('Apply Now', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Apply Now',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -241,7 +330,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
             children: [
               Text(
                 'Discover',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -251,7 +341,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               const SizedBox(height: 6),
               Text(
                 'Find opportunities, creators, and orgs.',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 14,
                   color: KalaColors.mediumGrey,
                 ),
@@ -284,7 +375,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                 const SizedBox(width: 8),
                 Text(
                   'Search opportunities, creators...',
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 13,
                     color: KalaColors.mediumGrey,
                   ),
@@ -337,7 +429,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           const SizedBox(width: 6),
           Text(
             label,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: KalaColors.charcoal,
@@ -348,7 +441,7 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
     );
   }
 
-  Widget _buildYourApplicationsBox() {
+  Widget _buildYourApplicationsBox(int inProgress, int selected, int total) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -361,7 +454,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
         children: [
           Text(
             'YOUR APPLICATIONS',
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 10,
               fontWeight: FontWeight.bold,
               color: KalaColors.mediumGrey,
@@ -373,18 +467,18 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildAppStatusItem(
-                Icons.remove_red_eye_outlined,
-                '2 Under\nReview',
+                Icons.description_outlined,
+                '$inProgress In\nProgress',
                 const Color(0xFF6366F1),
               ),
               _buildAppStatusItem(
                 Icons.check,
-                '1\nShortlisted',
+                '$selected\nSelected',
                 KalaColors.accentGreen,
               ),
               _buildAppStatusItem(
-                Icons.error_outline,
-                '1\nAction',
+                Icons.history_edu_outlined,
+                '$total\nTotal',
                 KalaColors.burntOrange,
               ),
               const Icon(Icons.chevron_right, color: KalaColors.mediumGrey),
@@ -402,7 +496,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
         const SizedBox(width: 8),
         Text(
           text,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: KalaColors.charcoal,
@@ -442,14 +537,16 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                 children: [
                   Text(
                     'Saved Opportunities',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 10,
                       color: KalaColors.mediumGrey,
                     ),
                   ),
                   Text(
                     '12 saved, 3 deadlines close',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: KalaColors.charcoal,
@@ -475,7 +572,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
       children: [
         Text(
           title,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -485,7 +583,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           const SizedBox(height: 2),
           Text(
             subtitle,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 11,
               color: KalaColors.mediumGrey,
             ),
@@ -495,186 +594,52 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
     );
   }
 
-  Widget _buildOpportunityCard({
-    required String title,
-    required bool isVerified,
-    required String matchPercentage,
-    required List<String> tags,
-    required String location,
-    required String pay,
-    required String applicants,
-    required String daysLeft,
-  }) {
+  Widget _buildEmptyState() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF0EBE1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: KalaColors.lightGrey),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: KalaColors.softBeige,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(Icons.business, color: KalaColors.charcoal),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: TextStyle(fontFamily: 'ZT_Nature', 
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: KalaColors.charcoal,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEF3ED),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            matchPercentage,
-                            style: TextStyle(fontFamily: 'ZT_Nature', 
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: KalaColors.burntOrange,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: tags.map((tag) => _buildTag(tag)).toList(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: KalaColors.softBeige,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.explore_outlined,
+              size: 32,
+              color: KalaColors.burntOrange,
+            ),
           ),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildIconText(Icons.location_on_outlined, location),
-              _buildIconText(Icons.account_balance_wallet_outlined, pay),
-              _buildIconText(Icons.people_outline, applicants),
-            ],
+          const Text(
+            'No live opportunities right now',
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Divider(height: 1, color: KalaColors.lightGrey),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.access_time,
-                    size: 14,
-                    color: KalaColors.burntOrange,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    daysLeft,
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: KalaColors.burntOrange,
-                    ),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: KalaColors.burntOrange,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                ),
-                child: Text(
-                  'Apply Now',
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ],
+          const SizedBox(height: 6),
+          const Text(
+            'Organizers publish new openings here in real time.\nPull down or tap refresh to check again.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              color: KalaColors.mediumGrey,
+              height: 1.5,
+            ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTag(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: KalaColors.ivory,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFEAE2B7)),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(fontFamily: 'ZT_Nature', 
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-          color: KalaColors.charcoal,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIconText(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: KalaColors.mediumGrey),
-        const SizedBox(width: 4),
-        Text(
-          text,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
-        ),
-      ],
     );
   }
 
@@ -746,7 +711,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                     const SizedBox(width: 4),
                     Text(
                       'Verified',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 9,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -760,7 +726,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           const SizedBox(height: 12),
           Text(
             name,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 14,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -777,7 +744,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               const SizedBox(width: 4),
               Text(
                 location,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 11,
                   color: KalaColors.mediumGrey,
                 ),
@@ -790,7 +758,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
             children: [
               Text(
                 activeOpts,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 10,
                   color: KalaColors.mediumGrey,
                   height: 1.4,
@@ -799,7 +768,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               Text(
                 responseTime,
                 textAlign: TextAlign.right,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 10,
                   color: KalaColors.mediumGrey,
                   height: 1.4,
@@ -823,7 +793,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               ),
               child: Text(
                 'View Organization',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontWeight: FontWeight.w600,
                   fontSize: 11,
                 ),
@@ -894,7 +865,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                     children: [
                       Text(
                         name,
-                        style: TextStyle(fontFamily: 'ZT_Nature', 
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: KalaColors.charcoal,
@@ -910,7 +882,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                   ),
                   Text(
                     '★ Available',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 9,
                       color: KalaColors.accentGreen,
                       fontWeight: FontWeight.bold,
@@ -923,7 +896,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           const SizedBox(height: 12),
           Text(
             role,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 11,
               fontWeight: FontWeight.bold,
               color: KalaColors.burntOrange,
@@ -931,7 +905,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           ),
           Text(
             location,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 10,
               color: KalaColors.mediumGrey,
             ),
@@ -939,7 +914,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           const SizedBox(height: 12),
           Text(
             openTo,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 10,
               color: KalaColors.charcoal,
               height: 1.4,
@@ -961,7 +937,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               ),
               child: Text(
                 'View Portfolio',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontWeight: FontWeight.w600,
                   fontSize: 11,
                 ),
@@ -1036,7 +1013,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -1062,7 +1040,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                             ),
                             child: Text(
                               r,
-                              style: TextStyle(fontFamily: 'ZT_Nature', 
+                              style: TextStyle(
+                                fontFamily: 'ZT_Nature',
                                 fontSize: 9,
                                 color: KalaColors.charcoal,
                               ),
@@ -1078,14 +1057,16 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                   children: [
                     Text(
                       timeline,
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 10,
                         color: KalaColors.mediumGrey,
                       ),
                     ),
                     Text(
                       '₹ $payType',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 10,
                         color: payType == 'Paid'
                             ? KalaColors.accentGreen
@@ -1098,7 +1079,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                 const SizedBox(height: 12),
                 Text(
                   'Led by BMM Film Club',
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 10,
                     color: KalaColors.mediumGrey,
                   ),
@@ -1119,7 +1101,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                     ),
                     child: Text(
                       'View Project',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontWeight: FontWeight.w600,
                         fontSize: 11,
                       ),
@@ -1216,7 +1199,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                         const SizedBox(width: 4),
                         Text(
                           '12 Tickets',
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 9,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -1236,7 +1220,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -1247,7 +1232,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                 const SizedBox(height: 4),
                 Text(
                   org,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 10,
                     color: KalaColors.mediumGrey,
                   ),
@@ -1261,7 +1247,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                       children: [
                         Text(
                           'Registration',
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 9,
                             color: KalaColors.mediumGrey,
                           ),
@@ -1276,7 +1263,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                             const SizedBox(width: 2),
                             Text(
                               deadline,
-                              style: TextStyle(fontFamily: 'ZT_Nature', 
+                              style: TextStyle(
+                                fontFamily: 'ZT_Nature',
                                 fontSize: 10,
                                 color: KalaColors.burntOrange,
                                 fontWeight: FontWeight.bold,
@@ -1291,14 +1279,16 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                       children: [
                         Text(
                           'Prize Pool',
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 9,
                             color: KalaColors.mediumGrey,
                           ),
                         ),
                         Text(
                           prize,
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 10,
                             color: KalaColors.mutedGold,
                             fontWeight: FontWeight.bold,
@@ -1314,14 +1304,16 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                   children: [
                     Text(
                       'Mode',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 9,
                         color: KalaColors.mediumGrey,
                       ),
                     ),
                     Text(
                       mode,
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 10,
                         color: KalaColors.charcoal,
                         fontWeight: FontWeight.bold,
@@ -1345,7 +1337,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
                     ),
                     child: Text(
                       'Register Now',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontWeight: FontWeight.w600,
                         fontSize: 11,
                       ),
@@ -1404,7 +1397,8 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           const SizedBox(height: 8),
           Text(
             title,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -1413,7 +1407,11 @@ class _DiscoverMarketplaceScreenState extends State<DiscoverMarketplaceScreen> {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 9,
+              color: KalaColors.mediumGrey,
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

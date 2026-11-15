@@ -72,12 +72,6 @@ flutter:
   fonts:
     - family: ZT_Nature
       fonts:
-        - asset: assets/fonts/ZT_Nature/ZTNature-Thin.ttf
-          weight: 100
-        - asset: assets/fonts/ZT_Nature/ZTNature-ExtraLight.ttf
-          weight: 200
-        - asset: assets/fonts/ZT_Nature/ZTNature-Light.ttf
-          weight: 300
         - asset: assets/fonts/ZT_Nature/ZTNature-Regular.ttf
           weight: 400
         - asset: assets/fonts/ZT_Nature/ZTNature-Medium.ttf
@@ -85,15 +79,5 @@ flutter:
         - asset: assets/fonts/ZT_Nature/ZTNature-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/ZT_Nature/ZTNature-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/ZT_Nature/ZTNature-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/ZT_Nature/ZTNature-Black.ttf
-          weight: 900
-        - asset: assets/fonts/ZT_Nature/ZTNature-Italic.ttf
-          style: italic
-          weight: 400
-        - asset: assets/fonts/ZT_Nature/ZTNature-BoldItalic.ttf
-          style: italic
           weight: 700
 

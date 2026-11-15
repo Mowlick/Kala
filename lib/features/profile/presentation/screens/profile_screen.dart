@@ -10,7 +10,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
+class _ProfileScreenState extends State<ProfileScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -35,11 +36,16 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             _buildSliverAppBar(),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildProfileHeader(),
+                    _buildProfileHeader(
+                      context.read<AuthController>().displayName,
+                    ),
                     const SizedBox(height: 16),
                     _buildRoleTags(),
                     const SizedBox(height: 16),
@@ -47,7 +53,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     const SizedBox(height: 16),
                     Text(
                       'Passionate musician blending soulful vocals with meaningful lyrics. Performing across genres and creating music that connects.',
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal, height: 1.5),
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 12,
+                        color: KalaColors.charcoal,
+                        height: 1.5,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     _buildSocialLinks(),
@@ -64,11 +75,25 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                       height: 48,
                       child: OutlinedButton.icon(
                         onPressed: () => _showLogoutConfirmationDialog(context),
-                        icon: const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 18),
-                        label: const Text('Log Out', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+                        icon: const Icon(
+                          Icons.logout_rounded,
+                          color: Colors.redAccent,
+                          size: 18,
+                        ),
+                        label: const Text(
+                          'Log Out',
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                          ),
+                        ),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Colors.redAccent),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                       ),
                     ),
@@ -103,16 +128,28 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       elevation: 0,
       pinned: true,
       leading: IconButton(
-        icon: const Icon(Icons.chevron_left, color: KalaColors.charcoal, size: 28),
+        icon: const Icon(
+          Icons.chevron_left,
+          color: KalaColors.charcoal,
+          size: 28,
+        ),
         onPressed: () {},
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.edit_outlined, color: KalaColors.charcoal, size: 20),
+          icon: const Icon(
+            Icons.edit_outlined,
+            color: KalaColors.charcoal,
+            size: 20,
+          ),
           onPressed: () {},
         ),
         IconButton(
-          icon: const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 22),
+          icon: const Icon(
+            Icons.logout_rounded,
+            color: Colors.redAccent,
+            size: 22,
+          ),
           tooltip: 'Log Out',
           onPressed: () => _showLogoutConfirmationDialog(context),
         ),
@@ -132,27 +169,50 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             SizedBox(width: 8),
             Text(
               'Log Out',
-              style: TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold, fontSize: 18, color: KalaColors.charcoal),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: KalaColors.charcoal,
+              ),
             ),
           ],
         ),
         content: const Text(
           'Are you sure you want to log out of your Kalā account?',
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.charcoal),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 14,
+            color: KalaColors.charcoal,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel', style: TextStyle(color: KalaColors.mediumGrey, fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                color: KalaColors.mediumGrey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.redAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               elevation: 0,
             ),
-            child: const Text('Log Out', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Log Out',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -165,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     }
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(String displayName) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -179,7 +239,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 shape: BoxShape.circle,
                 border: Border.all(color: const Color(0xFFFDE6D8), width: 3),
                 image: const DecorationImage(
-                  image: NetworkImage('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200'),
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200',
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -190,7 +252,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_circle, size: 18, color: KalaColors.accentGreen),
+              child: const Icon(
+                Icons.check_circle,
+                size: 18,
+                color: KalaColors.accentGreen,
+              ),
             ),
           ],
         ),
@@ -202,37 +268,66 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               Row(
                 children: [
                   Text(
-                    'Aarav Mehta',
-                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                    displayName,
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(Icons.verified, size: 18, color: Color(0xFFEA580C)),
+                  const Icon(
+                    Icons.verified,
+                    size: 18,
+                    color: Color(0xFFEA580C),
+                  ),
                 ],
               ),
               const SizedBox(height: 4),
               Text(
                 'Singer • Songwriter • Guitarist',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  color: KalaColors.charcoal,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.location_on_outlined, size: 14, color: KalaColors.mediumGrey),
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 14,
+                    color: KalaColors.mediumGrey,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     'Delhi, India',
-                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 12,
+                      color: KalaColors.mediumGrey,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: KalaColors.accentGreen.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       'Available',
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: KalaColors.accentGreen,
+                      ),
                     ),
                   ),
                 ],
@@ -259,7 +354,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           ),
           child: Text(
             role,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w500, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: KalaColors.charcoal,
+            ),
           ),
         );
       }).toList(),
@@ -272,7 +372,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       children: [
         Text(
           'Available For',
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -282,14 +387,22 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               children: tags.map((tag) {
                 return Container(
                   margin: const EdgeInsets.only(right: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: KalaColors.accentGreen.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     tag,
-                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.w600, color: KalaColors.accentGreen),
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: KalaColors.accentGreen,
+                    ),
                   ),
                 );
               }).toList(),
@@ -305,7 +418,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       children: [
         const Icon(Icons.link, size: 18, color: KalaColors.charcoal),
         const SizedBox(width: 16),
-        const Icon(Icons.camera_alt_outlined, size: 18, color: KalaColors.charcoal),
+        const Icon(
+          Icons.camera_alt_outlined,
+          size: 18,
+          color: KalaColors.charcoal,
+        ),
         const SizedBox(width: 16),
         const Icon(Icons.play_circle_outline, size: 18, color: Colors.red),
         const SizedBox(width: 16),
@@ -319,11 +436,20 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           ),
           child: Row(
             children: [
-              const Icon(Icons.mail_outline, size: 14, color: KalaColors.charcoal),
+              const Icon(
+                Icons.mail_outline,
+                size: 14,
+                color: KalaColors.charcoal,
+              ),
               const SizedBox(width: 6),
               Text(
                 'Show Contact',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: KalaColors.charcoal,
+                ),
               ),
             ],
           ),
@@ -336,28 +462,62 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildStatItem('32', 'Applications', Icons.description_outlined, const Color(0xFFEA580C)),
-        _buildStatItem('14', 'Shortlisted', Icons.visibility_outlined, const Color(0xFFEA580C)),
-        _buildStatItem('8', 'Projects', Icons.star_border, const Color(0xFFEA580C)),
-        _buildStatItem('3.2K', 'Views', Icons.trending_up, const Color(0xFFEA580C)),
+        _buildStatItem(
+          '32',
+          'Applications',
+          Icons.description_outlined,
+          const Color(0xFFEA580C),
+        ),
+        _buildStatItem(
+          '14',
+          'Shortlisted',
+          Icons.visibility_outlined,
+          const Color(0xFFEA580C),
+        ),
+        _buildStatItem(
+          '8',
+          'Projects',
+          Icons.star_border,
+          const Color(0xFFEA580C),
+        ),
+        _buildStatItem(
+          '3.2K',
+          'Views',
+          Icons.trending_up,
+          const Color(0xFFEA580C),
+        ),
         _buildProfileStrengthStat(),
       ],
     );
   }
 
-  Widget _buildStatItem(String count, String label, IconData icon, Color iconColor) {
+  Widget _buildStatItem(
+    String count,
+    String label,
+    IconData icon,
+    Color iconColor,
+  ) {
     return Column(
       children: [
         Icon(icon, size: 20, color: iconColor),
         const SizedBox(height: 8),
         Text(
           count,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 10,
+            color: KalaColors.mediumGrey,
+          ),
         ),
       ],
     );
@@ -373,18 +533,29 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             value: 0.92,
             strokeWidth: 3,
             backgroundColor: KalaColors.accentGreen.withValues(alpha: 0.2),
-            valueColor: const AlwaysStoppedAnimation<Color>(KalaColors.accentGreen),
+            valueColor: const AlwaysStoppedAnimation<Color>(
+              KalaColors.accentGreen,
+            ),
           ),
         ),
         const SizedBox(height: 8),
         Text(
           '92%',
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           'Profile Strength',
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 10,
+            color: KalaColors.mediumGrey,
+          ),
         ),
       ],
     );
@@ -409,12 +580,22 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                   children: [
                     Text(
                       'Complete your profile',
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: KalaColors.charcoal,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       '(82%)',
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFFEA580C)),
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFEA580C),
+                      ),
                     ),
                   ],
                 ),
@@ -424,7 +605,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                   child: const LinearProgressIndicator(
                     value: 0.82,
                     backgroundColor: Color(0xFFFFEDD5),
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFEA580C)),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(0xFFEA580C),
+                    ),
                     minHeight: 6,
                   ),
                 ),
@@ -480,12 +663,24 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                       decoration: BoxDecoration(
                         border: Border.all(color: const Color(0xFFFFEDD5)),
                       ),
-                      child: const Icon(Icons.person, size: 16, color: Color(0xFFFDBA74)),
+                      child: const Icon(
+                        Icons.person,
+                        size: 16,
+                        color: Color(0xFFFDBA74),
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    Container(height: 4, width: 40, color: const Color(0xFFFFEDD5)),
+                    Container(
+                      height: 4,
+                      width: 40,
+                      color: const Color(0xFFFFEDD5),
+                    ),
                     const SizedBox(height: 4),
-                    Container(height: 4, width: 30, color: const Color(0xFFFFEDD5)),
+                    Container(
+                      height: 4,
+                      width: 30,
+                      color: const Color(0xFFFFEDD5),
+                    ),
                   ],
                 ),
               ),
@@ -519,7 +714,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         const SizedBox(width: 6),
         Text(
           label,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 10,
+            color: KalaColors.charcoal,
+          ),
         ),
       ],
     );
@@ -537,8 +736,16 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         unselectedLabelColor: KalaColors.mediumGrey,
         indicatorColor: const Color(0xFFEA580C),
         indicatorWeight: 2,
-        labelStyle: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold),
-        unselectedLabelStyle: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.w500),
+        labelStyle: TextStyle(
+          fontFamily: 'ZT_Nature',
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontFamily: 'ZT_Nature',
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
         tabs: const [
           Tab(text: 'Portfolio'),
           Tab(text: 'Applications'),
@@ -561,11 +768,21 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 'Featured Work',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
               ),
               Text(
                 'View All',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFEA580C),
+                ),
               ),
             ],
           ),
@@ -604,11 +821,21 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 'My Applications',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
               ),
               Text(
                 'View All',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFEA580C),
+                ),
               ),
             ],
           ),
@@ -617,13 +844,37 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(child: _buildAppStatBox('3', 'Under\nReview', const Color(0xFFEA580C))),
+                Expanded(
+                  child: _buildAppStatBox(
+                    '3',
+                    'Under\nReview',
+                    const Color(0xFFEA580C),
+                  ),
+                ),
                 const SizedBox(width: 6),
-                Expanded(child: _buildAppStatBox('2', 'Short-\nlisted', KalaColors.accentGreen)),
+                Expanded(
+                  child: _buildAppStatBox(
+                    '2',
+                    'Short-\nlisted',
+                    KalaColors.accentGreen,
+                  ),
+                ),
                 const SizedBox(width: 6),
-                Expanded(child: _buildAppStatBox('1', 'Inter-\nview', const Color(0xFFEA580C))),
+                Expanded(
+                  child: _buildAppStatBox(
+                    '1',
+                    'Inter-\nview',
+                    const Color(0xFFEA580C),
+                  ),
+                ),
                 const SizedBox(width: 6),
-                Expanded(child: _buildAppStatBox('0', 'Selected', KalaColors.accentGreen)),
+                Expanded(
+                  child: _buildAppStatBox(
+                    '0',
+                    'Selected',
+                    KalaColors.accentGreen,
+                  ),
+                ),
                 const SizedBox(width: 6),
                 Expanded(child: _buildAppStatBox('1', 'Rejected', Colors.red)),
               ],
@@ -635,18 +886,43 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 'Career Timeline',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
               ),
               Text(
                 'View All',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFFEA580C)),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFEA580C),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          _buildCareerTimelineItem('2025', 'Won Inter College Singing Competition', 'March 2025', isLast: false),
-          _buildCareerTimelineItem('2025', 'Accepted into Delhi Music Fest', 'April 2025', isLast: false),
-          _buildCareerTimelineItem('2025', 'Performed at IIT Cultural Fest', 'May 2025', isLast: true),
+          _buildCareerTimelineItem(
+            '2025',
+            'Won Inter College Singing Competition',
+            'March 2025',
+            isLast: false,
+          ),
+          _buildCareerTimelineItem(
+            '2025',
+            'Accepted into Delhi Music Fest',
+            'April 2025',
+            isLast: false,
+          ),
+          _buildCareerTimelineItem(
+            '2025',
+            'Performed at IIT Cultural Fest',
+            'May 2025',
+            isLast: true,
+          ),
           const SizedBox(height: 32),
           _buildBottomProfileActions(),
           const SizedBox(height: 40), // Extra padding at bottom
@@ -655,7 +931,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     );
   }
 
-  Widget _buildFeaturedWorkCard(String title, String subtitle, String duration, String imageUrl) {
+  Widget _buildFeaturedWorkCard(
+    String title,
+    String subtitle,
+    String duration,
+    String imageUrl,
+  ) {
     return SizedBox(
       width: 160,
       child: Column(
@@ -684,7 +965,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 ),
                 child: Text(
                   duration,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -692,14 +978,23 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           const SizedBox(height: 8),
           Text(
             title,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
           Text(
             subtitle,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 9,
+              color: KalaColors.mediumGrey,
+            ),
           ),
         ],
       ),
@@ -719,12 +1014,23 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         children: [
           Text(
             count,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 8, fontWeight: FontWeight.w600, color: color, height: 1.1),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 8,
+              fontWeight: FontWeight.w600,
+              color: color,
+              height: 1.1,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -732,7 +1038,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     );
   }
 
-  Widget _buildCareerTimelineItem(String year, String title, String date, {required bool isLast}) {
+  Widget _buildCareerTimelineItem(
+    String year,
+    String title,
+    String date, {
+    required bool isLast,
+  }) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -750,10 +1061,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               ),
               if (!isLast)
                 Expanded(
-                  child: Container(
-                    width: 2,
-                    color: const Color(0xFFEA580C),
-                  ),
+                  child: Container(width: 2, color: const Color(0xFFEA580C)),
                 ),
             ],
           ),
@@ -763,7 +1071,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Text(
                 year,
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
               ),
             ],
           ),
@@ -774,12 +1087,21 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   date,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 9,
+                    color: KalaColors.mediumGrey,
+                  ),
                 ),
                 if (!isLast) const SizedBox(height: 24),
               ],
@@ -801,7 +1123,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       ],
     );
   }
-  
+
   Widget _buildActionIcon(IconData icon, String label) {
     return Column(
       children: [
@@ -809,7 +1131,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         const SizedBox(height: 6),
         Text(
           label,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 10,
+            color: KalaColors.charcoal,
+          ),
         ),
       ],
     );

@@ -36,7 +36,10 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
       vsync: this,
       duration: const Duration(milliseconds: 220),
     );
-    _fadeAnim = CurvedAnimation(parent: _pageAnimController, curve: Curves.easeInOut);
+    _fadeAnim = CurvedAnimation(
+      parent: _pageAnimController,
+      curve: Curves.easeInOut,
+    );
     _pageAnimController.forward();
   }
 
@@ -86,16 +89,38 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
           padding: const EdgeInsets.only(top: 12, bottom: 8),
           decoration: const BoxDecoration(
             color: Colors.white,
-            border: Border(top: BorderSide(color: KalaColors.lightGrey, width: 0.5)),
+            border: Border(
+              top: BorderSide(color: KalaColors.lightGrey, width: 0.5),
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildNavItem(navIndex: 0, outlineIcon: Icons.home_outlined, filledIcon: Icons.home, label: 'Hub'),
-              _buildNavItem(navIndex: 1, outlineIcon: Icons.people_outline, filledIcon: Icons.people, label: 'Talent'),
+              _buildNavItem(
+                navIndex: 0,
+                outlineIcon: Icons.home_outlined,
+                filledIcon: Icons.home,
+                label: 'Hub',
+              ),
+              _buildNavItem(
+                navIndex: 1,
+                outlineIcon: Icons.people_outline,
+                filledIcon: Icons.people,
+                label: 'Talent',
+              ),
               _buildCenterNavItem(),
-              _buildNavItem(navIndex: 3, outlineIcon: Icons.timeline_outlined, filledIcon: Icons.timeline, label: 'Flow'),
-              _buildNavItem(navIndex: 4, outlineIcon: Icons.settings_outlined, filledIcon: Icons.settings, label: 'Admin'),
+              _buildNavItem(
+                navIndex: 3,
+                outlineIcon: Icons.timeline_outlined,
+                filledIcon: Icons.timeline,
+                label: 'Flow',
+              ),
+              _buildNavItem(
+                navIndex: 4,
+                outlineIcon: Icons.settings_outlined,
+                filledIcon: Icons.settings,
+                label: 'Admin',
+              ),
             ],
           ),
         ),
@@ -110,7 +135,9 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
     required String label,
   }) {
     final bool isSelected = _navIndex == navIndex;
-    final Color color = isSelected ? KalaColors.burntOrange : KalaColors.charcoal;
+    final Color color = isSelected
+        ? KalaColors.burntOrange
+        : KalaColors.charcoal;
 
     return Expanded(
       child: GestureDetector(
@@ -137,7 +164,8 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
             const SizedBox(height: 4),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
-              style: TextStyle(fontFamily: 'ZT_Nature', 
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: color,
@@ -204,7 +232,9 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
             decoration: const BoxDecoration(
               color: KalaColors.ivory,
-              border: Border(right: BorderSide(color: Color(0xFFEAE2B7), width: 0.5)),
+              border: Border(
+                right: BorderSide(color: Color(0xFFEAE2B7), width: 0.5),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -213,7 +243,8 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
                   padding: const EdgeInsets.only(left: 12.0, bottom: 28.0),
                   child: Text(
                     'kalā',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: KalaColors.charcoal,
@@ -223,11 +254,26 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
                 ),
                 _buildSidebarItem(0, Icons.home_outlined, Icons.home, 'Hub'),
                 const SizedBox(height: 8),
-                _buildSidebarItem(1, Icons.people_outline, Icons.people, 'Talent'),
+                _buildSidebarItem(
+                  1,
+                  Icons.people_outline,
+                  Icons.people,
+                  'Talent',
+                ),
                 const SizedBox(height: 8),
-                _buildSidebarItem(2, Icons.timeline_outlined, Icons.timeline, 'Flow'),
+                _buildSidebarItem(
+                  2,
+                  Icons.timeline_outlined,
+                  Icons.timeline,
+                  'Flow',
+                ),
                 const SizedBox(height: 8),
-                _buildSidebarItem(3, Icons.settings_outlined, Icons.settings, 'Admin'),
+                _buildSidebarItem(
+                  3,
+                  Icons.settings_outlined,
+                  Icons.settings,
+                  'Admin',
+                ),
                 const SizedBox(height: 32),
                 GestureDetector(
                   onTap: () => OrganizerCreateScreen.show(context),
@@ -246,19 +292,35 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
                             shape: BoxShape.circle,
                             color: KalaColors.burntOrange,
                           ),
-                          child: const Icon(Icons.add, color: Colors.white, size: 16),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Create / Post',
-                                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                              Text(
+                                'Create / Post',
+                                style: TextStyle(
+                                  fontFamily: 'ZT_Nature',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: KalaColors.charcoal,
+                                ),
+                              ),
                               const SizedBox(height: 2),
                               Text(
                                 'Post a new opportunity',
-                                style: TextStyle(fontSize: 9, color: KalaColors.charcoal.withValues(alpha: 0.5)),
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: KalaColors.charcoal.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -281,7 +343,12 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
     );
   }
 
-  Widget _buildSidebarItem(int screenIndex, IconData icon, IconData activeIcon, String label) {
+  Widget _buildSidebarItem(
+    int screenIndex,
+    IconData icon,
+    IconData activeIcon,
+    String label,
+  ) {
     final bool isSelected = _currentIndex == screenIndex;
     return GestureDetector(
       onTap: () {
@@ -294,7 +361,9 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? KalaColors.burntOrange.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? KalaColors.burntOrange.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -305,16 +374,21 @@ class _OrganizerNavigationHubState extends State<OrganizerNavigationHub>
                 isSelected ? activeIcon : icon,
                 key: ValueKey<bool>(isSelected),
                 size: 22,
-                color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal.withValues(alpha: 0.6),
+                color: isSelected
+                    ? KalaColors.burntOrange
+                    : KalaColors.charcoal.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(width: 14),
             Text(
               label,
-              style: TextStyle(fontFamily: 'ZT_Nature', 
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? KalaColors.charcoal : KalaColors.charcoal.withValues(alpha: 0.7),
+                color: isSelected
+                    ? KalaColors.charcoal
+                    : KalaColors.charcoal.withValues(alpha: 0.7),
               ),
             ),
           ],

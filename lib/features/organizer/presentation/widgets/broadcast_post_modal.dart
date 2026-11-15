@@ -93,7 +93,9 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
       padding: const EdgeInsets.all(24),
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
-        child: _isPublished ? _buildDeliveryAnalyticsView() : _buildEditorView(),
+        child: _isPublished
+            ? _buildDeliveryAnalyticsView()
+            : _buildEditorView(),
       ),
     );
   }
@@ -106,18 +108,40 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
         children: [
           Row(
             children: [
-              const Icon(Icons.campaign_outlined, color: KalaColors.burntOrange, size: 28),
+              const Icon(
+                Icons.campaign_outlined,
+                color: KalaColors.burntOrange,
+                size: 28,
+              ),
               const SizedBox(width: 10),
               const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Broadcast Post Editor', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-                    Text('Targeted broadcast communication to performers & applicants', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                    Text(
+                      'Broadcast Post Editor',
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: KalaColors.charcoal,
+                      ),
+                    ),
+                    Text(
+                      'Targeted broadcast communication to performers & applicants',
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 11,
+                        color: KalaColors.mediumGrey,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -130,7 +154,15 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Target Audience Scope
-                  const Text('1. Broadcast Target Scope', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    '1. Broadcast Target Scope',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -144,45 +176,94 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
                   const SizedBox(height: 20),
 
                   // Announcement Type Dropdown
-                  const Text('2. Announcement Type', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    '2. Announcement Type',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
                     initialValue: _selectedAnnouncementType,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                     ),
-                    items: _announcementTypes.map((t) => DropdownMenuItem(value: t, child: Text(t, style: const TextStyle(fontSize: 13)))).toList(),
+                    items: _announcementTypes
+                        .map(
+                          (t) => DropdownMenuItem(
+                            value: t,
+                            child: Text(
+                              t,
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ),
+                        )
+                        .toList(),
                     onChanged: (val) {
-                      if (val != null) setState(() => _selectedAnnouncementType = val);
+                      if (val != null)
+                        setState(() => _selectedAnnouncementType = val);
                     },
                   ),
                   const SizedBox(height: 20),
 
                   // Broadcast Title
-                  const Text('3. Broadcast Title', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    '3. Broadcast Title',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _titleController,
                     decoration: InputDecoration(
                       hintText: 'e.g. Audition Deadline Extended by 48 Hours!',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    validator: (val) => (val == null || val.trim().isEmpty) ? 'Please enter a title' : null,
+                    validator: (val) => (val == null || val.trim().isEmpty)
+                        ? 'Please enter a title'
+                        : null,
                   ),
                   const SizedBox(height: 20),
 
                   // Broadcast Message Body
-                  const Text('4. Message Content', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    '4. Message Content',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _messageController,
                     maxLines: 4,
                     decoration: InputDecoration(
-                      hintText: 'Type your official announcement or instructions...',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      hintText:
+                          'Type your official announcement or instructions...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    validator: (val) => (val == null || val.trim().isEmpty) ? 'Please enter message content' : null,
+                    validator: (val) => (val == null || val.trim().isEmpty)
+                        ? 'Please enter message content'
+                        : null,
                   ),
                 ],
               ),
@@ -196,15 +277,30 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
             child: ElevatedButton.icon(
               onPressed: _isPublishing ? null : _handlePublish,
               icon: _isPublishing
-                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                   : const Icon(Icons.send_rounded, size: 18),
               label: Text(
-                _isPublishing ? 'Publishing Broadcast...' : 'Publish Broadcast Now',
-                style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold),
+                _isPublishing
+                    ? 'Publishing Broadcast...'
+                    : 'Publish Broadcast Now',
+                style: const TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: KalaColors.burntOrange,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ),
@@ -216,7 +312,15 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
   Widget _scopeChip(String label, String value) {
     final isSelected = _targetScope == value;
     return ChoiceChip(
-      label: Text(label, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : KalaColors.charcoal)),
+      label: Text(
+        label,
+        style: TextStyle(
+          fontFamily: 'ZT_Nature',
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: isSelected ? Colors.white : KalaColors.charcoal,
+        ),
+      ),
       selected: isSelected,
       selectedColor: KalaColors.burntOrange,
       backgroundColor: Colors.white,
@@ -232,13 +336,35 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: KalaColors.accentGreen.withValues(alpha: 0.1), shape: BoxShape.circle),
-          child: const Icon(Icons.check_circle, color: KalaColors.accentGreen, size: 48),
+          decoration: BoxDecoration(
+            color: KalaColors.accentGreen.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.check_circle,
+            color: KalaColors.accentGreen,
+            size: 48,
+          ),
         ),
         const SizedBox(height: 16),
-        const Text('Broadcast Published! 📡', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 22, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        const Text(
+          'Broadcast Published! 📡',
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
         const SizedBox(height: 6),
-        Text('Target: $_targetScope • Type: $_selectedAnnouncementType', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
+        Text(
+          'Target: $_targetScope • Type: $_selectedAnnouncementType',
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 12,
+            color: KalaColors.mediumGrey,
+          ),
+        ),
         const SizedBox(height: 28),
 
         // Delivery Analytics Card
@@ -252,7 +378,15 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Live Delivery Analytics', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+              const Text(
+                'Live Delivery Analytics',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
+              ),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -275,9 +409,18 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
             onPressed: () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: KalaColors.burntOrange,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
             ),
-            child: const Text('Back to Dashboard', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Back to Dashboard',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ],
@@ -287,9 +430,24 @@ class _BroadcastPostModalState extends State<BroadcastPostModal> {
   Widget _analyticStat(String value, String label) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.burntOrange,
+          ),
+        ),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 11,
+            color: KalaColors.mediumGrey,
+          ),
+        ),
       ],
     );
   }

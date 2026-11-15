@@ -57,14 +57,20 @@ class _SplashScreenState extends State<SplashScreen> {
               Expanded(
                 flex: 5,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 64.0, top: 40.0, right: 40.0, bottom: 40.0),
+                  padding: const EdgeInsets.only(
+                    left: 64.0,
+                    top: 40.0,
+                    right: 40.0,
+                    bottom: 40.0,
+                  ),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'kalā',
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 36, // Reduced from 48
                             fontWeight: FontWeight.bold,
                             color: KalaColors.charcoal,
@@ -74,7 +80,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         const SizedBox(height: 32), // Reduced from 64
                         RichText(
                           text: TextSpan(
-                            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                            style: Theme.of(context).textTheme.displayLarge
+                                ?.copyWith(
                                   fontSize: 40, // Reduced from 64
                                   height: 1.2,
                                   color: KalaColors.charcoal,
@@ -103,7 +110,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           width: 400,
                           child: Text(
                             'A platform to showcase your talent,\ndiscover real opportunities, and\ncollaborate with creative minds.',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
                                   color: KalaColors.mediumGrey,
                                   height: 1.5,
                                   fontSize: 16, // Reduced from 18
@@ -127,7 +135,10 @@ class _SplashScreenState extends State<SplashScreen> {
                             ),
                             child: const Text(
                               "Let's Begin",
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -138,9 +149,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           },
                           child: RichText(
                             text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: KalaColors.mediumGrey,
-                                  ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: KalaColors.mediumGrey),
                               children: const [
                                 TextSpan(text: 'Already have an account? '),
                                 TextSpan(
@@ -163,7 +173,12 @@ class _SplashScreenState extends State<SplashScreen> {
               Expanded(
                 flex: 7,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0, right: 64.0, bottom: 40.0, left: 20),
+                  padding: const EdgeInsets.only(
+                    top: 40.0,
+                    right: 64.0,
+                    bottom: 40.0,
+                    left: 20,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -172,7 +187,10 @@ class _SplashScreenState extends State<SplashScreen> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              border: Border.all(color: KalaColors.softBeige, width: 1.5),
+                              border: Border.all(
+                                color: KalaColors.softBeige,
+                                width: 1.5,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: TextButton(
@@ -180,10 +198,16 @@ class _SplashScreenState extends State<SplashScreen> {
                                 Navigator.pushNamed(context, '/auth');
                               },
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
                                 foregroundColor: KalaColors.charcoal,
                               ),
-                              child: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
+                              child: const Text(
+                                'Skip',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                             ),
                           ),
                         ],
@@ -199,7 +223,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                     child: _buildArchPanel(
                                       context,
                                       title: 'Singer',
-                                      imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
+                                      imageUrl:
+                                          'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
                                       topLeft: 24,
                                       topRight: 24,
                                       bottomLeft: 12,
@@ -211,7 +236,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                     child: _buildArchPanel(
                                       context,
                                       title: 'Photographer',
-                                      imageUrl: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
+                                      imageUrl:
+                                          'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
                                       topLeft: 24,
                                       topRight: 24,
                                       bottomLeft: 12,
@@ -229,7 +255,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                     child: _buildNeonPanel(
                                       context,
                                       title: 'Music Producer',
-                                      imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
+                                      imageUrl:
+                                          'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
                                       topLeft: 12,
                                       topRight: 12,
                                       bottomLeft: 24,
@@ -241,7 +268,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                     child: _buildArchPanel(
                                       context,
                                       title: 'Actor',
-                                      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+                                      imageUrl:
+                                          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
                                       topLeft: 12,
                                       topRight: 12,
                                       bottomLeft: 24,
@@ -272,25 +300,29 @@ class _SplashScreenState extends State<SplashScreen> {
                 context,
                 icon: Icons.people_outline,
                 title: 'Showcase Your Talent',
-                description: 'Build a stunning portfolio to\nshow the world what you do best.',
+                description:
+                    'Build a stunning portfolio to\nshow the world what you do best.',
               ),
               _buildFeatureItem(
                 context,
                 icon: Icons.business_center_outlined,
                 title: 'Discover Opportunities',
-                description: 'Find auditions, gigs, internships\nand projects that match your skills.',
+                description:
+                    'Find auditions, gigs, internships\nand projects that match your skills.',
               ),
               _buildFeatureItem(
                 context,
                 icon: Icons.handshake_outlined,
                 title: 'Collaborate & Connect',
-                description: 'Connect with artists, creators\nand professionals across India.',
+                description:
+                    'Connect with artists, creators\nand professionals across India.',
               ),
               _buildFeatureItem(
                 context,
                 icon: Icons.trending_up,
                 title: 'Grow Your Career',
-                description: 'Learn, collaborate and grow\nyour journey in the creative world.',
+                description:
+                    'Learn, collaborate and grow\nyour journey in the creative world.',
               ),
             ],
           ),
@@ -311,7 +343,8 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Text(
                 'kalā',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -325,29 +358,32 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Text(
                   'Skip',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: KalaColors.mediumGrey,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: KalaColors.mediumGrey,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        
+
         // Scrollable Content
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 32.0,
+              vertical: 16.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RichText(
                   text: TextSpan(
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                          fontSize: 32,
-                          height: 1,
-                          color: KalaColors.charcoal,
-                        ),
+                      fontSize: 32,
+                      height: 1,
+                      color: KalaColors.charcoal,
+                    ),
                     children: const [
                       TextSpan(text: "Where India's\n"),
                       TextSpan(text: "emerging artists\n"),
@@ -362,21 +398,17 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Container(
-                  width: 40,
-                  height: 2,
-                  color: KalaColors.burntOrange,
-                ),
+                Container(width: 40, height: 2, color: KalaColors.burntOrange),
                 const SizedBox(height: 16),
                 Text(
                   'A platform to showcase your talent, discover real opportunities, and collaborate with creative minds.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: KalaColors.mediumGrey,
-                        height: 1.5,
-                      ),
+                    color: KalaColors.mediumGrey,
+                    height: 1.5,
+                  ),
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Image Collage (4 photos)
                 GridView.count(
                   shrinkWrap: true,
@@ -389,7 +421,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     _buildArchPanel(
                       context,
                       title: 'Singer',
-                      imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
                       topLeft: 24,
                       topRight: 24,
                       bottomLeft: 12,
@@ -398,7 +431,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     _buildArchPanel(
                       context,
                       title: 'Photographer',
-                      imageUrl: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
                       topLeft: 24,
                       topRight: 24,
                       bottomLeft: 12,
@@ -407,7 +441,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     _buildNeonPanel(
                       context,
                       title: 'Music Producer',
-                      imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
                       topLeft: 12,
                       topRight: 12,
                       bottomLeft: 24,
@@ -416,7 +451,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     _buildArchPanel(
                       context,
                       title: 'Actor',
-                      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
                       topLeft: 12,
                       topRight: 12,
                       bottomLeft: 24,
@@ -428,7 +464,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
         ),
-        
+
         // Let's Begin Button
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -462,9 +498,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: RichText(
                   text: TextSpan(
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: KalaColors.mediumGrey,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: KalaColors.mediumGrey,
+                      fontWeight: FontWeight.w500,
+                    ),
                     children: [
                       const TextSpan(text: 'Already have an account? '),
                       TextSpan(
@@ -499,7 +535,7 @@ class _SplashScreenState extends State<SplashScreen> {
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(topLeft),
           topRight: Radius.circular(topRight),
-          bottomLeft: Radius.circular(bottomLeft),  
+          bottomLeft: Radius.circular(bottomLeft),
           bottomRight: Radius.circular(bottomRight),
         ),
         image: DecorationImage(
@@ -543,17 +579,19 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.black.withValues(alpha: 0.7),
-            ],
+            colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildFeatureItem(BuildContext context, {required IconData icon, required String title, required String description}) {
+  Widget _buildFeatureItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String description,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -571,17 +609,17 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
               description,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: KalaColors.mediumGrey,
-                    height: 1.5,
-                  ),
+                color: KalaColors.mediumGrey,
+                height: 1.5,
+              ),
             ),
           ],
         ),

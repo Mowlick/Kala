@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/models/creator_onboarding_model.dart';
 
 class OnboardingController extends ChangeNotifier {
   final CreatorOnboardingModel _model = CreatorOnboardingModel();
-  
+
   CreatorOnboardingModel get model => _model;
 
   // Onboarding Step helper (1 to 4)
@@ -74,5 +75,72 @@ class OnboardingController extends ChangeNotifier {
     _model.spotifyUrl = spotify;
     _model.websiteUrl = website;
     notifyListeners();
+  }
+
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+
+  Future<bool> submitStudentOnboarding() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) throw Exception('User not logged in');
+
+      // Update users table
+      await Supabase.instance.client
+          .from('users')
+          .update({
+            'name': _model.name,
+            'city': _model.city,
+            'bio': _model.goals.join(', '), // Using goals as bio for now
+            // Assuming we could store other JSON data if we had schema, but for now just basic fields
+          })
+          .eq('id', user.id);
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = 'Failed to save onboarding data: $e';
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> submitOrganizerOnboarding(
+    Map<String, dynamic> organizerData,
+  ) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) throw Exception('User not logged in');
+
+      await Supabase.instance.client
+          .from('users')
+          .update({
+            'name': organizerData['name'],
+            'city': organizerData['city'],
+          })
+          .eq('id', user.id);
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = 'Failed to save organizer data: $e';
+      notifyListeners();
+      return false;
+    }
   }
 }

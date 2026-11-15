@@ -25,11 +25,13 @@ class _NavigationHubState extends State<NavigationHub> {
     _screens = [
       const CareerDashboardScreen(),
       const DiscoverMarketplaceScreen(),
-      HubMenuOverlay(onClose: () {
-        setState(() {
-          _currentIndex = 0;
-        });
-      }),
+      HubMenuOverlay(
+        onClose: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+      ),
       const ApplicationsTrackerScreen(),
       const ProfileScreen(),
     ];
@@ -84,7 +86,8 @@ class _NavigationHubState extends State<NavigationHub> {
                     padding: const EdgeInsets.only(left: 12.0, bottom: 28.0),
                     child: Text(
                       'kalā',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: KalaColors.charcoal,
@@ -153,7 +156,8 @@ class _NavigationHubState extends State<NavigationHub> {
                               children: [
                                 Text(
                                   'Create / Post',
-                                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                                  style: TextStyle(
+                                    fontFamily: 'ZT_Nature',
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: KalaColors.charcoal,
@@ -192,7 +196,8 @@ class _NavigationHubState extends State<NavigationHub> {
                       children: [
                         Text(
                           'Your profile is 80% complete',
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: KalaColors.charcoal,
@@ -218,7 +223,8 @@ class _NavigationHubState extends State<NavigationHub> {
                             children: [
                               Text(
                                 'Complete your profile',
-                                style: TextStyle(fontFamily: 'ZT_Nature', 
+                                style: TextStyle(
+                                  fontFamily: 'ZT_Nature',
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                   color: KalaColors.charcoal,
@@ -245,10 +251,7 @@ class _NavigationHubState extends State<NavigationHub> {
 
             // Active screen expanded viewport
             Expanded(
-              child: IndexedStack(
-                index: _currentIndex,
-                children: _screens,
-              ),
+              child: IndexedStack(index: _currentIndex, children: _screens),
             ),
           ],
         ),
@@ -263,7 +266,9 @@ class _NavigationHubState extends State<NavigationHub> {
           padding: const EdgeInsets.only(top: 12, bottom: 8),
           decoration: const BoxDecoration(
             color: Colors.white,
-            border: Border(top: BorderSide(color: KalaColors.lightGrey, width: 0.5)),
+            border: Border(
+              top: BorderSide(color: KalaColors.lightGrey, width: 0.5),
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -307,7 +312,9 @@ class _NavigationHubState extends State<NavigationHub> {
     required String label,
   }) {
     final bool isSelected = _currentIndex == navIndex;
-    final Color color = isSelected ? KalaColors.burntOrange : KalaColors.charcoal;
+    final Color color = isSelected
+        ? KalaColors.burntOrange
+        : KalaColors.charcoal;
 
     return Expanded(
       child: GestureDetector(
@@ -334,7 +341,8 @@ class _NavigationHubState extends State<NavigationHub> {
             const SizedBox(height: 4),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
-              style: TextStyle(fontFamily: 'ZT_Nature', 
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: color,
@@ -415,7 +423,8 @@ class _NavigationHubState extends State<NavigationHub> {
             const SizedBox(width: 14),
             Text(
               label,
-              style: TextStyle(fontFamily: 'ZT_Nature', 
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 color: isSelected

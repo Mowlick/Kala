@@ -20,7 +20,10 @@ class KalaSearchBar extends StatelessWidget {
     this.onSubmitted,
     this.prefixIcon = const Icon(Icons.search, color: KalaColors.mediumGrey),
     this.suffixIcon,
-    this.contentPadding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+    this.contentPadding = const EdgeInsets.symmetric(
+      vertical: 12,
+      horizontal: 16,
+    ),
     this.height = 48,
   });
 
@@ -31,41 +34,42 @@ class KalaSearchBar extends StatelessWidget {
       child: Material(
         type: MaterialType.transparency,
         child: TextField(
-        controller: controller,
-        onChanged: onChanged,
-        onSubmitted: onSubmitted,
-        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.charcoal),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(fontFamily: 'ZT_Nature', 
+          controller: controller,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted,
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 14,
-            color: KalaColors.mediumGrey,
+            color: KalaColors.charcoal,
           ),
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-          fillColor: Colors.white,
-          filled: true,
-          contentPadding: contentPadding,
-          isDense: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(height / 2),
-            borderSide: const BorderSide(
-              color: KalaColors.softBeige,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 14,
+              color: KalaColors.mediumGrey,
             ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(height / 2),
-            borderSide: const BorderSide(
-              color: KalaColors.softBeige,
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
+            fillColor: Colors.white,
+            filled: true,
+            contentPadding: contentPadding,
+            isDense: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(height / 2),
+              borderSide: const BorderSide(color: KalaColors.softBeige),
             ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(height / 2),
-            borderSide: const BorderSide(
-              color: KalaColors.burntOrange,
-              width: 1.5,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(height / 2),
+              borderSide: const BorderSide(color: KalaColors.softBeige),
             ),
-          ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(height / 2),
+              borderSide: const BorderSide(
+                color: KalaColors.burntOrange,
+                width: 1.5,
+              ),
+            ),
           ),
         ),
       ),

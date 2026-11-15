@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/theme/kala_colors.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../events/presentation/controllers/event_controller.dart';
+import '../../../events/domain/models/event_model.dart';
+import '../../../opportunities/domain/models/opportunity_model.dart';
 
-class CareerDashboardScreen extends StatelessWidget {
+class CareerDashboardScreen extends StatefulWidget {
   const CareerDashboardScreen({super.key});
 
   @override
+  State<CareerDashboardScreen> createState() => _CareerDashboardScreenState();
+}
+
+class _CareerDashboardScreenState extends State<CareerDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Pull the latest backend data when the dashboard first shows so events
+    // published on other devices appear even if a realtime event was missed.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<EventController>().refresh();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final eventController = context.watch<EventController>();
+
     return Scaffold(
       backgroundColor: KalaColors.ivory,
       body: SafeArea(
@@ -20,6 +44,8 @@ class CareerDashboardScreen extends StatelessWidget {
               _buildQuickActions(),
               const SizedBox(height: 24),
               _buildProfileStrengthCard(),
+              const SizedBox(height: 24),
+              _buildLiveFromOrganizersSection(context, eventController),
               const SizedBox(height: 24),
               _buildSectionTitle(
                 'Recommended For You',
@@ -87,6 +113,7 @@ class CareerDashboardScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final auth = context.read<AuthController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +124,8 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               Text(
                 'My Dashboard',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -106,8 +134,9 @@ class CareerDashboardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Good morning, Arjun Mehta 👋',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                'Good morning, ${auth.displayName} 👋',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 14,
                   color: KalaColors.mediumGrey,
                 ),
@@ -117,6 +146,16 @@ class CareerDashboardScreen extends StatelessWidget {
         ),
         Row(
           children: [
+            IconButton(
+              tooltip: 'Refresh',
+              onPressed: () => context.read<EventController>().refresh(),
+              icon: const Icon(
+                Icons.refresh,
+                size: 22,
+                color: KalaColors.burntOrange,
+              ),
+            ),
+            const SizedBox(width: 4),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -156,7 +195,8 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           'QUICK ACTIONS',
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 10,
             fontWeight: FontWeight.bold,
             color: KalaColors.mediumGrey,
@@ -207,7 +247,8 @@ class CareerDashboardScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             label,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: isPrimary ? Colors.white : KalaColors.charcoal,
@@ -243,7 +284,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Complete your profile',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 12,
                       color: KalaColors.mediumGrey,
                     ),
@@ -251,7 +293,8 @@ class CareerDashboardScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'Profile Strength',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: KalaColors.charcoal,
@@ -264,7 +307,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 children: [
                   Text(
                     '82%',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: KalaColors.burntOrange,
@@ -272,7 +316,8 @@ class CareerDashboardScreen extends StatelessWidget {
                   ),
                   Text(
                     'Complete',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 10,
                       color: KalaColors.mediumGrey,
                     ),
@@ -317,7 +362,8 @@ class CareerDashboardScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'Complete Profile',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
@@ -338,7 +384,8 @@ class CareerDashboardScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'Improve Portfolio',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
@@ -358,7 +405,8 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           count,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -367,7 +415,8 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 11,
             color: KalaColors.charcoal,
             fontWeight: FontWeight.w500,
@@ -376,7 +425,11 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           subtext,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.accentGreen),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 9,
+            color: KalaColors.accentGreen,
+          ),
         ),
       ],
     );
@@ -388,7 +441,8 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -397,7 +451,11 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           subtitle,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 11,
+            color: KalaColors.mediumGrey,
+          ),
         ),
       ],
     );
@@ -409,7 +467,8 @@ class CareerDashboardScreen extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -417,7 +476,8 @@ class CareerDashboardScreen extends StatelessWidget {
         ),
         Text(
           actionLabel,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: KalaColors.burntOrange,
@@ -476,7 +536,8 @@ class CareerDashboardScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             title,
-                            style: TextStyle(fontFamily: 'ZT_Nature', 
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: KalaColors.charcoal,
@@ -495,7 +556,8 @@ class CareerDashboardScreen extends StatelessWidget {
                           ),
                           child: Text(
                             matchPercentage,
-                            style: TextStyle(fontFamily: 'ZT_Nature', 
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
                               color: KalaColors.burntOrange,
@@ -541,7 +603,8 @@ class CareerDashboardScreen extends StatelessWidget {
                   const SizedBox(width: 6),
                   Text(
                     daysLeft,
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: KalaColors.burntOrange,
@@ -565,7 +628,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 ),
                 child: Text(
                   'Apply Now',
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
@@ -588,7 +652,8 @@ class CareerDashboardScreen extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(fontFamily: 'ZT_Nature', 
+        style: TextStyle(
+          fontFamily: 'ZT_Nature',
           fontSize: 10,
           fontWeight: FontWeight.w500,
           color: KalaColors.charcoal,
@@ -604,7 +669,11 @@ class CareerDashboardScreen extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           text,
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 10,
+            color: KalaColors.mediumGrey,
+          ),
         ),
       ],
     );
@@ -655,7 +724,8 @@ class CareerDashboardScreen extends StatelessWidget {
         children: [
           Text(
             company,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 10,
               color: KalaColors.mediumGrey,
             ),
@@ -665,7 +735,8 @@ class CareerDashboardScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             title,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 14,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -685,7 +756,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 ),
                 child: Text(
                   status,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: statusColor,
@@ -694,7 +766,8 @@ class CareerDashboardScreen extends StatelessWidget {
               ),
               Text(
                 daysAgo,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 10,
                   color: KalaColors.mediumGrey,
                 ),
@@ -774,7 +847,8 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -783,7 +857,8 @@ class CareerDashboardScreen extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 11,
                   color: KalaColors.mediumGrey,
                 ),
@@ -873,7 +948,8 @@ class CareerDashboardScreen extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: KalaColors.charcoal,
@@ -881,7 +957,8 @@ class CareerDashboardScreen extends StatelessWidget {
                         ),
                         Text(
                           role,
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 10,
                             color: KalaColors.mediumGrey,
                           ),
@@ -893,7 +970,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   featuredProject,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -902,7 +980,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   views,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 10,
                     color: KalaColors.mutedGold,
                     fontWeight: FontWeight.w600,
@@ -923,7 +1002,8 @@ class CareerDashboardScreen extends StatelessWidget {
                     ),
                     child: Text(
                       'View Portfolio',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontWeight: FontWeight.w600,
                         fontSize: 11,
                       ),
@@ -986,7 +1066,8 @@ class CareerDashboardScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -997,7 +1078,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   location,
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 11,
                     color: KalaColors.mediumGrey,
                   ),
@@ -1015,7 +1097,8 @@ class CareerDashboardScreen extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       time,
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 10,
                         color: KalaColors.charcoal,
                         fontWeight: FontWeight.w500,
@@ -1073,7 +1156,8 @@ class CareerDashboardScreen extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 skill,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: KalaColors.charcoal,
@@ -1085,7 +1169,8 @@ class CareerDashboardScreen extends StatelessWidget {
             children: [
               Text(
                 opsCount,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 11,
                   color: KalaColors.accentGreen,
                   fontWeight: FontWeight.bold,
@@ -1152,7 +1237,8 @@ class CareerDashboardScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             title,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -1161,7 +1247,11 @@ class CareerDashboardScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, color: KalaColors.mediumGrey),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 9,
+              color: KalaColors.mediumGrey,
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -1221,7 +1311,8 @@ class CareerDashboardScreen extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: KalaColors.charcoal,
@@ -1230,7 +1321,8 @@ class CareerDashboardScreen extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     company,
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 11,
                       color: KalaColors.mediumGrey,
                     ),
@@ -1241,10 +1333,617 @@ class CareerDashboardScreen extends StatelessWidget {
           ),
           Text(
             closesIn,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 11,
               color: KalaColors.burntOrange,
               fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── LIVE ORGANIZER DATA (real-time synced) ──────────────────────────────
+  static const List<String> _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  String _formatDate(DateTime d) => '${d.day} ${_months[d.month - 1]}';
+
+  Widget _buildLiveFromOrganizersSection(
+    BuildContext context,
+    EventController controller,
+  ) {
+    final events = controller.events;
+    final opportunities = controller.opportunities;
+
+    if (events.isEmpty && opportunities.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                '🎪 Live From Organizers',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
+              ),
+            ),
+            Text(
+              'Live · RT',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: KalaColors.burntOrange,
+              ),
+            ),
+            const SizedBox(width: 4),
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                tooltip: 'Refresh live events',
+                onPressed:
+                    controller.isLoadingData ? null : () => controller.refresh(),
+                icon: controller.isLoadingData
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.refresh, size: 20),
+                color: KalaColors.burntOrange,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        const Text(
+          'Events & auditions published right now by organizers — updates instantly',
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 11,
+            color: KalaColors.mediumGrey,
+          ),
+        ),
+        if (events.isNotEmpty) ...[
+          const SizedBox(height: 14),
+          SizedBox(
+            height: 260,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: events.length,
+              itemBuilder: (context, index) =>
+                  _buildLiveEventCard(context, controller, events[index]),
+            ),
+          ),
+        ],
+        if (opportunities.isNotEmpty) ...[
+          const SizedBox(height: 14),
+          ...opportunities
+              .take(3)
+              .map(
+                (opp) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: _buildLiveOpportunityRow(context, opp),
+                ),
+              ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildLiveEventCard(
+    BuildContext context,
+    EventController controller,
+    EventModel event,
+  ) {
+    final opps = controller.getOpportunitiesForEvent(event.eventId);
+    final daysLeft = event.registrationDeadline
+        .difference(DateTime.now())
+        .inDays;
+
+    return GestureDetector(
+      onTap: () => _showEventOpportunitiesSheet(context, controller, event),
+      child: Container(
+        width: 300,
+        margin: const EdgeInsets.only(right: 12),
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFF0EBE1)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Image.network(
+                  event.bannerUrl,
+                  height: 100,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    height: 100,
+                    width: double.infinity,
+                    color: KalaColors.softBeige,
+                    child: const Icon(
+                      Icons.event,
+                      size: 32,
+                      color: KalaColors.mediumGrey,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: KalaColors.burntOrange,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      event.category,
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                if (daysLeft >= 0)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.65),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        daysLeft == 0
+                            ? 'Closing today'
+                            : 'Closes in $daysLeft days',
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    event.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          event.organizationName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 10,
+                            color: KalaColors.mediumGrey,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      if (event.isVerified)
+                        const Icon(
+                          Icons.verified,
+                          size: 12,
+                          color: KalaColors.burntOrange,
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 12,
+                        color: KalaColors.mediumGrey,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          '${event.venue} • ${event.location}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 10,
+                            color: KalaColors.mediumGrey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        size: 12,
+                        color: KalaColors.burntOrange,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          '${_formatDate(event.startDate)} – ${_formatDate(event.endDate)}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 10,
+                            color: KalaColors.charcoal,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        opps.isEmpty
+                            ? 'Auditions coming soon'
+                            : '${opps.length} Audition${opps.length == 1 ? '' : 's'}',
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.burntOrange,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: KalaColors.burntOrange,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'View Auditions',
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLiveOpportunityRow(BuildContext context, OpportunityModel opp) {
+    return GestureDetector(
+      onTap: () =>
+          Navigator.pushNamed(context, '/opportunity-detail', arguments: opp),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFF0EBE1)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF059669).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.mic_none,
+                size: 16,
+                color: Color(0xFF059669),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    opp.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${opp.stipend} • ${opp.vacancies} vacancy${opp.vacancies == 1 ? '' : 'ies'}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 10,
+                      color: KalaColors.mediumGrey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: KalaColors.burntOrange,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEventOpportunitiesSheet(
+    BuildContext context,
+    EventController controller,
+    EventModel event,
+  ) {
+    final opps = controller.getOpportunitiesForEvent(event.eventId);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.6,
+        maxChildSize: 0.9,
+        builder: (ctx, scrollController) => Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                event.title,
+                style: const TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
+              ),
+              const SizedBox(height: 2),
+              if (opps.isEmpty)
+                const Text(
+                  'This event is live on the organizers side. '
+                  'No auditions are open yet — stay tuned.',
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 11,
+                    color: KalaColors.mediumGrey,
+                  ),
+                )
+              else
+                Text(
+                  '${opps.length} open audition${opps.length == 1 ? '' : 's'} • tap to apply',
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 11,
+                    color: KalaColors.mediumGrey,
+                  ),
+                ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: opps.isEmpty
+                    ? _buildNoOpportunitiesState(ctx, event)
+                    : ListView.separated(
+                        controller: scrollController,
+                        itemCount: opps.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        itemBuilder: (ctx, i) {
+                          final opp = opps[i];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pop(ctx);
+                              Navigator.pushNamed(
+                                context,
+                                '/opportunity-detail',
+                                arguments: opp,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: KalaColors.lightGrey),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          opp.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontFamily: 'ZT_Nature',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: KalaColors.charcoal,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 3),
+                                        Text(
+                                          '${opp.category} • ${opp.stipend}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontFamily: 'ZT_Nature',
+                                            fontSize: 11,
+                                            color: KalaColors.mediumGrey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Icon(
+                                    Icons.chevron_right,
+                                    size: 18,
+                                    color: KalaColors.burntOrange,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoOpportunitiesState(BuildContext ctx, EventModel event) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: KalaColors.softBeige,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.campaign_outlined,
+              size: 30,
+              color: KalaColors.burntOrange,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Auditions are being prepared',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'There are no open roles for "${event.title}" yet.\n'
+            'Follow the organizer to get notified when they open.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              color: KalaColors.mediumGrey,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            height: 46,
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(ctx),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: KalaColors.charcoal,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'Got it',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ],

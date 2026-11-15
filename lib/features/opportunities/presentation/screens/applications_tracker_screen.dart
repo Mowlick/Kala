@@ -9,7 +9,8 @@ class ApplicationsTrackerScreen extends StatefulWidget {
   const ApplicationsTrackerScreen({super.key});
 
   @override
-  State<ApplicationsTrackerScreen> createState() => _ApplicationsTrackerScreenState();
+  State<ApplicationsTrackerScreen> createState() =>
+      _ApplicationsTrackerScreenState();
 }
 
 class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
@@ -33,12 +34,23 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
     // Filter to only this student's submissions
     final studentId = auth.currentUserId;
     final liveSubmissions = studentId.isNotEmpty
-        ? eventController.submissions.where((s) => s.studentId == studentId).toList()
+        ? eventController.submissions
+              .where((s) => s.studentId == studentId)
+              .toList()
         : eventController.submissions; // fallback: show all if not logged in
+    final visibleSubmissions = _selectedChip == 'All'
+        ? liveSubmissions
+        : liveSubmissions
+              .where((s) => s.status.label == _selectedChip)
+              .toList();
 
     // Check for special status
-    final hasSelected = liveSubmissions.any((s) => s.status == ApplicationStatus.selected);
-    final hasRejected = liveSubmissions.any((s) => s.status == ApplicationStatus.rejected);
+    final hasSelected = visibleSubmissions.any(
+      (s) => s.status == ApplicationStatus.selected,
+    );
+    final hasRejected = visibleSubmissions.any(
+      (s) => s.status == ApplicationStatus.rejected,
+    );
 
     return Scaffold(
       backgroundColor: KalaColors.ivory,
@@ -50,99 +62,90 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             children: [
               _buildHeader(),
               const SizedBox(height: 24),
-              _buildFilterChips(),
+              _buildFilterChips(liveSubmissions),
               const SizedBox(height: 24),
-              _buildStatsSummary(),
+              _buildStatsSummary(liveSubmissions),
               const SizedBox(height: 32),
               _buildSectionTitleWithSort('Recent Applications', 'Latest First'),
               const SizedBox(height: 16),
 
               // Status banners
               if (hasSelected) _buildStatusBanner(isSelected: true),
-              if (hasRejected && !hasSelected) _buildStatusBanner(isSelected: false),
+              if (hasRejected && !hasSelected)
+                _buildStatusBanner(isSelected: false),
 
-              // Render Live Real-time Submissions
-              ...liveSubmissions.map((sub) => Padding(
+              // Render Live Real-time Submissions (Supabase-backed)
+              if (liveSubmissions.isEmpty)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: KalaColors.lightGrey),
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.mark_email_unread_outlined,
+                        size: 36,
+                        color: KalaColors.burntOrange,
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'No applications yet',
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Apply to a live opportunity and track its\nstatus here in real time.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 12,
+                          color: KalaColors.mediumGrey,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                ...visibleSubmissions.map(
+                  (sub) => Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: _buildApplicationCard(
                       id: sub.submissionId,
-                      imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=200',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=200',
                       type: sub.studentRole.toUpperCase(),
                       typeColor: KalaColors.burntOrange,
-                      typeBgColor: KalaColors.burntOrange.withValues(alpha: 0.1),
+                      typeBgColor: KalaColors.burntOrange.withValues(
+                        alpha: 0.1,
+                      ),
                       title: sub.opportunityTitle,
                       company: sub.eventTitle,
                       isVerified: true,
                       location: 'Mumbai',
-                      appliedDate: 'Submitted recently',
+                      appliedDate:
+                          'Applied ${sub.submittedAt.day}/${sub.submittedAt.month}/${sub.submittedAt.year}',
                       statusTag: sub.status.label,
                       statusColor: _statusColor(sub.status),
-                      statusBgColor: _statusColor(sub.status).withValues(alpha: 0.1),
+                      statusBgColor: _statusColor(
+                        sub.status,
+                      ).withValues(alpha: 0.1),
                       statusIcon: _statusIcon(sub.status),
                       totalStages: 5,
                       completedStages: sub.status.stepOrder,
                       stageColor: _statusColor(sub.status),
                     ),
-                  )),
-              _buildApplicationCard(
-                id: 'Indian Dance Festival 2025',
-                imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=200',
-                type: 'AUDITION',
-                typeColor: const Color(0xFFD97706),
-                typeBgColor: const Color(0xFFFEF3C7),
-                title: 'Indian Dance Festival 2025',
-                company: 'Nritya Foundation',
-                isVerified: true,
-                location: 'Delhi',
-                appliedDate: 'Applied 16 May 2025',
-                statusTag: 'Shortlisted',
-                statusColor: const Color(0xFFD97706),
-                statusBgColor: const Color(0xFFFEF3C7),
-                statusIcon: Icons.star_border,
-                totalStages: 5,
-                completedStages: 3,
-                stageColor: KalaColors.accentGreen,
-              ),
-              const SizedBox(height: 16),
-              _buildApplicationCard(
-                id: 'Short Film – Lead Actor',
-                imageUrl: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=200',
-                type: 'CASTING',
-                typeColor: const Color(0xFF059669),
-                typeBgColor: const Color(0xFFD1FAE5),
-                title: 'Short Film – Lead Actor',
-                company: 'FrameStories Productions',
-                isVerified: true,
-                location: 'Bengaluru',
-                appliedDate: 'Applied 14 May 2025',
-                statusTag: 'Interview Scheduled',
-                statusColor: const Color(0xFFEA580C),
-                statusBgColor: const Color(0xFFFFEDD5),
-                statusIcon: Icons.calendar_today_outlined,
-                totalStages: 5,
-                completedStages: 4,
-                stageColor: const Color(0xFFEA580C),
-              ),
-              const SizedBox(height: 16),
-              _buildApplicationCard(
-                id: 'Open Mic – Indie Music',
-                imageUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=200',
-                type: 'COMPETITION',
-                typeColor: const Color(0xFF4F46E5),
-                typeBgColor: const Color(0xFFE0E7FF),
-                title: 'Open Mic – Indie Music',
-                company: 'IIT Bombay Cultural Council',
-                isVerified: true,
-                location: 'Mumbai',
-                appliedDate: 'Applied 10 May 2025',
-                statusTag: 'Under Review',
-                statusColor: const Color(0xFF2563EB),
-                statusBgColor: const Color(0xFFDBEAFE),
-                statusIcon: Icons.access_time,
-                totalStages: 5,
-                completedStages: 2,
-                stageColor: const Color(0xFF2563EB),
-              ),
+                  ),
+                ),
               const SizedBox(height: 40),
             ],
           ),
@@ -154,21 +157,31 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
   // ── Status helpers ────────────────────────────────────────────────────────
   Color _statusColor(ApplicationStatus status) {
     switch (status) {
-      case ApplicationStatus.applied: return const Color(0xFF3B82F6); // Blue
-      case ApplicationStatus.underReview: return const Color(0xFFF59E0B); // Amber
-      case ApplicationStatus.interview: return const Color(0xFF8B5CF6); // Purple
-      case ApplicationStatus.selected: return KalaColors.accentGreen;   // Green
-      case ApplicationStatus.rejected: return const Color(0xFFEF4444);  // Red
+      case ApplicationStatus.applied:
+        return const Color(0xFF3B82F6); // Blue
+      case ApplicationStatus.underReview:
+        return const Color(0xFFF59E0B); // Amber
+      case ApplicationStatus.interview:
+        return const Color(0xFF8B5CF6); // Purple
+      case ApplicationStatus.selected:
+        return KalaColors.accentGreen; // Green
+      case ApplicationStatus.rejected:
+        return const Color(0xFFEF4444); // Red
     }
   }
 
   IconData _statusIcon(ApplicationStatus status) {
     switch (status) {
-      case ApplicationStatus.applied: return Icons.send_outlined;
-      case ApplicationStatus.underReview: return Icons.hourglass_top_outlined;
-      case ApplicationStatus.interview: return Icons.calendar_today_outlined;
-      case ApplicationStatus.selected: return Icons.check_circle_outline;
-      case ApplicationStatus.rejected: return Icons.cancel_outlined;
+      case ApplicationStatus.applied:
+        return Icons.send_outlined;
+      case ApplicationStatus.underReview:
+        return Icons.hourglass_top_outlined;
+      case ApplicationStatus.interview:
+        return Icons.calendar_today_outlined;
+      case ApplicationStatus.selected:
+        return Icons.check_circle_outline;
+      case ApplicationStatus.rejected:
+        return Icons.cancel_outlined;
     }
   }
 
@@ -186,23 +199,39 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
       ),
       child: Row(
         children: [
-          Icon(isSelected ? Icons.emoji_events_rounded : Icons.sentiment_dissatisfied_outlined,
-              color: Colors.white, size: 32),
+          Icon(
+            isSelected
+                ? Icons.emoji_events_rounded
+                : Icons.sentiment_dissatisfied_outlined,
+            color: Colors.white,
+            size: 32,
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isSelected ? '🎉 Congratulations! You\'re Selected!' : 'Keep Going — Don\'t Give Up',
-                  style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                  isSelected
+                      ? '🎉 Congratulations! You\'re Selected!'
+                      : 'Keep Going — Don\'t Give Up',
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   isSelected
                       ? 'The organizer has selected you. Check your inbox for next steps.'
                       : 'This one wasn\'t a match, but more opportunities await you!',
-                  style: const TextStyle(fontSize: 12, color: Colors.white70, height: 1.4),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.white70,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
@@ -223,7 +252,8 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             children: [
               Text(
                 'My Applications',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,
@@ -233,7 +263,11 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(height: 6),
               Text(
                 'Track every opportunity you\'ve applied for.',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 14,
+                  color: KalaColors.mediumGrey,
+                ),
               ),
             ],
           ),
@@ -247,7 +281,11 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                 shape: BoxShape.circle,
                 border: Border.all(color: KalaColors.lightGrey),
               ),
-              child: const Icon(Icons.search, size: 20, color: KalaColors.charcoal),
+              child: const Icon(
+                Icons.search,
+                size: 20,
+                color: KalaColors.charcoal,
+              ),
             ),
             const SizedBox(width: 12),
             Container(
@@ -281,14 +319,22 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
     );
   }
 
-  Widget _buildFilterChips() {
+  Widget _buildFilterChips(List liveSubmissions) {
+    int countOf(ApplicationStatus status) =>
+        liveSubmissions.where((s) => s.status == status).length;
     final chips = [
-      {'label': 'All', 'count': '12'},
-      {'label': 'Applied', 'count': '4'},
-      {'label': 'Under Review', 'count': '3'},
-      {'label': 'Shortlisted', 'count': '2'},
-      {'label': 'Interview', 'count': '1'},
-      {'label': 'Selected', 'count': '1'},
+      {'label': 'All', 'count': "${liveSubmissions.length}"},
+      {'label': 'Applied', 'count': '${countOf(ApplicationStatus.applied)}'},
+      {
+        'label': 'Under Review',
+        'count': '${countOf(ApplicationStatus.underReview)}',
+      },
+      {
+        'label': 'Interview',
+        'count': '${countOf(ApplicationStatus.interview)}',
+      },
+      {'label': 'Selected', 'count': '${countOf(ApplicationStatus.selected)}'},
+      {'label': 'Rejected', 'count': '${countOf(ApplicationStatus.rejected)}'},
     ];
 
     return SingleChildScrollView(
@@ -305,12 +351,19 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
-                  color: isSelected ? KalaColors.burntOrange : const Color(0xFFF5EBE0),
+                  color: isSelected
+                      ? KalaColors.burntOrange
+                      : const Color(0xFFF5EBE0),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSelected ? KalaColors.burntOrange : Colors.transparent,
+                    color: isSelected
+                        ? KalaColors.burntOrange
+                        : Colors.transparent,
                     width: 1.0,
                   ),
                 ),
@@ -318,18 +371,24 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                   children: [
                     Text(
                       chip['label']!,
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 12,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         color: isSelected ? Colors.white : KalaColors.charcoal,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       chip['count']!,
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
                         fontSize: 11,
-                        color: isSelected ? Colors.white70 : KalaColors.mediumGrey,
+                        color: isSelected
+                            ? Colors.white70
+                            : KalaColors.mediumGrey,
                       ),
                     ),
                   ],
@@ -342,7 +401,9 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
     );
   }
 
-  Widget _buildStatsSummary() {
+  Widget _buildStatsSummary(List liveSubmissions) {
+    int countOf(ApplicationStatus status) =>
+        liveSubmissions.where((s) => s.status == status).length;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
@@ -359,34 +420,64 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
       ),
       child: Row(
         children: [
-          Expanded(child: _buildStatBox(Icons.description_outlined, '12', 'Total Applied', const Color(0xFFDC2626))),
+          Expanded(
+            child: _buildStatBox(
+              Icons.description_outlined,
+              "${liveSubmissions.length}",
+              'Total Applied',
+              const Color(0xFFDC2626),
+            ),
+          ),
           _buildVerticalDivider(),
-          Expanded(child: _buildStatBox(Icons.remove_red_eye_outlined, '8', 'Profile Viewed', const Color(0xFF92400E))),
+          Expanded(
+            child: _buildStatBox(
+              Icons.remove_red_eye_outlined,
+              '${countOf(ApplicationStatus.underReview)}',
+              'Under Review',
+              const Color(0xFF92400E),
+            ),
+          ),
           _buildVerticalDivider(),
-          Expanded(child: _buildStatBox(Icons.star_border, '2', 'Shortlisted', const Color(0xFFEA580C))),
+          Expanded(
+            child: _buildStatBox(
+              Icons.star_border,
+              '${countOf(ApplicationStatus.interview)}',
+              'Interviews',
+              const Color(0xFFEA580C),
+            ),
+          ),
           _buildVerticalDivider(),
-          Expanded(child: _buildStatBox(Icons.check_circle_outline, '1', 'Selected', KalaColors.accentGreen)),
+          Expanded(
+            child: _buildStatBox(
+              Icons.check_circle_outline,
+              '${countOf(ApplicationStatus.selected)}',
+              'Selected',
+              KalaColors.accentGreen,
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildVerticalDivider() {
-    return Container(
-      width: 1,
-      height: 40,
-      color: KalaColors.lightGrey,
-    );
+    return Container(width: 1, height: 40, color: KalaColors.lightGrey);
   }
 
-  Widget _buildStatBox(IconData icon, String count, String label, Color iconColor) {
+  Widget _buildStatBox(
+    IconData icon,
+    String count,
+    String label,
+    Color iconColor,
+  ) {
     return Column(
       children: [
         Icon(icon, size: 20, color: iconColor),
         const SizedBox(height: 8),
         Text(
           count,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -396,7 +487,8 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 10,
             color: KalaColors.mediumGrey,
           ),
@@ -412,7 +504,8 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         Expanded(
           child: Text(
             title,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -431,13 +524,18 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             children: [
               Text(
                 sortLabel,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 12,
                   color: KalaColors.charcoal,
                 ),
               ),
               const SizedBox(width: 4),
-              const Icon(Icons.keyboard_arrow_down, size: 16, color: KalaColors.charcoal),
+              const Icon(
+                Icons.keyboard_arrow_down,
+                size: 16,
+                color: KalaColors.charcoal,
+              ),
             ],
           ),
         ),
@@ -483,191 +581,236 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
           ],
         ),
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  imageUrl,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    imageUrl,
                     width: 80,
                     height: 80,
-                    color: KalaColors.lightGrey,
-                    child: const Icon(Icons.image, color: KalaColors.mediumGrey),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: typeBgColor,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            type,
-                            style: TextStyle(fontFamily: 'ZT_Nature', 
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              color: typeColor,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: statusBgColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(statusIcon, size: 12, color: statusColor),
-                              const SizedBox(width: 4),
-                              Text(
-                                statusTag,
-                                style: TextStyle(fontFamily: 'ZT_Nature', 
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: statusColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      title,
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: KalaColors.charcoal,
-                        height: 1.2,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            company,
-                            style: TextStyle(fontFamily: 'ZT_Nature', 
-                              fontSize: 12,
-                              color: KalaColors.charcoal,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (isVerified) ...[
-                          const SizedBox(width: 4),
-                          const Icon(Icons.verified, size: 14, color: KalaColors.accentGreen),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on_outlined, size: 14, color: KalaColors.mediumGrey),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            location,
-                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text('•', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey)),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.calendar_today_outlined, size: 12, color: KalaColors.mediumGrey),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            appliedDate,
-                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Icon(
-                isExpanded ? Icons.keyboard_arrow_up : Icons.chevron_right,
-                size: 24,
-                color: KalaColors.charcoal,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              const SizedBox(width: 76), // 60 (image width) + 16 (spacing)
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: List.generate(totalStages, (index) {
-                          final isCompleted = index < completedStages;
-                          return Expanded(
-                            child: Container(
-                              height: 4,
-                              margin: EdgeInsets.only(right: index < totalStages - 1 ? 4 : 0),
-                              decoration: BoxDecoration(
-                                color: isCompleted ? stageColor : KalaColors.lightGrey,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      '$completedStages/$totalStages stages',
-                      style: TextStyle(fontFamily: 'ZT_Nature', 
-                        fontSize: 11,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: 80,
+                      height: 80,
+                      color: KalaColors.lightGrey,
+                      child: const Icon(
+                        Icons.image,
                         color: KalaColors.mediumGrey,
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: typeBgColor,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              type,
+                              style: TextStyle(
+                                fontFamily: 'ZT_Nature',
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                                color: typeColor,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: statusBgColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(statusIcon, size: 12, color: statusColor),
+                                const SizedBox(width: 4),
+                                Text(
+                                  statusTag,
+                                  style: TextStyle(
+                                    fontFamily: 'ZT_Nature',
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: statusColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                          height: 1.2,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              company,
+                              style: TextStyle(
+                                fontFamily: 'ZT_Nature',
+                                fontSize: 12,
+                                color: KalaColors.charcoal,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (isVerified) ...[
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.verified,
+                              size: 14,
+                              color: KalaColors.accentGreen,
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 14,
+                            color: KalaColors.mediumGrey,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              location,
+                              style: TextStyle(
+                                fontFamily: 'ZT_Nature',
+                                fontSize: 12,
+                                color: KalaColors.mediumGrey,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '•',
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 12,
+                              color: KalaColors.mediumGrey,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.calendar_today_outlined,
+                            size: 12,
+                            color: KalaColors.mediumGrey,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              appliedDate,
+                              style: TextStyle(
+                                fontFamily: 'ZT_Nature',
+                                fontSize: 12,
+                                color: KalaColors.mediumGrey,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  isExpanded ? Icons.keyboard_arrow_up : Icons.chevron_right,
+                  size: 24,
+                  color: KalaColors.charcoal,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const SizedBox(width: 76), // 60 (image width) + 16 (spacing)
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: List.generate(totalStages, (index) {
+                            final isCompleted = index < completedStages;
+                            return Expanded(
+                              child: Container(
+                                height: 4,
+                                margin: EdgeInsets.only(
+                                  right: index < totalStages - 1 ? 4 : 0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isCompleted
+                                      ? stageColor
+                                      : KalaColors.lightGrey,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        '$completedStages/$totalStages stages',
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 11,
+                          color: KalaColors.mediumGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (isExpanded) ...[
+              const SizedBox(height: 24),
+              const Divider(color: KalaColors.lightGrey, height: 1),
+              const SizedBox(height: 24),
+              _buildExpandedContent(),
             ],
-          ),
-          if (isExpanded) ...[
-            const SizedBox(height: 24),
-            const Divider(color: KalaColors.lightGrey, height: 1),
-            const SizedBox(height: 24),
-            _buildExpandedContent(),
-          ]
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -678,7 +821,8 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
       children: [
         Text(
           'Application Timeline',
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: KalaColors.charcoal,
@@ -731,13 +875,21 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
           textColor = KalaColors.charcoal;
           dateColor = KalaColors.mediumGrey;
         } else if (isActive) {
-          icon = const Icon(Icons.calendar_today, size: 14, color: Color(0xFFEA580C));
+          icon = const Icon(
+            Icons.calendar_today,
+            size: 14,
+            color: Color(0xFFEA580C),
+          );
           bgColor = Colors.white;
           borderColor = const Color(0xFFEA580C);
           textColor = KalaColors.charcoal;
           dateColor = const Color(0xFFEA580C);
         } else {
-          icon = const Icon(Icons.star_border, size: 14, color: KalaColors.mediumGrey);
+          icon = const Icon(
+            Icons.star_border,
+            size: 14,
+            color: KalaColors.mediumGrey,
+          );
           bgColor = const Color(0xFFF9FAFB);
           borderColor = KalaColors.lightGrey;
           textColor = KalaColors.mediumGrey;
@@ -755,8 +907,8 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                       color: index == 0
                           ? Colors.transparent
                           : (stages[index - 1]['status'] == 'completed'
-                              ? KalaColors.accentGreen
-                              : KalaColors.lightGrey),
+                                ? KalaColors.accentGreen
+                                : KalaColors.lightGrey),
                     ),
                   ),
                   Container(
@@ -774,7 +926,9 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                       height: 2,
                       color: index == stages.length - 1
                           ? Colors.transparent
-                          : (isCompleted ? KalaColors.accentGreen : KalaColors.lightGrey),
+                          : (isCompleted
+                                ? KalaColors.accentGreen
+                                : KalaColors.lightGrey),
                     ),
                   ),
                 ],
@@ -782,7 +936,8 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(height: 8),
               Text(
                 stages[index]['label']!,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 10,
                   fontWeight: isActive ? FontWeight.bold : FontWeight.w600,
                   color: textColor,
@@ -792,7 +947,8 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(height: 2),
               Text(
                 stages[index]['date']!,
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 10,
                   color: dateColor,
                 ),
@@ -817,12 +973,17 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.calendar_today_outlined, size: 14, color: Color(0xFF92400E)),
+              const Icon(
+                Icons.calendar_today_outlined,
+                size: 14,
+                color: Color(0xFF92400E),
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Interview Details',
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: KalaColors.charcoal,
@@ -845,12 +1006,21 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
             child: OutlinedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.calendar_today, size: 14),
-              label: Text('Add to Calendar', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600)),
+              label: Text(
+                'Add to Calendar',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFFEA580C),
                 side: const BorderSide(color: Color(0xFFF9E4D4)),
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
           ),
@@ -868,7 +1038,11 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 11,
+              color: KalaColors.charcoal,
+            ),
           ),
         ),
       ],
@@ -892,12 +1066,17 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               Expanded(
                 child: Row(
                   children: [
-                    const Icon(Icons.campaign_outlined, size: 16, color: Color(0xFF92400E)),
+                    const Icon(
+                      Icons.campaign_outlined,
+                      size: 16,
+                      color: Color(0xFF92400E),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Organizer Update',
-                        style: TextStyle(fontFamily: 'ZT_Nature', 
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: KalaColors.charcoal,
@@ -912,14 +1091,23 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               const SizedBox(width: 4),
               Text(
                 '16 May',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 10,
+                  color: KalaColors.mediumGrey,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             'Congratulations! You\'ve been shortlisted for the in-person audition. Please carry a valid ID and be prepared with a 2 min monologue.',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.charcoal, height: 1.4),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 11,
+              color: KalaColors.charcoal,
+              height: 1.4,
+            ),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -930,12 +1118,21 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
                 foregroundColor: const Color(0xFFEA580C),
                 side: const BorderSide(color: Color(0xFFF9E4D4)),
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('View All Updates', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600)),
+                  Text(
+                    'View All Updates',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(width: 4),
                   const Icon(Icons.arrow_forward, size: 14),
                 ],
@@ -964,7 +1161,11 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: KalaColors.lightGrey),
             ),
-            child: const Icon(Icons.description_outlined, size: 20, color: Color(0xFFDC2626)),
+            child: const Icon(
+              Icons.description_outlined,
+              size: 20,
+              color: Color(0xFFDC2626),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -973,12 +1174,21 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               children: [
                 Text(
                   'Your Submission',
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Resume • Acting Reel • 2 Photos • Cover Letter',
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.charcoal),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 10,
+                    color: KalaColors.charcoal,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -992,11 +1202,17 @@ class _ApplicationsTrackerScreenState extends State<ApplicationsTrackerScreen> {
               foregroundColor: const Color(0xFFEA580C),
               backgroundColor: const Color(0xFFF9E4D4).withValues(alpha: 0.5),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
             child: Text(
               'View Submission',
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

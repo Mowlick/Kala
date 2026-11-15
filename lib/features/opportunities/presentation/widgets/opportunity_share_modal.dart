@@ -21,7 +21,20 @@ class OpportunityShareModal extends StatelessWidget {
       '🔗 Apply Now on KALĀ:\n$_deepLink';
 
   String _formatDate(DateTime dt) {
-    final months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
   }
 
@@ -70,9 +83,23 @@ class OpportunityShareModal extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Share Opportunity', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                    const Text(
+                      'Share Opportunity',
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: KalaColors.charcoal,
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text(opportunity.title, style: const TextStyle(fontSize: 12, color: KalaColors.mediumGrey)),
+                    Text(
+                      opportunity.title,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: KalaColors.mediumGrey,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -92,7 +119,11 @@ class OpportunityShareModal extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: Column(
@@ -101,13 +132,23 @@ class OpportunityShareModal extends StatelessWidget {
                     data: _deepLink,
                     version: QrVersions.auto,
                     size: 180,
-                    eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: KalaColors.charcoal),
-                    dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: KalaColors.charcoal),
+                    eyeStyle: const QrEyeStyle(
+                      eyeShape: QrEyeShape.square,
+                      color: KalaColors.charcoal,
+                    ),
+                    dataModuleStyle: const QrDataModuleStyle(
+                      dataModuleShape: QrDataModuleShape.square,
+                      color: KalaColors.charcoal,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Scan to Apply',
-                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal.withValues(alpha: 0.6)),
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 12,
+                      color: KalaColors.charcoal.withValues(alpha: 0.6),
+                    ),
                   ),
                 ],
               ),
@@ -128,13 +169,20 @@ class OpportunityShareModal extends StatelessWidget {
                 Expanded(
                   child: Text(
                     _deepLink,
-                    style: const TextStyle(fontSize: 12, color: KalaColors.charcoal),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: KalaColors.charcoal,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 GestureDetector(
                   onTap: () => _copyLink(context),
-                  child: const Icon(Icons.copy_outlined, size: 18, color: KalaColors.burntOrange),
+                  child: const Icon(
+                    Icons.copy_outlined,
+                    size: 18,
+                    color: KalaColors.burntOrange,
+                  ),
                 ),
               ],
             ),
@@ -150,11 +198,20 @@ class OpportunityShareModal extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () => _openWhatsApp(context),
                   icon: const Icon(Icons.message_outlined, size: 18),
-                  label: const Text('Share on WhatsApp', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold)),
+                  label: const Text(
+                    'Share on WhatsApp',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF25D366),
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                 ),
@@ -165,11 +222,22 @@ class OpportunityShareModal extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _copyLink(context),
                   icon: const Icon(Icons.link_outlined, size: 18),
-                  label: const Text('Copy Link', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold)),
+                  label: const Text(
+                    'Copy Link',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: KalaColors.charcoal,
-                    side: BorderSide(color: KalaColors.charcoal.withValues(alpha: 0.2)),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    side: BorderSide(
+                      color: KalaColors.charcoal.withValues(alpha: 0.2),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                 ),

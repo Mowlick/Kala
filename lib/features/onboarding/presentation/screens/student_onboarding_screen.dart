@@ -1,29 +1,79 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../../core/navigation/app_router.dart';
+import '../onboarding_controller.dart';
 
 class StudentOnboardingScreen extends StatefulWidget {
   const StudentOnboardingScreen({super.key});
 
   @override
-  State<StudentOnboardingScreen> createState() => _StudentOnboardingScreenState();
+  State<StudentOnboardingScreen> createState() =>
+      _StudentOnboardingScreenState();
 }
 
 class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
+
+  String _experienceLevel = 'Intermediate';
+  String _yearsOfExperience = '2-4 Years';
+
   // Selected Skills state for Page 2
   final List<String> _selectedSkills = ['Singing', 'Dance'];
 
-  void _nextPage() {
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _nameController.dispose();
+    _dobController.dispose();
+    _locationController.dispose();
+    _phoneController.dispose();
+    _bioController.dispose();
+    super.dispose();
+  }
+
+  void _nextPage() async {
+    if (_currentPage == 0) {
+      if (!_formKey.currentState!.validate()) return;
+    }
+
     if (_currentPage < 2) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
-      Navigator.pushReplacementNamed(context, '/home');
+      // Final submission
+      final controller = context.read<OnboardingController>();
+      controller.updateDetails(
+        name: _nameController.text.trim(),
+        city: _locationController.text.trim(),
+        experienceLevel: _experienceLevel,
+        primarySkills: _selectedSkills,
+        languages: [],
+        openTo: [],
+      );
+      controller.model.goals = [_bioController.text.trim()];
+
+      final success = await controller.submitStudentOnboarding();
+      if (!mounted) return;
+      if (success) {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(controller.errorMessage ?? 'Submission failed'),
+          ),
+        );
+      }
     }
   }
 
@@ -40,32 +90,36 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<OnboardingController>();
     return Scaffold(
-      backgroundColor: KalaColors.ivory, // Standard white background for forms
+      backgroundColor: KalaColors.ivory,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 16),
-            _buildStepper(),
-            const SizedBox(height: 24),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(), // Disable swipe
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                children: [
-                  _buildPage1(),
-                  _buildPage2(),
-                  _buildPage3(),
-                ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 16),
+              _buildStepper(),
+              const SizedBox(height: 24),
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  children: [
+                    _buildPage1(),
+                    _buildPage2(),
+                    _buildPage3(controller.isLoading),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -80,18 +134,19 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
             icon: const Icon(Icons.arrow_back, color: KalaColors.charcoal),
             onPressed: _previousPage,
           ),
-          Expanded(
+          const Expanded(
             child: Text(
-              'Create Account',
-              style: TextStyle(fontFamily: 'ZT_Nature', 
-                fontSize: 18,
+              'Create Student Account',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: KalaColors.charcoal,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 48), // To balance the back button
+          const SizedBox(width: 48),
         ],
       ),
     );
@@ -116,17 +171,21 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
   Widget _buildStepItem(int stepIndex, String title) {
     final isCompleted = _currentPage > stepIndex;
     final isActive = _currentPage == stepIndex;
-    
+
     return Column(
       children: [
         Container(
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: (isActive || isCompleted) ? const Color(0xFFEA580C) : Colors.white,
+            color: (isActive || isCompleted)
+                ? const Color(0xFFEA580C)
+                : Colors.white,
             shape: BoxShape.circle,
             border: Border.all(
-              color: (isActive || isCompleted) ? const Color(0xFFEA580C) : KalaColors.lightGrey,
+              color: (isActive || isCompleted)
+                  ? const Color(0xFFEA580C)
+                  : KalaColors.lightGrey,
               width: 1.5,
             ),
           ),
@@ -135,7 +194,8 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                 ? const Icon(Icons.check, color: Colors.white, size: 18)
                 : Text(
                     '${stepIndex + 1}',
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: isActive ? Colors.white : KalaColors.mediumGrey,
@@ -146,7 +206,8 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
         const SizedBox(height: 8),
         Text(
           title,
-          style: TextStyle(fontFamily: 'ZT_Nature', 
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
             fontSize: 12,
             fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
             color: isActive ? KalaColors.charcoal : KalaColors.mediumGrey,
@@ -171,71 +232,106 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Basic Information',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Tell us more about yourself',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 14,
+              color: KalaColors.mediumGrey,
+            ),
           ),
           const SizedBox(height: 32),
-          _buildInputField(
+          _buildTextField(
+            controller: _nameController,
             icon: Icons.person_outline,
-            label: 'Full Name',
-            value: 'Aarav Sharma',
+            label: 'Full Name *',
+            hint: 'Aarav Sharma',
+            validator: (v) => v == null || v.isEmpty ? 'Required' : null,
           ),
           const SizedBox(height: 16),
-          _buildInputField(
+          _buildTextField(
+            controller: _dobController,
             icon: Icons.calendar_today_outlined,
-            label: 'Date of Birth',
-            value: '22 May 2003',
-            isDropdown: true,
+            label: 'Date of Birth *',
+            hint: 'DD MMM YYYY',
+            validator: (v) => v == null || v.isEmpty ? 'Required' : null,
           ),
           const SizedBox(height: 16),
-          _buildInputField(
+          _buildTextField(
+            controller: _locationController,
             icon: Icons.location_on_outlined,
-            label: 'Location',
-            value: 'Delhi, India',
-            isDropdown: true,
+            label: 'Location *',
+            hint: 'Delhi, India',
+            validator: (v) => v == null || v.isEmpty ? 'Required' : null,
           ),
           const SizedBox(height: 16),
-          _buildInputField(
+          _buildTextField(
+            controller: _phoneController,
             icon: Icons.phone_outlined,
             label: 'Phone Number',
-            value: '+91 98765 43210',
+            hint: '+91 98765 43210',
           ),
           const SizedBox(height: 48),
-          _buildPrimaryButton('Continue', Icons.arrow_forward),
+          _buildPrimaryButton('Continue', Icons.arrow_forward, false),
         ],
       ),
     );
   }
 
   Widget _buildPage2() {
-    final allSkills = ['Singing', 'Dance', 'Acting', 'Instrumentalist', 'Beatboxer', 'Other'];
-    
+    final allSkills = [
+      'Singing',
+      'Dance',
+      'Acting',
+      'Instrumentalist',
+      'Beatboxer',
+      'Other',
+    ];
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Profile Details',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'This helps organizers know you better',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 14,
+              color: KalaColors.mediumGrey,
+            ),
           ),
           const SizedBox(height: 24),
           Row(
             children: [
-              Text(
+              const Text(
                 'Profile Photo',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
               ),
               const Spacer(),
               Stack(
@@ -247,7 +343,9 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: NetworkImage('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200'),
+                        image: NetworkImage(
+                          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200',
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -259,7 +357,11 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
-                    child: const Icon(Icons.camera_alt, size: 14, color: Colors.white),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: 14,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -268,13 +370,21 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
           ),
           const SizedBox(height: 24),
           RichText(
-            text: TextSpan(
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            text: const TextSpan(
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
               children: [
-                const TextSpan(text: 'Category / Skills '),
+                TextSpan(text: 'Category / Skills '),
                 TextSpan(
                   text: '(Select up to 3)',
-                  style: TextStyle(color: KalaColors.mediumGrey, fontWeight: FontWeight.normal),
+                  style: TextStyle(
+                    color: KalaColors.mediumGrey,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ],
             ),
@@ -296,12 +406,17 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected ? const Color(0xFFFFF7ED) : Colors.white,
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFFEA580C) : KalaColors.lightGrey,
+                      color: isSelected
+                          ? const Color(0xFFEA580C)
+                          : KalaColors.lightGrey,
                     ),
                   ),
                   child: Row(
@@ -309,15 +424,24 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                     children: [
                       Text(
                         skill,
-                        style: TextStyle(fontFamily: 'ZT_Nature', 
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
                           fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                          color: isSelected ? const Color(0xFFEA580C) : KalaColors.charcoal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w500,
+                          color: isSelected
+                              ? const Color(0xFFEA580C)
+                              : KalaColors.charcoal,
                         ),
                       ),
                       if (isSelected) ...[
                         const SizedBox(width: 4),
-                        const Icon(Icons.check_circle, size: 16, color: Color(0xFFEA580C)),
+                        const Icon(
+                          Icons.check_circle,
+                          size: 16,
+                          color: Color(0xFFEA580C),
+                        ),
                       ],
                     ],
                   ),
@@ -326,105 +450,102 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
             }).toList(),
           ),
           const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: Text('Experience Level', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: KalaColors.lightGrey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Intermediate', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal)),
-                      const Icon(Icons.keyboard_arrow_down, color: KalaColors.mediumGrey, size: 18),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          const Text(
+            'Experience Level',
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
+          ),
+          DropdownButtonFormField<String>(
+            initialValue: _experienceLevel,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16),
+            ),
+            items: [
+              'Beginner',
+              'Intermediate',
+              'Expert',
+            ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+            onChanged: (v) => setState(() => _experienceLevel = v!),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: Text('Years of Experience', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: KalaColors.lightGrey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('2-4 Years', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal)),
-                      const Icon(Icons.keyboard_arrow_down, color: KalaColors.mediumGrey, size: 18),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          const Text(
+            'Years of Experience',
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
+          ),
+          DropdownButtonFormField<String>(
+            initialValue: _yearsOfExperience,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16),
+            ),
+            items: [
+              '0-1 Years',
+              '2-4 Years',
+              '5+ Years',
+            ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+            onChanged: (v) => setState(() => _yearsOfExperience = v!),
           ),
           const SizedBox(height: 24),
-          Text(
+          const Text(
             'Bio',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
           ),
           const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: KalaColors.lightGrey),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Stack(
-              children: [
-                Text(
-                  'Passionate singer and songwriter.\nPerformed at various college events\nand music festivals.',
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal, height: 1.5),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Text(
-                    '92/200',
-                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
-                  ),
-                ),
-              ],
+          TextFormField(
+            controller: _bioController,
+            maxLines: 3,
+            maxLength: 200,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Passionate singer and songwriter...',
             ),
           ),
           const SizedBox(height: 32),
-          _buildPrimaryButton('Continue', Icons.arrow_forward),
+          _buildPrimaryButton('Continue', Icons.arrow_forward, false),
           const SizedBox(height: 24),
         ],
       ),
     );
   }
 
-  Widget _buildPage3() {
+  Widget _buildPage3(bool isLoading) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Verification',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Help us verify your identity',
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, color: KalaColors.mediumGrey),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 14,
+              color: KalaColors.mediumGrey,
+            ),
           ),
           const SizedBox(height: 24),
           _buildUploadBox(
@@ -448,18 +569,28 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal),
+                  text: const TextSpan(
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 12,
+                      color: KalaColors.charcoal,
+                    ),
                     children: [
-                      const TextSpan(text: 'I agree to the '),
-                      const TextSpan(
+                      TextSpan(text: 'I agree to the '),
+                      TextSpan(
                         text: 'Terms of Service',
-                        style: TextStyle(color: Color(0xFFEA580C), fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Color(0xFFEA580C),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const TextSpan(text: ' and\n'),
-                      const TextSpan(
+                      TextSpan(text: ' and\n'),
+                      TextSpan(
                         text: 'Privacy Policy',
-                        style: TextStyle(color: Color(0xFFEA580C), fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Color(0xFFEA580C),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -468,16 +599,24 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
             ],
           ),
           const SizedBox(height: 24),
-          _buildPrimaryButton('Create Account', Icons.check_circle_outline),
+          _buildPrimaryButton(
+            'Create Account',
+            Icons.check_circle_outline,
+            isLoading,
+          ),
           const SizedBox(height: 24),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline, size: 14, color: KalaColors.mediumGrey),
-              const SizedBox(width: 8),
+              Icon(Icons.lock_outline, size: 14, color: KalaColors.mediumGrey),
+              SizedBox(width: 8),
               Text(
                 'Your data is secure with us',
-                style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.mediumGrey),
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  color: KalaColors.mediumGrey,
+                ),
               ),
             ],
           ),
@@ -486,53 +625,78 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
     );
   }
 
-  Widget _buildInputField({required IconData icon, required String label, required String value, bool isDropdown = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: KalaColors.lightGrey),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: KalaColors.mediumGrey, size: 22),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
-                ),
-              ],
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required IconData icon,
+    required String label,
+    required String hint,
+    String? Function(String?)? validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 10,
+            color: KalaColors.mediumGrey,
+          ),
+        ),
+        const SizedBox(height: 4),
+        TextFormField(
+          controller: controller,
+          validator: validator,
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: KalaColors.mediumGrey, size: 22),
+            hintText: hint,
+            hintStyle: const TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: KalaColors.mediumGrey,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: KalaColors.lightGrey),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
             ),
           ),
-          if (isDropdown)
-            const Icon(Icons.keyboard_arrow_down, color: KalaColors.mediumGrey),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildUploadBox({required String title, required String label, required String subtitle, required IconData icon, bool isOptional = false}) {
+  Widget _buildUploadBox({
+    required String title,
+    required String label,
+    required String subtitle,
+    required IconData icon,
+    bool isOptional = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
           text: TextSpan(
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: const TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
             children: [
               TextSpan(text: title),
               if (isOptional)
-                TextSpan(
+                const TextSpan(
                   text: ' (Optional)',
-                  style: TextStyle(color: KalaColors.mediumGrey, fontWeight: FontWeight.normal),
+                  style: TextStyle(
+                    color: KalaColors.mediumGrey,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
             ],
           ),
@@ -561,17 +725,30 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
                   children: [
                     Text(
                       label,
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: KalaColors.charcoal,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey, height: 1.4),
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 11,
+                        color: KalaColors.mediumGrey,
+                        height: 1.4,
+                      ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.file_upload_outlined, color: KalaColors.charcoal),
+              const Icon(
+                Icons.file_upload_outlined,
+                color: KalaColors.charcoal,
+              ),
             ],
           ),
         ),
@@ -579,29 +756,41 @@ class _StudentOnboardingScreenState extends State<StudentOnboardingScreen> {
     );
   }
 
-  Widget _buildPrimaryButton(String text, IconData icon) {
+  Widget _buildPrimaryButton(String text, IconData icon, bool isLoading) {
     return GestureDetector(
-      onTap: _nextPage,
+      onTap: isLoading ? null : _nextPage,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFEA580C),
+          color: isLoading ? KalaColors.mediumGrey : const Color(0xFFEA580C),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              text,
-              style: TextStyle(fontFamily: 'ZT_Nature', 
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Icon(icon, color: Colors.white, size: 20),
+            isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text(
+                    text,
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+            if (!isLoading) ...[
+              const SizedBox(width: 8),
+              Icon(icon, color: Colors.white, size: 20),
+            ],
           ],
         ),
       ),

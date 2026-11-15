@@ -26,7 +26,11 @@ class AnalyticsService {
       totalApplications: 142,
       conversionRate: 68.4,
       dropOffRate: 12.1,
-      topSkillsRequested: ['Lead Singing', 'Cinematography', 'Contemporary Dance'],
+      topSkillsRequested: [
+        'Lead Singing',
+        'Cinematography',
+        'Contemporary Dance',
+      ],
       acceptanceRate: 18.5,
       averageReviewTime: '1.4 days',
     );

@@ -3,15 +3,42 @@ import '../../domain/models/portfolio_item_model.dart';
 
 class StudentProfileController extends ChangeNotifier {
   final List<PortfolioItemModel> _portfolioItems = [];
-  final List<String> _skills = ['Lead Singing', 'Bollywood Playback', 'Contemporary Dance'];
-  final List<String> _experiences = ['Vocalist at NCPA Music Fest (2025)', 'Lead Dancer in FrameStories Short Film'];
-  String _bio = 'Passionate vocalist & performer based in Mumbai. 5+ years live stage experience.';
+  final List<String> _skills = [
+    'Lead Singing',
+    'Bollywood Playback',
+    'Contemporary Dance',
+  ];
+  final List<String> _experiences = [
+    'Vocalist at NCPA Music Fest (2025)',
+    'Lead Dancer in FrameStories Short Film',
+  ];
+  String _bio =
+      'Passionate vocalist & performer based in Mumbai. 5+ years live stage experience.';
   String _demoReelUrl = 'https://youtube.com/watch?v=mock_demo_reel';
   List<String> _creativeRoles = ['Singer', 'Vocalist', 'Dancer'];
 
-  List<PortfolioItemModel> get portfolioItems => List.unmodifiable(_portfolioItems);
-  List<PortfolioItemModel> get featuredItems => _portfolioItems.where((i) => i.isFeatured && !i.isDraft).toList();
-  List<PortfolioItemModel> get drafts => _portfolioItems.where((i) => i.isDraft).toList();
+  List<PortfolioItemModel>? _featuredItemsCache;
+  List<PortfolioItemModel>? _draftsCache;
+
+  List<PortfolioItemModel> get portfolioItems =>
+      List.unmodifiable(_portfolioItems);
+  List<PortfolioItemModel> get featuredItems {
+    _featuredItemsCache ??= _portfolioItems
+        .where((i) => i.isFeatured && !i.isDraft)
+        .toList();
+    return _featuredItemsCache!;
+  }
+
+  List<PortfolioItemModel> get drafts {
+    _draftsCache ??= _portfolioItems.where((i) => i.isDraft).toList();
+    return _draftsCache!;
+  }
+
+  void _invalidateCaches() {
+    _featuredItemsCache = null;
+    _draftsCache = null;
+  }
+
   List<String> get skills => List.unmodifiable(_skills);
   List<String> get experiences => List.unmodifiable(_experiences);
   String get bio => _bio;
@@ -28,7 +55,8 @@ class StudentProfileController extends ChangeNotifier {
         id: 'port_1',
         title: 'NCPA Live Solo Performance',
         description: 'Recorded live at National Center for Performing Arts',
-        mediaUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+        mediaUrl:
+            'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
         category: 'performance',
         tags: ['Live', 'Vocal', 'Classical'],
         isFeatured: true,
@@ -43,7 +71,8 @@ class StudentProfileController extends ChangeNotifier {
         id: 'port_2',
         title: 'Best Vocalist Award 2025',
         description: 'First place trophy at Inter-College Fest',
-        mediaUrl: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad',
+        mediaUrl:
+            'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad',
         category: 'certificate',
         tags: ['Award', 'Trophy'],
         isFeatured: true,
@@ -76,6 +105,7 @@ class StudentProfileController extends ChangeNotifier {
     } else {
       _portfolioItems.add(item);
     }
+    _invalidateCaches();
     notifyListeners();
   }
 

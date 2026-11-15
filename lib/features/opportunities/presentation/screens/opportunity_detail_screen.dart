@@ -3,11 +3,40 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
 import '../../../events/presentation/controllers/event_controller.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../applications/domain/models/application_submission_model.dart';
 import '../../domain/models/opportunity_model.dart';
+import '../../domain/models/dynamic_form_model.dart';
 import '../widgets/dynamic_form_renderer.dart';
 
-class OpportunityDetailScreen extends StatelessWidget {
+class OpportunityDetailScreen extends StatefulWidget {
   const OpportunityDetailScreen({super.key});
+
+  @override
+  State<OpportunityDetailScreen> createState() =>
+      _OpportunityDetailScreenState();
+}
+
+class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
+  bool _formLoadRequested = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_formLoadRequested) return;
+    _formLoadRequested = true;
+
+    // Make sure the organizer's application form is on this device before
+    // the student taps Apply — pulls it straight from Supabase if the
+    // realtime/initial sync hasn't delivered it yet.
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is OpportunityModel && args.formId.isNotEmpty) {
+      final controller = context.read<EventController>();
+      final existing = controller.getFormById(args.formId);
+      if (existing == null || existing.fields.isEmpty) {
+        controller.loadForm(args.formId);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +45,36 @@ class OpportunityDetailScreen extends StatelessWidget {
     // Accept either a real OpportunityModel or a legacy Map
     final OpportunityModel? liveOpp = args is OpportunityModel ? args : null;
 
+    final controller = context.watch<EventController>();
+    final auth = context.read<AuthController>();
+    final applied =
+        liveOpp != null &&
+        controller.hasApplied(auth.currentUserId, liveOpp.opportunityId);
+    final event = liveOpp != null
+        ? controller.getEventById(liveOpp.eventId)
+        : null;
+
     // Fallback Map for when navigated without a real model (e.g. from mock cards)
-    final Map<String, dynamic> opp = args is Map<String, dynamic> ? args : {
-      'title': liveOpp?.title ?? 'Dancers for Music Video',
-      'location': 'Mumbai, Maharashtra',
-      'category': liveOpp?.category ?? 'AUDITION',
-      'compensation': liveOpp?.stipend ?? 'Paid (₹15,000 - ₹20,000)',
-      'age': '18-25 yrs',
-      'duration': liveOpp != null
-          ? 'Closes in ${liveOpp.deadline.difference(DateTime.now()).inDays} days'
-          : '3 days left',
-      'tags': [liveOpp?.category ?? 'Performance'],
-      'imageUrl': 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
-    };
+    final Map<String, dynamic> opp = args is Map<String, dynamic>
+        ? args
+        : {
+            'title': liveOpp?.title ?? 'Dancers for Music Video',
+            'location': liveOpp != null
+                ? (event?.location.isNotEmpty == true
+                      ? event!.location
+                      : 'Mumbai, Maharashtra')
+                : 'Mumbai, Maharashtra',
+            'category': liveOpp?.category ?? 'AUDITION',
+            'compensation': liveOpp?.stipend ?? 'Paid (₹15,000 - ₹20,000)',
+            'age': liveOpp?.eligibility ?? '',
+            'duration': liveOpp != null
+                ? 'Closes in ${liveOpp.deadline.difference(DateTime.now()).inDays} days'
+                : '3 days left',
+            'tags': [liveOpp?.category ?? 'Performance'],
+            'description': liveOpp?.description ?? '',
+            'imageUrl':
+                'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
+          };
 
     return Scaffold(
       body: Stack(
@@ -56,7 +102,10 @@ class OpportunityDetailScreen extends StatelessWidget {
                       height: 280,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Colors.black.withValues(alpha: 0.4), Colors.transparent],
+                          colors: [
+                            Colors.black.withValues(alpha: 0.4),
+                            Colors.transparent,
+                          ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         ),
@@ -65,7 +114,10 @@ class OpportunityDetailScreen extends StatelessWidget {
                     // Back button & Bookmark
                     SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -78,7 +130,10 @@ class OpportunityDetailScreen extends StatelessWidget {
                                   shape: BoxShape.circle,
                                   color: Colors.white,
                                 ),
-                                child: const Icon(Icons.arrow_back, color: KalaColors.charcoal),
+                                child: const Icon(
+                                  Icons.arrow_back,
+                                  color: KalaColors.charcoal,
+                                ),
                               ),
                             ),
                             Container(
@@ -88,7 +143,10 @@ class OpportunityDetailScreen extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 color: Colors.white,
                               ),
-                              child: const Icon(Icons.bookmark_border, color: KalaColors.charcoal),
+                              child: const Icon(
+                                Icons.bookmark_border,
+                                color: KalaColors.charcoal,
+                              ),
                             ),
                           ],
                         ),
@@ -105,7 +163,10 @@ class OpportunityDetailScreen extends StatelessWidget {
                     children: [
                       // Category Tag
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: KalaColors.softBeige,
                           borderRadius: BorderRadius.circular(6),
@@ -124,7 +185,8 @@ class OpportunityDetailScreen extends StatelessWidget {
                       // Title
                       Text(
                         opp['title'] as String,
-                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        style: Theme.of(context).textTheme.displaySmall
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               height: 1.2,
                             ),
@@ -133,23 +195,36 @@ class OpportunityDetailScreen extends StatelessWidget {
                       // Organizer row
                       Row(
                         children: [
-                          const CircleAvatar(
-                            backgroundImage: NetworkImage('https://images.unsplash.com/photo-1534528741775-53994a69daeb'),
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              event?.organizationLogo.isNotEmpty == true
+                                  ? event!.organizationLogo
+                                  : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
+                            ),
                             radius: 12,
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Kala Studio Productions  ',
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            event?.organizationName ??
+                                'Kala Studio Productions',
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
-                          const Icon(Icons.verified, color: KalaColors.burntOrange, size: 14),
+                          if (event?.isVerified ?? true) ...[
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.verified,
+                              color: KalaColors.burntOrange,
+                              size: 14,
+                            ),
+                          ],
                         ],
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Divider
                       const Divider(color: KalaColors.softBeige, thickness: 1),
                       const SizedBox(height: 16),
@@ -157,15 +232,38 @@ class OpportunityDetailScreen extends StatelessWidget {
                       // Quick Stats Grid
                       Row(
                         children: [
-                          _buildStatItem(context, Icons.payments_outlined, 'Compensation', opp['compensation']),
-                          _buildStatItem(context, Icons.location_on_outlined, 'Location', opp['location']),
+                          _buildStatItem(
+                            context,
+                            Icons.payments_outlined,
+                            'Compensation',
+                            opp['compensation'],
+                          ),
+                          _buildStatItem(
+                            context,
+                            Icons.location_on_outlined,
+                            'Location',
+                            opp['location'],
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       Row(
                         children: [
-                          _buildStatItem(context, Icons.hourglass_empty_outlined, 'Duration', opp['duration']),
-                          _buildStatItem(context, Icons.people_outline, 'Open for', opp['age']),
+                          _buildStatItem(
+                            context,
+                            Icons.hourglass_empty_outlined,
+                            'Duration',
+                            opp['duration'],
+                          ),
+                          // Eligibility is shown exactly as the organizer
+                          // wrote it; hidden when they left it blank.
+                          if ((opp['age'] as String).isNotEmpty)
+                            _buildStatItem(
+                              context,
+                              Icons.people_outline,
+                              'Open for',
+                              opp['age'],
+                            ),
                         ],
                       ),
 
@@ -176,33 +274,36 @@ class OpportunityDetailScreen extends StatelessWidget {
                       // Description Section
                       Text(
                         'About the Opportunity',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'We are casting female contemporary and hip hop dancers for an upcoming independent Hindi indie pop music video project shooting in Mumbai. The choreography represents raw, expressive narrative movements blending classical Indian postures with modern dynamic shapes.',
+                        (opp['description'] as String?)?.isNotEmpty == true
+                            ? opp['description'] as String
+                            : 'The organizer will publish full details for this opportunity. Apply to get your profile in front of them.',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: KalaColors.mediumGrey,
-                              height: 1.5,
-                            ),
+                          color: KalaColors.mediumGrey,
+                          height: 1.5,
+                        ),
                       ),
                       const SizedBox(height: 20),
 
-                      // Requirements Section
-                      Text(
-                        'Requirements',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildBulletItem(context, 'Strong background in hip hop or contemporary fusion.'),
-                      _buildBulletItem(context, 'Prior screen performance experience preferred.'),
-                      _buildBulletItem(context, 'Available for rehearsals in Mumbai during June.'),
-                      _buildBulletItem(context, 'A valid performance portfolio and reels on KALĀ.'),
-                      
+                      // Requirements Section — the organizer's own published
+                      // requirements, exactly as stored in Supabase.
+                      if (liveOpp != null &&
+                          liveOpp.requirements.isNotEmpty) ...[
+                        Text(
+                          'Requirements',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        ...liveOpp.requirements.map(
+                          (r) => _buildBulletItem(context, r),
+                        ),
+                      ],
+
                       // Extra padding for bottom button space
                       const SizedBox(height: 120),
                     ],
@@ -243,11 +344,18 @@ class OpportunityDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Deadline',
-                          style: TextStyle(fontSize: 11, color: KalaColors.mediumGrey),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: KalaColors.mediumGrey,
+                          ),
                         ),
                         const SizedBox(height: 2),
-                        const Text(
-                          '31 May 2026',
+                        Text(
+                          liveOpp != null
+                              ? '${liveOpp.deadline.day} '
+                                    '${const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][liveOpp.deadline.month - 1]} '
+                                    '${liveOpp.deadline.year}'
+                              : '31 May 2026',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -261,41 +369,94 @@ class OpportunityDetailScreen extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: ElevatedButton(
-                      onPressed: () {
-                        final controller = context.read<EventController>();
-                        final auth = context.read<AuthController>();
+                      onPressed: applied
+                          ? null
+                          : () async {
+                              final controller = context
+                                  .read<EventController>();
+                              final auth = context.read<AuthController>();
 
-                        // Prefer the real form linked to this opportunity
-                        final form = liveOpp != null
-                            ? controller.getFormById(liveOpp.formId) ?? (controller.forms.isNotEmpty ? controller.forms.first : null)
-                            : (controller.forms.isNotEmpty ? controller.forms.first : null);
+                              final opportunityId =
+                                  liveOpp?.opportunityId ?? '';
+                              final opportunityTitle =
+                                  liveOpp?.title ??
+                                  opp['title'] as String? ??
+                                  'Opportunity';
+                              final eventId = liveOpp?.eventId ?? '';
+                              final eventTitle = event?.title ?? 'KALĀ Event';
 
-                        if (form != null) {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (ctx) => SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.85,
-                              child: DynamicFormRenderer(
-                                form: form,
-                                opportunityId: liveOpp?.opportunityId ?? 'opp_301',
-                                opportunityTitle: liveOpp?.title ?? opp['title'] ?? 'Opportunity',
-                                eventId: liveOpp?.eventId ?? 'evt_101',
-                                eventTitle: 'National Creative Fest 2026',
-                                studentId: auth.currentUserId.isNotEmpty ? auth.currentUserId : 'usr_demo',
-                                onSubmit: (submission) {
-                                  controller.submitApplication(submission);
-                                  Navigator.pop(ctx);
-                                  _showApplySuccessDialog(context);
-                                },
-                              ),
-                            ),
-                          );
-                        } else {
-                          _showApplySuccessDialog(context);
-                        }
-                      },
-                      child: const Text('Apply Now'),
+                              // Use only THIS opportunity's real form. If it
+                              // hasn't synced yet, still show the application
+                              // sheet — the renderer falls back to default
+                              // personal-detail questions so Apply always
+                              // works.
+                              final linkedForm = liveOpp != null
+                                  ? controller.getFormById(liveOpp.formId)
+                                  : null;
+                              final form =
+                                  linkedForm ??
+                                  DynamicFormModel(
+                                    formId: liveOpp?.formId ?? '',
+                                    title: 'Application Form',
+                                    fields: const [],
+                                    createdAt: DateTime.now(),
+                                  );
+
+                              // Kick off a background fetch in case the form
+                              // simply hasn't arrived on this device yet.
+                              if (linkedForm == null &&
+                                  (liveOpp?.formId.isNotEmpty ?? false)) {
+                                controller.loadForm(liveOpp!.formId);
+                              }
+
+                              final submission =
+                                  await showModalBottomSheet<
+                                    ApplicationSubmissionModel
+                                  >(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (ctx) => SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                          0.85,
+                                      child: DynamicFormRenderer(
+                                        form: form,
+                                        opportunityId: opportunityId,
+                                        opportunityTitle: opportunityTitle,
+                                        eventId: eventId,
+                                        eventTitle: eventTitle,
+                                        organizerId: liveOpp?.organizerId ?? '',
+                                        studentId: auth.currentUserId.isNotEmpty
+                                            ? auth.currentUserId
+                                            : 'usr_demo',
+                                        onSubmit: (sub) {
+                                          Navigator.pop(ctx, sub);
+                                        },
+                                      ),
+                                    ),
+                                  );
+
+                              if (submission == null || !context.mounted) {
+                                return;
+                              }
+                              final outcome = await controller
+                                  .submitApplication(submission);
+                              if (!context.mounted) return;
+                              if (outcome.ok) {
+                                _showApplySuccessDialog(context);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    content: Text(
+                                      outcome.message ??
+                                          'Could not submit the application. Please try again.',
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                      child: Text(applied ? 'Applied ✓' : 'Apply Now'),
                     ),
                   ),
                 ],
@@ -307,7 +468,12 @@ class OpportunityDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildStatItem(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value,
+  ) {
     return Expanded(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,9 +501,9 @@ class OpportunityDetailScreen extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: KalaColors.charcoal,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
               ],
             ),
@@ -362,9 +528,9 @@ class OpportunityDetailScreen extends StatelessWidget {
             child: Text(
               text,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: KalaColors.mediumGrey,
-                    height: 1.4,
-                  ),
+                color: KalaColors.mediumGrey,
+                height: 1.4,
+              ),
             ),
           ),
         ],
@@ -377,7 +543,9 @@ class OpportunityDetailScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           elevation: 8,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -400,17 +568,17 @@ class OpportunityDetailScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text(
                   'Application Submitted!',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Your KALĀ portfolio and contact details have been successfully shared with the organizer.',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: KalaColors.mediumGrey,
-                      ),
+                    color: KalaColors.mediumGrey,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(

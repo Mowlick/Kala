@@ -5,7 +5,8 @@ class CreateOpportunityScreen extends StatefulWidget {
   const CreateOpportunityScreen({super.key});
 
   @override
-  State<CreateOpportunityScreen> createState() => _CreateOpportunityScreenState();
+  State<CreateOpportunityScreen> createState() =>
+      _CreateOpportunityScreenState();
 }
 
 class _CreateOpportunityScreenState extends State<CreateOpportunityScreen> {
@@ -15,9 +16,15 @@ class _CreateOpportunityScreenState extends State<CreateOpportunityScreen> {
   final _compensationController = TextEditingController();
   final _requirementsController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   String _selectedCategory = 'Audition';
-  final List<String> _categories = ['Audition', 'Gig', 'Competition', 'Internship', 'Workshop'];
+  final List<String> _categories = [
+    'Audition',
+    'Gig',
+    'Competition',
+    'Internship',
+    'Workshop',
+  ];
 
   @override
   void dispose() {
@@ -51,15 +58,15 @@ class _CreateOpportunityScreenState extends State<CreateOpportunityScreen> {
                   Text(
                     'Reach India\'s Best Talent',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Post details about your audition, gig, or event to find professional creators.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: KalaColors.mediumGrey,
-                        ),
+                      color: KalaColors.mediumGrey,
+                    ),
                   ),
                   const SizedBox(height: 28),
 
@@ -158,7 +165,8 @@ class _CreateOpportunityScreenState extends State<CreateOpportunityScreen> {
                     controller: _descriptionController,
                     maxLines: 4,
                     decoration: const InputDecoration(
-                      hintText: 'Provide details about the project, schedules, and what selected artists will get to do...',
+                      hintText:
+                          'Provide details about the project, schedules, and what selected artists will get to do...',
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -179,7 +187,8 @@ class _CreateOpportunityScreenState extends State<CreateOpportunityScreen> {
                     controller: _requirementsController,
                     maxLines: 3,
                     decoration: const InputDecoration(
-                      hintText: 'e.g. Min 2 years hip hop experience\nMust reside in Mumbai\nPortfolio reels are required',
+                      hintText:
+                          'e.g. Min 2 years hip hop experience\nMust reside in Mumbai\nPortfolio reels are required',
                     ),
                   ),
                   const SizedBox(height: 36),
@@ -207,7 +216,9 @@ class _CreateOpportunityScreenState extends State<CreateOpportunityScreen> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           elevation: 8,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -230,17 +241,17 @@ class _CreateOpportunityScreenState extends State<CreateOpportunityScreen> {
                 const SizedBox(height: 20),
                 Text(
                   'Opportunity Posted!',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Your opportunity has been successfully reviewed and is now live for all KALĀ creators.',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: KalaColors.mediumGrey,
-                      ),
+                    color: KalaColors.mediumGrey,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(

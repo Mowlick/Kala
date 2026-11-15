@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../events/presentation/controllers/event_controller.dart';
 import '../../../events/presentation/screens/event_workspace_screen.dart';
 import '../../../opportunities/presentation/screens/opportunity_studio_screen.dart';
@@ -20,7 +21,7 @@ class OrganizerHubScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
+              _buildHeader(context),
               _buildTodaysPriorities(eventController),
               _buildMyEventsSection(context, eventController),
               _buildMyOpportunitiesSection(context, eventController),
@@ -37,7 +38,8 @@ class OrganizerHubScreen extends StatelessWidget {
   }
 
   // ─── HEADER ───────────────────────────────────────────────────────────────
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    final auth = context.read<AuthController>();
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
       child: Row(
@@ -53,8 +55,9 @@ class OrganizerHubScreen extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                'R',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                auth.displayInitial,
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -69,7 +72,8 @@ class OrganizerHubScreen extends StatelessWidget {
               children: [
                 Text(
                   'Good Morning,',
-                  style: TextStyle(fontFamily: 'ZT_Nature', 
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
                     fontSize: 12,
                     color: KalaColors.mediumGrey,
                   ),
@@ -78,9 +82,10 @@ class OrganizerHubScreen extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        'Rhythm Productions',
+                        auth.displayName,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: 'ZT_Nature', 
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: KalaColors.charcoal,
@@ -88,13 +93,27 @@ class OrganizerHubScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(Icons.verified, color: KalaColors.burntOrange, size: 16),
+                    const Icon(
+                      Icons.verified,
+                      color: KalaColors.burntOrange,
+                      size: 16,
+                    ),
                   ],
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
+          IconButton(
+            tooltip: 'Refresh',
+            onPressed: () => context.read<EventController>().refresh(),
+            icon: const Icon(
+              Icons.refresh,
+              size: 22,
+              color: KalaColors.burntOrange,
+            ),
+          ),
+          const SizedBox(width: 4),
           _iconButton(Icons.search),
           const SizedBox(width: 8),
           Stack(
@@ -183,8 +202,12 @@ class OrganizerHubScreen extends StatelessWidget {
   }
 
   // ─── MY EVENTS SECTION ───────────────────────────────────────────────────
-  Widget _buildMyEventsSection(BuildContext context, EventController controller) {
-    final events = controller.events;
+  Widget _buildMyEventsSection(
+    BuildContext context,
+    EventController controller,
+  ) {
+    final auth = context.read<AuthController>();
+    final events = controller.eventsForOrganizer(auth.currentUserId);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -196,12 +219,34 @@ class OrganizerHubScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Text('📅 My Events', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    '📅 My Events',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                    child: Text('${events.length}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${events.length}',
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: KalaColors.burntOrange,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -209,7 +254,15 @@ class OrganizerHubScreen extends StatelessWidget {
                 onPressed: () {
                   _showViewAllEventsModal(context, controller);
                 },
-                child: const Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                child: const Text(
+                  'View All',
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.burntOrange,
+                  ),
+                ),
               ),
             ],
           ),
@@ -226,17 +279,44 @@ class OrganizerHubScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const Icon(Icons.event_note_outlined, size: 40, color: KalaColors.mediumGrey),
+                  const Icon(
+                    Icons.event_note_outlined,
+                    size: 40,
+                    color: KalaColors.mediumGrey,
+                  ),
                   const SizedBox(height: 8),
-                  const Text('You haven\'t created any events yet', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    'You haven\'t created any events yet',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  const Text('Host a festival, concert, workshop or open audition.', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                  const Text(
+                    'Host a festival, concert, workshop or open audition.',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 11,
+                      color: KalaColors.mediumGrey,
+                    ),
+                  ),
                   const SizedBox(height: 14),
                   ElevatedButton.icon(
                     onPressed: () => OrganizerCreateScreen.show(context),
                     icon: const Icon(Icons.add, size: 16),
-                    label: const Text('Create Event', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                    style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
+                    label: const Text(
+                      'Create Event',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: KalaColors.burntOrange,
+                    ),
                   ),
                 ],
               ),
@@ -250,13 +330,18 @@ class OrganizerHubScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final evt = events[index];
                   final opps = controller.getOpportunitiesForEvent(evt.eventId);
-                  final subs = controller.submissions.where((s) => s.eventId == evt.eventId).length;
+                  final subs = controller.submissions
+                      .where((s) => s.eventId == evt.eventId)
+                      .length;
 
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => EventWorkspaceScreen(eventId: evt.eventId)),
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              EventWorkspaceScreen(eventId: evt.eventId),
+                        ),
                       );
                     },
                     child: Container(
@@ -268,7 +353,11 @@ class OrganizerHubScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: KalaColors.lightGrey),
                         boxShadow: [
-                          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 3)),
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
                         ],
                       ),
                       child: Column(
@@ -277,24 +366,77 @@ class OrganizerHubScreen extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                                child: Text(evt.category, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: KalaColors.burntOrange.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  evt.category,
+                                  style: const TextStyle(
+                                    fontFamily: 'ZT_Nature',
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: KalaColors.burntOrange,
+                                  ),
+                                ),
                               ),
                               const Spacer(),
-                              Text('$subs applicants', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                              Text(
+                                '$subs applicants',
+                                style: const TextStyle(
+                                  fontFamily: 'ZT_Nature',
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: KalaColors.charcoal,
+                                ),
+                              ),
                             ],
                           ),
                           const Spacer(),
-                          Text(evt.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                          Text(
+                            evt.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: KalaColors.charcoal,
+                            ),
+                          ),
                           const SizedBox(height: 2),
-                          Text('${evt.venue} • ${opps.length} Gigs', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                          Text(
+                            '${evt.venue} • ${opps.length} Gigs',
+                            style: const TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 11,
+                              color: KalaColors.mediumGrey,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              const Icon(Icons.touch_app_outlined, size: 12, color: KalaColors.burntOrange),
+                              const Icon(
+                                Icons.touch_app_outlined,
+                                size: 12,
+                                color: KalaColors.burntOrange,
+                              ),
                               const SizedBox(width: 4),
-                              const Text('Open Workspace ➔', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                              const Text(
+                                'Open Workspace ➔',
+                                style: TextStyle(
+                                  fontFamily: 'ZT_Nature',
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: KalaColors.burntOrange,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -311,8 +453,12 @@ class OrganizerHubScreen extends StatelessWidget {
   }
 
   // ─── MY OPPORTUNITIES SECTION ────────────────────────────────────────────
-  Widget _buildMyOpportunitiesSection(BuildContext context, EventController controller) {
-    final opps = controller.opportunities;
+  Widget _buildMyOpportunitiesSection(
+    BuildContext context,
+    EventController controller,
+  ) {
+    final auth = context.read<AuthController>();
+    final opps = controller.opportunitiesForOrganizer(auth.currentUserId);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -324,12 +470,34 @@ class OrganizerHubScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Text('🎯 My Opportunities', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    '🎯 My Opportunities',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(color: const Color(0xFF059669).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                    child: Text('${opps.length}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF059669))),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF059669).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${opps.length}',
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF059669),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -337,7 +505,15 @@ class OrganizerHubScreen extends StatelessWidget {
                 onPressed: () {
                   _showViewAllOpportunitiesModal(context, controller);
                 },
-                child: const Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                child: const Text(
+                  'View All',
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.burntOrange,
+                  ),
+                ),
               ),
             ],
           ),
@@ -354,17 +530,44 @@ class OrganizerHubScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const Icon(Icons.work_outline_rounded, size: 40, color: KalaColors.mediumGrey),
+                  const Icon(
+                    Icons.work_outline_rounded,
+                    size: 40,
+                    color: KalaColors.mediumGrey,
+                  ),
                   const SizedBox(height: 8),
-                  const Text('Create your first opportunity', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                  const Text(
+                    'Create your first opportunity',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: KalaColors.charcoal,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  const Text('Recruit singers, dancers, actors, crew or volunteers.', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                  const Text(
+                    'Recruit singers, dancers, actors, crew or volunteers.',
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 11,
+                      color: KalaColors.mediumGrey,
+                    ),
+                  ),
                   const SizedBox(height: 14),
                   ElevatedButton.icon(
                     onPressed: () => OrganizerCreateScreen.show(context),
                     icon: const Icon(Icons.add, size: 16),
-                    label: const Text('Create Opportunity', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                    style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange),
+                    label: const Text(
+                      'Create Opportunity',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: KalaColors.burntOrange,
+                    ),
                   ),
                 ],
               ),
@@ -381,7 +584,11 @@ class OrganizerHubScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => OpportunityStudioScreen(opportunityId: opp.opportunityId)),
+                        MaterialPageRoute(
+                          builder: (_) => OpportunityStudioScreen(
+                            opportunityId: opp.opportunityId,
+                          ),
+                        ),
                       );
                     },
                     child: Container(
@@ -393,7 +600,11 @@ class OrganizerHubScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: KalaColors.lightGrey),
                         boxShadow: [
-                          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 3)),
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
                         ],
                       ),
                       child: Column(
@@ -402,18 +613,61 @@ class OrganizerHubScreen extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(color: const Color(0xFF059669).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                                child: Text(opp.status, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF059669))),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFF059669,
+                                  ).withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  opp.status,
+                                  style: const TextStyle(
+                                    fontFamily: 'ZT_Nature',
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF059669),
+                                  ),
+                                ),
                               ),
                               const Spacer(),
-                              Text('${opp.vacancies} vacancies', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+                              Text(
+                                '${opp.vacancies} vacancies',
+                                style: const TextStyle(
+                                  fontFamily: 'ZT_Nature',
+                                  fontSize: 10,
+                                  color: KalaColors.mediumGrey,
+                                ),
+                              ),
                             ],
                           ),
                           const Spacer(),
-                          Text(opp.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                          Text(
+                            opp.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: KalaColors.charcoal,
+                            ),
+                          ),
                           const SizedBox(height: 2),
-                          Text(opp.stipend, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+                          Text(
+                            opp.stipend,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 11,
+                              color: KalaColors.burntOrange,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -427,18 +681,30 @@ class OrganizerHubScreen extends StatelessWidget {
     );
   }
 
-  void _showViewAllEventsModal(BuildContext context, EventController controller) {
+  void _showViewAllEventsModal(
+    BuildContext context,
+    EventController controller,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (ctx) => Container(
         height: MediaQuery.of(ctx).size.height * 0.75,
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('📅 All Created Events', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              '📅 All Created Events',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
@@ -446,12 +712,27 @@ class OrganizerHubScreen extends StatelessWidget {
                 itemBuilder: (ctx, i) {
                   final evt = controller.events[i];
                   return ListTile(
-                    title: Text(evt.title, style: const TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold)),
+                    title: Text(
+                      evt.title,
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     subtitle: Text('${evt.category} • ${evt.venue}'),
-                    trailing: const Icon(Icons.chevron_right, color: KalaColors.burntOrange),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: KalaColors.burntOrange,
+                    ),
                     onTap: () {
                       Navigator.pop(ctx);
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => EventWorkspaceScreen(eventId: evt.eventId)));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              EventWorkspaceScreen(eventId: evt.eventId),
+                        ),
+                      );
                     },
                   );
                 },
@@ -463,18 +744,30 @@ class OrganizerHubScreen extends StatelessWidget {
     );
   }
 
-  void _showViewAllOpportunitiesModal(BuildContext context, EventController controller) {
+  void _showViewAllOpportunitiesModal(
+    BuildContext context,
+    EventController controller,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (ctx) => Container(
         height: MediaQuery.of(ctx).size.height * 0.75,
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('🎯 All Created Opportunities', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              '🎯 All Created Opportunities',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
@@ -482,12 +775,28 @@ class OrganizerHubScreen extends StatelessWidget {
                 itemBuilder: (ctx, i) {
                   final opp = controller.opportunities[i];
                   return ListTile(
-                    title: Text(opp.title, style: const TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold)),
+                    title: Text(
+                      opp.title,
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     subtitle: Text('${opp.category} • ${opp.stipend}'),
-                    trailing: const Icon(Icons.chevron_right, color: KalaColors.burntOrange),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: KalaColors.burntOrange,
+                    ),
                     onTap: () {
                       Navigator.pop(ctx);
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityStudioScreen(opportunityId: opp.opportunityId)));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => OpportunityStudioScreen(
+                            opportunityId: opp.opportunityId,
+                          ),
+                        ),
+                      );
                     },
                   );
                 },
@@ -499,8 +808,13 @@ class OrganizerHubScreen extends StatelessWidget {
     );
   }
 
-  Widget _priorityRow(IconData icon, String title, String subtitle,
-      {String? highlight, Color subtitleColor = KalaColors.mediumGrey}) {
+  Widget _priorityRow(
+    IconData icon,
+    String title,
+    String subtitle, {
+    String? highlight,
+    Color subtitleColor = KalaColors.mediumGrey,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
@@ -521,7 +835,8 @@ class OrganizerHubScreen extends StatelessWidget {
                 highlight != null
                     ? RichText(
                         text: TextSpan(
-                          style: TextStyle(fontFamily: 'ZT_Nature', 
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: KalaColors.charcoal,
@@ -530,14 +845,17 @@ class OrganizerHubScreen extends StatelessWidget {
                             TextSpan(text: '$title '),
                             TextSpan(
                               text: highlight,
-                              style: const TextStyle(color: KalaColors.burntOrange),
+                              style: const TextStyle(
+                                color: KalaColors.burntOrange,
+                              ),
                             ),
                           ],
                         ),
                       )
                     : Text(
                         title,
-                        style: TextStyle(fontFamily: 'ZT_Nature', 
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: KalaColors.charcoal,
@@ -546,12 +864,20 @@ class OrganizerHubScreen extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: subtitleColor),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 11,
+                    color: subtitleColor,
+                  ),
                 ),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right, color: KalaColors.mediumGrey, size: 20),
+          const Icon(
+            Icons.chevron_right,
+            color: KalaColors.mediumGrey,
+            size: 20,
+          ),
         ],
       ),
     );
@@ -572,11 +898,31 @@ class OrganizerHubScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              _snapshotCard('12', 'Active\nOpportunities', Icons.work_outline, '+2'),
+              _snapshotCard(
+                '12',
+                'Active\nOpportunities',
+                Icons.work_outline,
+                '+2',
+              ),
               _snapshotCard('86', 'Under\nReview', Icons.people_outline, '+14'),
-              _snapshotCard('18', 'Interviews\nScheduled', Icons.calendar_today_outlined, '+3'),
-              _snapshotCard('9', 'Positions\nFilled', Icons.check_circle_outline, '+2'),
-              _snapshotCard('5', 'Projects\nSoon', Icons.rocket_launch_outlined, '—'),
+              _snapshotCard(
+                '18',
+                'Interviews\nScheduled',
+                Icons.calendar_today_outlined,
+                '+3',
+              ),
+              _snapshotCard(
+                '9',
+                'Positions\nFilled',
+                Icons.check_circle_outline,
+                '+2',
+              ),
+              _snapshotCard(
+                '5',
+                'Projects\nSoon',
+                Icons.rocket_launch_outlined,
+                '—',
+              ),
             ],
           ),
         ),
@@ -585,7 +931,12 @@ class OrganizerHubScreen extends StatelessWidget {
     );
   }
 
-  Widget _snapshotCard(String value, String label, IconData icon, String trend) {
+  Widget _snapshotCard(
+    String value,
+    String label,
+    IconData icon,
+    String trend,
+  ) {
     return Container(
       width: 120,
       margin: const EdgeInsets.only(right: 12),
@@ -602,7 +953,8 @@ class OrganizerHubScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: KalaColors.charcoal,
@@ -611,7 +963,12 @@ class OrganizerHubScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey, height: 1.3),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 10,
+              color: KalaColors.mediumGrey,
+              height: 1.3,
+            ),
           ),
           const SizedBox(height: 8),
           Container(
@@ -624,10 +981,13 @@ class OrganizerHubScreen extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             trend == '—' ? '—' : '↑ $trend',
-            style: TextStyle(fontFamily: 'ZT_Nature', 
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
               fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: trend == '—' ? KalaColors.mediumGrey : KalaColors.accentGreen,
+              color: trend == '—'
+                  ? KalaColors.mediumGrey
+                  : KalaColors.accentGreen,
             ),
           ),
         ],
@@ -651,9 +1011,27 @@ class OrganizerHubScreen extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _talentCard('Aarav Mehta', 'Vocalist', 'Mumbai, MH', '95%', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200'),
-              _talentCard('Nritika Rao', 'Bharatanatyam Dancer', 'Bengaluru, KA', '92%', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200'),
-              _talentCard('Kabir Malhotra', 'Cinematographer', 'Delhi, DL', '90%', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=200'),
+              _talentCard(
+                'Aarav Mehta',
+                'Vocalist',
+                'Mumbai, MH',
+                '95%',
+                'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200',
+              ),
+              _talentCard(
+                'Nritika Rao',
+                'Bharatanatyam Dancer',
+                'Bengaluru, KA',
+                '92%',
+                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
+              ),
+              _talentCard(
+                'Kabir Malhotra',
+                'Cinematographer',
+                'Delhi, DL',
+                '90%',
+                'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=200',
+              ),
             ],
           ),
         ),
@@ -662,7 +1040,13 @@ class OrganizerHubScreen extends StatelessWidget {
     );
   }
 
-  Widget _talentCard(String name, String role, String location, String match, String imgUrl) {
+  Widget _talentCard(
+    String name,
+    String role,
+    String location,
+    String match,
+    String imgUrl,
+  ) {
     return Container(
       width: 160,
       margin: const EdgeInsets.only(right: 12),
@@ -677,7 +1061,9 @@ class OrganizerHubScreen extends StatelessWidget {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: Image.network(
                   imgUrl,
                   height: 120,
@@ -687,7 +1073,11 @@ class OrganizerHubScreen extends StatelessWidget {
                     height: 120,
                     width: 160,
                     color: KalaColors.softBeige,
-                    child: const Icon(Icons.person, color: KalaColors.mediumGrey, size: 40),
+                    child: const Icon(
+                      Icons.person,
+                      color: KalaColors.mediumGrey,
+                      size: 40,
+                    ),
                   ),
                 ),
               ),
@@ -695,7 +1085,10 @@ class OrganizerHubScreen extends StatelessWidget {
                 top: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: KalaColors.burntOrange,
                     borderRadius: BorderRadius.circular(8),
@@ -703,7 +1096,8 @@ class OrganizerHubScreen extends StatelessWidget {
                   child: Text(
                     '$match\nMatch',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'ZT_Nature', 
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -722,25 +1116,42 @@ class OrganizerHubScreen extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 Text(
                   role,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 11,
+                    color: KalaColors.mediumGrey,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined, size: 11, color: KalaColors.mediumGrey),
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 11,
+                      color: KalaColors.mediumGrey,
+                    ),
                     const SizedBox(width: 2),
                     Flexible(
                       child: Text(
                         location,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 10,
+                          color: KalaColors.mediumGrey,
+                        ),
                       ),
                     ),
                   ],
@@ -791,11 +1202,23 @@ class OrganizerHubScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                _activityRow(Icons.person_outline, 'Aarav Mehta applied for Music Fest Performer', '10:30 AM'),
+                _activityRow(
+                  Icons.person_outline,
+                  'Aarav Mehta applied for Music Fest Performer',
+                  '10:30 AM',
+                ),
                 Divider(height: 1, color: KalaColors.lightGrey),
-                _activityRow(Icons.people_outline, '3 candidates shortlisted for Dance Competition', '09:15 AM'),
+                _activityRow(
+                  Icons.people_outline,
+                  '3 candidates shortlisted for Dance Competition',
+                  '09:15 AM',
+                ),
                 Divider(height: 1, color: KalaColors.lightGrey),
-                _activityRow(Icons.calendar_today_outlined, 'Interview scheduled with Nritiya Collective', 'Yesterday'),
+                _activityRow(
+                  Icons.calendar_today_outlined,
+                  'Interview scheduled with Nritiya Collective',
+                  'Yesterday',
+                ),
               ],
             ),
           ),
@@ -803,7 +1226,12 @@ class OrganizerHubScreen extends StatelessWidget {
           GestureDetector(
             child: Text(
               'See Full Timeline >',
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.burntOrange),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.burntOrange,
+              ),
             ),
           ),
           const SizedBox(height: 28),
@@ -830,11 +1258,23 @@ class OrganizerHubScreen extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, color: KalaColors.charcoal, height: 1.4),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 12,
+                color: KalaColors.charcoal,
+                height: 1.4,
+              ),
             ),
           ),
           const SizedBox(width: 8),
-          Text(time, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey)),
+          Text(
+            time,
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 10,
+              color: KalaColors.mediumGrey,
+            ),
+          ),
         ],
       ),
     );
@@ -849,17 +1289,41 @@ class OrganizerHubScreen extends StatelessWidget {
         children: [
           _sectionHeader('Upcoming Schedule', showViewAll: true),
           const SizedBox(height: 12),
-          _scheduleItem('MAY', '16', 'Music Fest – Auditions', '10:00 AM – 02:00 PM', 'Andheri, Mumbai'),
+          _scheduleItem(
+            'MAY',
+            '16',
+            'Music Fest – Auditions',
+            '10:00 AM – 02:00 PM',
+            'Andheri, Mumbai',
+          ),
           const SizedBox(height: 10),
-          _scheduleItem('MAY', '18', 'Short Film – Interviews', '11:00 AM – 01:00 PM', 'Google Meet'),
+          _scheduleItem(
+            'MAY',
+            '18',
+            'Short Film – Interviews',
+            '11:00 AM – 01:00 PM',
+            'Google Meet',
+          ),
           const SizedBox(height: 10),
-          _scheduleItem('MAY', '20', 'Dance Comp – Auditions', '09:00 AM – 04:00 PM', 'Bengaluru, KA'),
+          _scheduleItem(
+            'MAY',
+            '20',
+            'Dance Comp – Auditions',
+            '09:00 AM – 04:00 PM',
+            'Bengaluru, KA',
+          ),
         ],
       ),
     );
   }
 
-  Widget _scheduleItem(String month, String day, String title, String time, String location) {
+  Widget _scheduleItem(
+    String month,
+    String day,
+    String title,
+    String time,
+    String location,
+  ) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -878,8 +1342,24 @@ class OrganizerHubScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text(month, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 9, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
-                Text(day, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+                Text(
+                  month,
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.burntOrange,
+                  ),
+                ),
+                Text(
+                  day,
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.burntOrange,
+                  ),
+                ),
               ],
             ),
           ),
@@ -888,21 +1368,59 @@ class OrganizerHubScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.access_time_outlined, size: 11, color: KalaColors.mediumGrey),
+                    const Icon(
+                      Icons.access_time_outlined,
+                      size: 11,
+                      color: KalaColors.mediumGrey,
+                    ),
                     const SizedBox(width: 3),
-                    Flexible(child: Text(time, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey))),
+                    Flexible(
+                      child: Text(
+                        time,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 11,
+                          color: KalaColors.mediumGrey,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 2),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined, size: 11, color: KalaColors.mediumGrey),
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 11,
+                      color: KalaColors.mediumGrey,
+                    ),
                     const SizedBox(width: 3),
-                    Flexible(child: Text(location, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey))),
+                    Flexible(
+                      child: Text(
+                        location,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 11,
+                          color: KalaColors.mediumGrey,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -911,7 +1429,10 @@ class OrganizerHubScreen extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(color: KalaColors.burntOrange, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+              color: KalaColors.burntOrange,
+              shape: BoxShape.circle,
+            ),
           ),
         ],
       ),
@@ -927,13 +1448,26 @@ class OrganizerHubScreen extends StatelessWidget {
           child: Text(
             title,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+            style: TextStyle(
+              fontFamily: 'ZT_Nature',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: KalaColors.charcoal,
+            ),
           ),
         ),
         if (showViewAll)
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text('View All', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
+            child: Text(
+              'View All',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.burntOrange,
+              ),
+            ),
           ),
       ],
     );

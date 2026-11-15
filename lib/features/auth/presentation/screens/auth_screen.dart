@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/kala_colors.dart';
+import '../../../../core/navigation/app_router.dart';
 import '../controllers/auth_controller.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -19,18 +20,20 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  
+
   String _selectedRole = 'artist'; // Default to artist
   bool _isPhoneMode = true; // Preferred phone authentication
   bool _obscurePassword = true;
 
-  String get _title => widget.isLogin ? 'Welcome back' : 'Create your Kalā account';
+  String get _title =>
+      widget.isLogin ? 'Welcome back' : 'Create your Kalā account';
 
   String get _subtitle => widget.isLogin
       ? 'Sign in to continue your creative journey.'
       : "Join India's growing creative community.";
 
-  String get _leftTitleText1 => widget.isLogin ? 'Welcome\n' : 'Create your\ncreative ';
+  String get _leftTitleText1 =>
+      widget.isLogin ? 'Welcome\n' : 'Create your\ncreative ';
   String get _leftTitleText2 => widget.isLogin ? 'back.' : 'identity.';
 
   String get _leftSubtitle => widget.isLogin
@@ -61,7 +64,11 @@ class _AuthScreenState extends State<AuthScreen> {
     if (identifier.isEmpty) {
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(_isPhoneMode ? 'Please enter your mobile number or email.' : 'Please enter your email address.'),
+          content: Text(
+            _isPhoneMode
+                ? 'Please enter your mobile number or email.'
+                : 'Please enter your email address.',
+          ),
           backgroundColor: Colors.orange.shade800,
         ),
       );
@@ -88,7 +95,9 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
-    final role = _selectedRole == 'organization' ? 'organizer' : 'student';
+    final role = _selectedRole == 'organization'
+        ? UserRole.organizer
+        : UserRole.student;
     bool success;
 
     if (widget.isLogin) {
@@ -112,24 +121,34 @@ class _AuthScreenState extends State<AuthScreen> {
     if (success) {
       if (widget.isLogin) {
         final fetchedRole = auth.userRole ?? role;
-        if (fetchedRole == 'organizer') {
-          navigator.pushNamedAndRemoveUntil('/organizer-home', (_) => false);
+        if (fetchedRole == UserRole.organizer) {
+          navigator.pushNamedAndRemoveUntil(
+            AppRoutes.organizerHome,
+            (_) => false,
+          );
         } else {
-          navigator.pushNamedAndRemoveUntil('/home', (_) => false);
+          navigator.pushNamedAndRemoveUntil(AppRoutes.home, (_) => false);
         }
       } else {
-        if (role == 'organizer') {
-          navigator.pushNamed('/organizer-onboarding');
+        if (role == UserRole.organizer) {
+          navigator.pushNamed(AppRoutes.organizerOnboarding);
         } else {
-          navigator.pushNamed('/student-onboarding');
+          navigator.pushNamed(AppRoutes.studentOnboarding);
         }
       }
     } else {
-      final isUnconfirmed = auth.errorMessage?.toLowerCase().contains('email not confirmed') ?? false;
+      final isUnconfirmed =
+          auth.pendingConfirmation ||
+          (auth.errorMessage?.toLowerCase().contains('email not confirmed') ??
+              false);
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(auth.errorMessage ?? 'Authentication failed. Please try again.'),
-          backgroundColor: Colors.redAccent,
+          content: Text(
+            auth.errorMessage ?? 'Authentication failed. Please try again.',
+          ),
+          backgroundColor: auth.pendingConfirmation
+              ? Colors.green.shade700
+              : Colors.redAccent,
           action: isUnconfirmed
               ? SnackBarAction(
                   label: 'Resend',
@@ -139,7 +158,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     if (mounted) {
                       scaffoldMessenger.showSnackBar(
                         SnackBar(
-                          content: Text(sent ? 'Confirmation email resent to $identifier!' : 'Failed to resend confirmation email.'),
+                          content: Text(
+                            sent
+                                ? 'Confirmation email resent to $identifier!'
+                                : 'Failed to resend confirmation email.',
+                          ),
                           backgroundColor: sent ? Colors.green : Colors.orange,
                         ),
                       );
@@ -180,14 +203,23 @@ class _AuthScreenState extends State<AuthScreen> {
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back, color: KalaColors.charcoal),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: KalaColors.charcoal,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
             const Text(
               'kalā',
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 44, fontWeight: FontWeight.bold, color: KalaColors.charcoal, letterSpacing: -1),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 44,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+                letterSpacing: -1,
+              ),
             ),
             const SizedBox(height: 6),
             const Icon(Icons.flare, color: KalaColors.burntOrange, size: 26),
@@ -195,13 +227,22 @@ class _AuthScreenState extends State<AuthScreen> {
             Text(
               _title,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 34, height: 1.1, color: KalaColors.charcoal, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 34,
+                height: 1.1,
+                color: KalaColors.charcoal,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               _subtitle,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: KalaColors.charcoal.withValues(alpha: 0.6), height: 1.4),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: KalaColors.charcoal.withValues(alpha: 0.6),
+                height: 1.4,
+              ),
             ),
             const SizedBox(height: 24),
             _buildRoleSelector(),
@@ -217,7 +258,11 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   // ─── LAPTOP ───────────────────────────────────────────────────────────────
-  Widget _buildLaptopLayout(BuildContext context, BoxConstraints constraints) {
+  Widget _buildLaptopLayout(
+    BuildContext context,
+    BoxConstraints constraints, {
+    bool isWide = true,
+  }) {
     return Column(
       children: [
         Expanded(
@@ -234,24 +279,49 @@ class _AuthScreenState extends State<AuthScreen> {
                     children: [
                       const Text(
                         'kalā',
-                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 42, fontWeight: FontWeight.bold, color: KalaColors.charcoal, letterSpacing: -1),
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 42,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                          letterSpacing: -1,
+                        ),
                       ),
                       const Spacer(),
-                      const Icon(Icons.flare, color: KalaColors.burntOrange, size: 32),
+                      const Icon(
+                        Icons.flare,
+                        color: KalaColors.burntOrange,
+                        size: 32,
+                      ),
                       const SizedBox(height: 16),
                       RichText(
                         text: TextSpan(
-                          style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 54, height: 1.1, color: KalaColors.charcoal, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 54,
+                            height: 1.1,
+                            color: KalaColors.charcoal,
+                            fontWeight: FontWeight.bold,
+                          ),
                           children: [
                             TextSpan(text: _leftTitleText1),
-                            TextSpan(text: _leftTitleText2, style: const TextStyle(color: KalaColors.burntOrange)),
+                            TextSpan(
+                              text: _leftTitleText2,
+                              style: const TextStyle(
+                                color: KalaColors.burntOrange,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         _leftSubtitle,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: KalaColors.charcoal.withValues(alpha: 0.6), height: 1.55),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: KalaColors.charcoal.withValues(alpha: 0.6),
+                              height: 1.55,
+                            ),
                       ),
                       const SizedBox(height: 32),
                       Expanded(flex: 4, child: _buildFannedCollage(context)),
@@ -270,27 +340,53 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: SingleChildScrollView(
                       child: Container(
                         constraints: const BoxConstraints(maxWidth: 480),
-                        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 24,
+                        ),
                         padding: const EdgeInsets.fromLTRB(36, 28, 36, 28),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 32, offset: const Offset(0, 8)),
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 32,
+                              offset: const Offset(0, 8),
+                            ),
                           ],
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(_title, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 26, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                            Text(
+                              _title,
+                              style: const TextStyle(
+                                fontFamily: 'ZT_Nature',
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                color: KalaColors.charcoal,
+                              ),
+                            ),
                             Container(
                               margin: const EdgeInsets.only(top: 6, bottom: 8),
                               height: 3,
                               width: 36,
-                              decoration: BoxDecoration(color: KalaColors.burntOrange, borderRadius: BorderRadius.circular(2)),
+                              decoration: BoxDecoration(
+                                color: KalaColors.burntOrange,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                            Text(_subtitle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: KalaColors.charcoal.withValues(alpha: 0.5))),
+                            Text(
+                              _subtitle,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: KalaColors.charcoal.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  ),
+                            ),
                             const SizedBox(height: 20),
                             _buildRoleSelector(),
                             const SizedBox(height: 20),
@@ -335,12 +431,25 @@ class _AuthScreenState extends State<AuthScreen> {
                     decoration: BoxDecoration(
                       color: _isPhoneMode ? Colors.white : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: _isPhoneMode ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)] : [],
+                      boxShadow: _isPhoneMode
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 4,
+                              ),
+                            ]
+                          : [],
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.phone_android_rounded, size: 16, color: _isPhoneMode ? KalaColors.burntOrange : KalaColors.mediumGrey),
+                        Icon(
+                          Icons.phone_android_rounded,
+                          size: 16,
+                          color: _isPhoneMode
+                              ? KalaColors.burntOrange
+                              : KalaColors.mediumGrey,
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           'Mobile Number',
@@ -348,7 +457,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             fontFamily: 'ZT_Nature',
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: _isPhoneMode ? KalaColors.charcoal : KalaColors.mediumGrey,
+                            color: _isPhoneMode
+                                ? KalaColors.charcoal
+                                : KalaColors.mediumGrey,
                           ),
                         ),
                       ],
@@ -364,12 +475,25 @@ class _AuthScreenState extends State<AuthScreen> {
                     decoration: BoxDecoration(
                       color: !_isPhoneMode ? Colors.white : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: !_isPhoneMode ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)] : [],
+                      boxShadow: !_isPhoneMode
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 4,
+                              ),
+                            ]
+                          : [],
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.mail_outline_rounded, size: 16, color: !_isPhoneMode ? KalaColors.burntOrange : KalaColors.mediumGrey),
+                        Icon(
+                          Icons.mail_outline_rounded,
+                          size: 16,
+                          color: !_isPhoneMode
+                              ? KalaColors.burntOrange
+                              : KalaColors.mediumGrey,
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           'Email Address',
@@ -377,7 +501,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             fontFamily: 'ZT_Nature',
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: !_isPhoneMode ? KalaColors.charcoal : KalaColors.mediumGrey,
+                            color: !_isPhoneMode
+                                ? KalaColors.charcoal
+                                : KalaColors.mediumGrey,
                           ),
                         ),
                       ],
@@ -407,7 +533,15 @@ class _AuthScreenState extends State<AuthScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Mobile Number', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+              const Text(
+                'Mobile Number',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
+              ),
               const SizedBox(height: 6),
               Container(
                 decoration: BoxDecoration(
@@ -418,16 +552,34 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         color: KalaColors.softBeige.withValues(alpha: 0.5),
-                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                        ),
                       ),
                       child: const Row(
                         children: [
-                          Text('+91', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                          Text(
+                            '+91',
+                            style: TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: KalaColors.charcoal,
+                            ),
+                          ),
                           SizedBox(width: 4),
-                          Icon(Icons.keyboard_arrow_down, size: 16, color: KalaColors.mediumGrey),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 16,
+                            color: KalaColors.mediumGrey,
+                          ),
                         ],
                       ),
                     ),
@@ -437,7 +589,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
                           hintText: 'Enter 10-digit number',
-                          hintStyle: TextStyle(fontSize: 13, color: KalaColors.mediumGrey),
+                          hintStyle: TextStyle(
+                            fontSize: 13,
+                            color: KalaColors.mediumGrey,
+                          ),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 14),
                         ),
@@ -468,7 +623,13 @@ class _AuthScreenState extends State<AuthScreen> {
           obscure: _obscurePassword,
           suffixIcon: GestureDetector(
             onTap: () => setState(() => _obscurePassword = !_obscurePassword),
-            child: Icon(_obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 18, color: KalaColors.mediumGrey),
+            child: Icon(
+              _obscurePassword
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              size: 18,
+              color: KalaColors.mediumGrey,
+            ),
           ),
         ),
 
@@ -482,14 +643,28 @@ class _AuthScreenState extends State<AuthScreen> {
             onPressed: auth.isLoading ? null : () => _handleAuthSubmit(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: KalaColors.burntOrange,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               elevation: 0,
             ),
             child: auth.isLoading
-                ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.5,
+                    ),
+                  )
                 : Text(
                     widget.isLogin ? 'Sign In' : 'Create Account',
-                    style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: const TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
           ),
         ),
@@ -499,15 +674,28 @@ class _AuthScreenState extends State<AuthScreen> {
         // Divider
         Row(
           children: [
-            Expanded(child: Divider(color: KalaColors.charcoal.withValues(alpha: 0.15))),
+            Expanded(
+              child: Divider(
+                color: KalaColors.charcoal.withValues(alpha: 0.15),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Text(
                 'OR',
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: KalaColors.charcoal.withValues(alpha: 0.4), letterSpacing: 1),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal.withValues(alpha: 0.4),
+                  letterSpacing: 1,
+                ),
               ),
             ),
-            Expanded(child: Divider(color: KalaColors.charcoal.withValues(alpha: 0.15))),
+            Expanded(
+              child: Divider(
+                color: KalaColors.charcoal.withValues(alpha: 0.15),
+              ),
+            ),
           ],
         ),
 
@@ -530,7 +718,12 @@ class _AuthScreenState extends State<AuthScreen> {
       children: [
         const Text(
           'I am joining as',
-          style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+          style: TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
         ),
         const SizedBox(height: 12),
         Row(
@@ -540,22 +733,40 @@ class _AuthScreenState extends State<AuthScreen> {
                 onTap: () => setState(() => _selectedRole = 'artist'),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: _selectedRole == 'artist' ? const Color(0xFFFFF7ED) : Colors.white,
+                    color: _selectedRole == 'artist'
+                        ? const Color(0xFFFFF7ED)
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _selectedRole == 'artist' ? KalaColors.burntOrange : KalaColors.lightGrey,
+                      color: _selectedRole == 'artist'
+                          ? KalaColors.burntOrange
+                          : KalaColors.lightGrey,
                       width: _selectedRole == 'artist' ? 1.5 : 1,
                     ),
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.theater_comedy_rounded, color: _selectedRole == 'artist' ? KalaColors.burntOrange : KalaColors.mediumGrey, size: 24),
+                      Icon(
+                        Icons.theater_comedy_rounded,
+                        color: _selectedRole == 'artist'
+                            ? KalaColors.burntOrange
+                            : KalaColors.mediumGrey,
+                        size: 24,
+                      ),
                       const SizedBox(height: 6),
                       const Text(
                         'Performer / Artist',
-                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -569,22 +780,40 @@ class _AuthScreenState extends State<AuthScreen> {
                 onTap: () => setState(() => _selectedRole = 'organization'),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: _selectedRole == 'organization' ? const Color(0xFFFFF7ED) : Colors.white,
+                    color: _selectedRole == 'organization'
+                        ? const Color(0xFFFFF7ED)
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _selectedRole == 'organization' ? KalaColors.burntOrange : KalaColors.lightGrey,
+                      color: _selectedRole == 'organization'
+                          ? KalaColors.burntOrange
+                          : KalaColors.lightGrey,
                       width: _selectedRole == 'organization' ? 1.5 : 1,
                     ),
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.business_center_rounded, color: _selectedRole == 'organization' ? KalaColors.burntOrange : KalaColors.mediumGrey, size: 24),
+                      Icon(
+                        Icons.business_center_rounded,
+                        color: _selectedRole == 'organization'
+                            ? KalaColors.burntOrange
+                            : KalaColors.mediumGrey,
+                        size: 24,
+                      ),
                       const SizedBox(height: 6),
                       const Text(
                         'Organization / Recruiter',
-                        style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                        style: TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: KalaColors.charcoal,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -610,7 +839,15 @@ class _AuthScreenState extends State<AuthScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
         const SizedBox(height: 6),
         TextFormField(
           controller: controller,
@@ -619,9 +856,18 @@ class _AuthScreenState extends State<AuthScreen> {
             hintText: hint,
             prefixIcon: Icon(icon, size: 18, color: KalaColors.mediumGrey),
             suffixIcon: suffixIcon,
-            hintStyle: const TextStyle(fontSize: 13, color: KalaColors.mediumGrey),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: KalaColors.lightGrey)),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            hintStyle: const TextStyle(
+              fontSize: 13,
+              color: KalaColors.mediumGrey,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: KalaColors.lightGrey),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
           ),
         ),
       ],
@@ -640,8 +886,13 @@ class _AuthScreenState extends State<AuthScreen> {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           backgroundColor: Colors.white,
-          side: BorderSide(color: KalaColors.charcoal.withValues(alpha: 0.18), width: 1.2),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          side: BorderSide(
+            color: KalaColors.charcoal.withValues(alpha: 0.18),
+            width: 1.2,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
         child: Row(
@@ -651,7 +902,11 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: KalaColors.charcoal),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: KalaColors.charcoal,
+                ),
               ),
             ),
           ],
@@ -669,7 +924,9 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Widget _buildBottomSwitch(BuildContext context) {
-    final prefixText = widget.isLogin ? "Don't have an account? " : 'Already have an account? ';
+    final prefixText = widget.isLogin
+        ? "Don't have an account? "
+        : 'Already have an account? ';
     final linkText = widget.isLogin ? 'Create one' : 'Log In';
 
     return GestureDetector(
@@ -683,12 +940,17 @@ class _AuthScreenState extends State<AuthScreen> {
       },
       child: RichText(
         text: TextSpan(
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: KalaColors.charcoal.withValues(alpha: 0.6)),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: KalaColors.charcoal.withValues(alpha: 0.6),
+          ),
           children: [
             TextSpan(text: prefixText),
             TextSpan(
               text: linkText,
-              style: const TextStyle(color: KalaColors.burntOrange, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                color: KalaColors.burntOrange,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -704,28 +966,30 @@ class _AuthScreenState extends State<AuthScreen> {
       'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
     ];
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final totalWidth = constraints.maxWidth;
-      final cardWidth = (totalWidth - 24) / 4;
-      final baseHeight = constraints.maxHeight;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final totalWidth = constraints.maxWidth;
+        final cardWidth = (totalWidth - 24) / 4;
+        final baseHeight = constraints.maxHeight;
 
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: List.generate(4, (i) {
-          return Padding(
-            padding: EdgeInsets.only(right: i < 3 ? 8 : 0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: SizedBox(
-                width: cardWidth,
-                height: (baseHeight * 0.85).clamp(100.0, 400.0),
-                child: Image.network(images[i], fit: BoxFit.cover),
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: List.generate(4, (i) {
+            return Padding(
+              padding: EdgeInsets.only(right: i < 3 ? 8 : 0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: SizedBox(
+                  width: cardWidth,
+                  height: (baseHeight * 0.85).clamp(100.0, 400.0),
+                  child: Image.network(images[i], fit: BoxFit.cover),
+                ),
               ),
-            ),
-          );
-        }),
-      );
-    });
+            );
+          }),
+        );
+      },
+    );
   }
 }
 

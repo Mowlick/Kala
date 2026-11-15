@@ -28,7 +28,9 @@ class MediaUploadService {
     int maxSizeBytes = 50 * 1024 * 1024, // 50MB
   }) async {
     try {
-      debugPrint('MediaUploadService: Uploading $fileName under category [$category]...');
+      debugPrint(
+        'MediaUploadService: Uploading $fileName under category [$category]...',
+      );
       // Simulate network upload delay
       await Future.delayed(const Duration(milliseconds: 1200));
 

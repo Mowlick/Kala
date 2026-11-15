@@ -65,7 +65,8 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
           type: type,
           label: defaultLabel,
           isRequired: true,
-          options: type == FormFieldType.dropdown || type == FormFieldType.checkbox
+          options:
+              type == FormFieldType.dropdown || type == FormFieldType.checkbox
               ? ['Option 1', 'Option 2']
               : [],
         ),
@@ -83,7 +84,9 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
     if (_fields.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('⚠️ Please add at least 1 question field before publishing!'),
+          content: Text(
+            '⚠️ Please add at least 1 question field before publishing!',
+          ),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -92,7 +95,9 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
 
     final updated = DynamicFormModel(
       formId: widget.initialForm.formId,
-      title: _titleController.text.trim().isEmpty ? 'Untitled Form' : _titleController.text.trim(),
+      title: _titleController.text.trim().isEmpty
+          ? 'Untitled Form'
+          : _titleController.text.trim(),
       isTemplate: widget.initialForm.isTemplate,
       fields: _fields,
       version: widget.initialForm.version + 1,
@@ -115,12 +120,20 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
         children: [
           Row(
             children: [
-              const Icon(Icons.dynamic_form_outlined, color: KalaColors.burntOrange, size: 24),
+              const Icon(
+                Icons.dynamic_form_outlined,
+                color: KalaColors.burntOrange,
+                size: 24,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   'Form Builder & Template Editor',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
               ),
               IconButton(
@@ -137,7 +150,9 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
             decoration: InputDecoration(
               labelText: 'Form Title / Template Name',
               hintText: 'e.g. Vocalist Audition Form',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -147,19 +162,41 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
             children: [
               Text(
                 'Questions (${_fields.length})',
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: KalaColors.charcoal,
+                ),
               ),
               PopupMenuButton<FormFieldType>(
                 onSelected: _addNewField,
                 itemBuilder: (context) => [
-                  const PopupMenuItem(value: FormFieldType.text, child: Text('+ Short Text Question')),
-                  const PopupMenuItem(value: FormFieldType.longText, child: Text('+ Paragraph / Long Text')),
-                  const PopupMenuItem(value: FormFieldType.dropdown, child: Text('+ Dropdown Options')),
-                  const PopupMenuItem(value: FormFieldType.mediaUrl, child: Text('+ Demo Reel Link Input')),
-                  const PopupMenuItem(value: FormFieldType.fileUpload, child: Text('+ File / Media Upload')),
+                  const PopupMenuItem(
+                    value: FormFieldType.text,
+                    child: Text('+ Short Text Question'),
+                  ),
+                  const PopupMenuItem(
+                    value: FormFieldType.longText,
+                    child: Text('+ Paragraph / Long Text'),
+                  ),
+                  const PopupMenuItem(
+                    value: FormFieldType.dropdown,
+                    child: Text('+ Dropdown Options'),
+                  ),
+                  const PopupMenuItem(
+                    value: FormFieldType.mediaUrl,
+                    child: Text('+ Demo Reel Link Input'),
+                  ),
+                  const PopupMenuItem(
+                    value: FormFieldType.fileUpload,
+                    child: Text('+ File / Media Upload'),
+                  ),
                 ],
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: KalaColors.burntOrange,
                     borderRadius: BorderRadius.circular(20),
@@ -169,7 +206,14 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
                     children: [
                       Icon(Icons.add, color: Colors.white, size: 16),
                       SizedBox(width: 4),
-                      Text('Add Field', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                      Text(
+                        'Add Field',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -185,11 +229,24 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.assignment_add, size: 48, color: KalaColors.mediumGrey.withValues(alpha: 0.5)),
+                        Icon(
+                          Icons.assignment_add,
+                          size: 48,
+                          color: KalaColors.mediumGrey.withValues(alpha: 0.5),
+                        ),
                         const SizedBox(height: 12),
-                        const Text('No questions added yet.', style: TextStyle(color: KalaColors.mediumGrey)),
+                        const Text(
+                          'No questions added yet.',
+                          style: TextStyle(color: KalaColors.mediumGrey),
+                        ),
                         const SizedBox(height: 8),
-                        const Text('Tap "+ Add Field" to build your custom form.', style: TextStyle(fontSize: 12, color: KalaColors.mediumGrey)),
+                        const Text(
+                          'Tap "+ Add Field" to build your custom form.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: KalaColors.mediumGrey,
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -211,13 +268,25 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
                             Row(
                               children: [
                                 Chip(
-                                  label: Text(field.type.name.toUpperCase(), style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold)),
+                                  label: Text(
+                                    field.type.name.toUpperCase(),
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   backgroundColor: KalaColors.softBeige,
                                 ),
                                 const Spacer(),
                                 Row(
                                   children: [
-                                    const Text('Required', style: TextStyle(fontSize: 11, color: KalaColors.mediumGrey)),
+                                    const Text(
+                                      'Required',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: KalaColors.mediumGrey,
+                                      ),
+                                    ),
                                     Switch(
                                       value: field.isRequired,
                                       activeTrackColor: KalaColors.burntOrange,
@@ -230,13 +299,18 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
                                             placeholder: field.placeholder,
                                             isRequired: val,
                                             options: field.options,
-                                            acceptedFileTypes: field.acceptedFileTypes,
+                                            acceptedFileTypes:
+                                                field.acceptedFileTypes,
                                           );
                                         });
                                       },
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                                      icon: const Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.redAccent,
+                                        size: 20,
+                                      ),
                                       onPressed: () => _removeField(index),
                                     ),
                                   ],
@@ -281,9 +355,14 @@ class _FormBuilderWidgetState extends State<FormBuilderWidget> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: KalaColors.burntOrange,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Save Form & Update Template', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              child: const Text(
+                'Save Form & Update Template',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

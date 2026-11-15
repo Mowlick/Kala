@@ -25,7 +25,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
   final List<String> _selectedGoals = [
     'Build my personal brand',
     'Find gigs & paid opportunities',
-    'Collaborate with other artists'
+    'Collaborate with other artists',
   ];
 
   void _onContinue(OnboardingController controller) {
@@ -57,28 +57,40 @@ class _GoalsScreenState extends State<GoalsScreen> {
     );
   }
 
-  Widget _buildLaptopLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildLaptopLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return OnboardingLaptopLayout(
       title: 'What are your\ngoals?',
-      subtitle: 'Choose what matters most to you\nso we can tailor your experience.',
+      subtitle:
+          'Choose what matters most to you\nso we can tailor your experience.',
       stepNumber: 3,
-      illustration: Image.asset('assets/images/onboarding/illustration_3.png'),
+      illustration: Image.asset('assets/images/onboarding/illustration_3.webp'),
       onBackPressed: () => controller.prevStep(context),
       continueButton: ElevatedButton(
         onPressed: () => _onContinue(controller),
         style: ElevatedButton.styleFrom(
           backgroundColor: KalaColors.burntOrange,
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
           elevation: 0,
         ),
-        child: const Text('Continue', style: TextStyle(fontWeight: FontWeight.bold)),
+        child: const Text(
+          'Continue',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       child: _buildFormContent(context),
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildMobileLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -93,7 +105,10 @@ class _GoalsScreenState extends State<GoalsScreen> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 8.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -107,19 +122,19 @@ class _GoalsScreenState extends State<GoalsScreen> {
                     Text(
                       'Choose what matters most to you.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: KalaColors.mediumGrey,
-                          ),
+                        color: KalaColors.mediumGrey,
+                      ),
                     ),
                     const SizedBox(height: 24),
-                    Expanded(
-                      child: _buildFormContent(context),
-                    ),
+                    Expanded(child: _buildFormContent(context)),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => _onContinue(controller),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: const Text('Continue'),
                     ),
@@ -155,15 +170,14 @@ class _GoalsScreenState extends State<GoalsScreen> {
           },
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 18,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? KalaColors.burntOrange : KalaColors.softBeige,
+                color: isSelected
+                    ? KalaColors.burntOrange
+                    : KalaColors.softBeige,
                 width: isSelected ? 1.5 : 1,
               ),
             ),
@@ -171,7 +185,9 @@ class _GoalsScreenState extends State<GoalsScreen> {
               children: [
                 Icon(
                   icon,
-                  color: isSelected ? KalaColors.burntOrange : KalaColors.charcoal,
+                  color: isSelected
+                      ? KalaColors.burntOrange
+                      : KalaColors.charcoal,
                   size: 22,
                 ),
                 const SizedBox(width: 16),
@@ -179,27 +195,29 @@ class _GoalsScreenState extends State<GoalsScreen> {
                   child: Text(
                     goal,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        ),
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
                   ),
                 ),
                 Container(
                   width: 22,
                   height: 22,
                   decoration: BoxDecoration(
-                    color: isSelected ? KalaColors.burntOrange : Colors.transparent,
+                    color: isSelected
+                        ? KalaColors.burntOrange
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
-                      color: isSelected ? KalaColors.burntOrange : KalaColors.lightGrey,
+                      color: isSelected
+                          ? KalaColors.burntOrange
+                          : KalaColors.lightGrey,
                       width: 2,
                     ),
                   ),
                   child: isSelected
-                      ? const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 16,
-                        )
+                      ? const Icon(Icons.check, color: Colors.white, size: 16)
                       : null,
                 ),
               ],

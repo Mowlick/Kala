@@ -30,9 +30,7 @@ class SuccessScreen extends StatelessWidget {
           flex: 1,
           child: Container(
             color: KalaColors.softBeige.withValues(alpha: 0.3),
-            child: Center(
-              child: _buildCollage(size: 600, centerTextSize: 72),
-            ),
+            child: Center(child: _buildCollage(size: 600, centerTextSize: 72)),
           ),
         ),
         // Right side with Text & Buttons
@@ -47,16 +45,16 @@ class SuccessScreen extends StatelessWidget {
                 Text(
                   "You're all set! 🥳",
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: KalaColors.charcoal,
-                      ),
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   'Welcome to your creative home.\nExplore. Connect. Grow.',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: KalaColors.mediumGrey,
-                        height: 1.5,
-                      ),
+                    color: KalaColors.mediumGrey,
+                    height: 1.5,
+                  ),
                 ),
                 const SizedBox(height: 64),
                 SizedBox(
@@ -69,9 +67,17 @@ class SuccessScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: KalaColors.burntOrange,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    child: const Text('Explore Now', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    child: const Text(
+                      'Explore Now',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -83,12 +89,21 @@ class SuccessScreen extends StatelessWidget {
                       Navigator.pushReplacementNamed(context, '/home');
                     },
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: KalaColors.softBeige, width: 2),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      side: const BorderSide(
+                        color: KalaColors.softBeige,
+                        width: 2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: const Text(
                       'I\'ll do this later',
-                      style: TextStyle(color: KalaColors.mediumGrey, fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: KalaColors.mediumGrey,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -112,11 +127,9 @@ class SuccessScreen extends StatelessWidget {
             children: [
               const Spacer(),
               // Beautiful Circular Collage surrounding Logo
-              Center(
-                child: _buildCollage(size: 360, centerTextSize: 48),
-              ),
+              Center(child: _buildCollage(size: 360, centerTextSize: 48)),
               const SizedBox(height: 48),
-              
+
               // Celebratory Titles
               Text(
                 "You're all set! 🥳",
@@ -128,13 +141,13 @@ class SuccessScreen extends StatelessWidget {
                 'Welcome to your creative home.\nExplore. Connect. Grow.',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: KalaColors.mediumGrey,
-                      height: 1.4,
-                    ),
+                  color: KalaColors.mediumGrey,
+                  height: 1.4,
+                ),
               ),
-              
+
               const Spacer(),
-              
+
               // CTA Buttons
               ElevatedButton(
                 onPressed: () {
@@ -148,7 +161,10 @@ class SuccessScreen extends StatelessWidget {
                   Navigator.pushReplacementNamed(context, '/home');
                 },
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: KalaColors.softBeige, width: 1.5),
+                  side: const BorderSide(
+                    color: KalaColors.softBeige,
+                    width: 1.5,
+                  ),
                 ),
                 child: const Text(
                   'I\'ll do this later',
@@ -169,45 +185,51 @@ class SuccessScreen extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-        // Top Artist Circle
-        Positioned(
-          top: 0,
-          child: _buildCollageCircle(
-            imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
-            size: size * 0.70,
+          // Top Artist Circle
+          Positioned(
+            top: 0,
+            child: _buildCollageCircle(
+              imageUrl:
+                  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
+              size: size * 0.70,
+            ),
           ),
-        ),
-        // Bottom Artist Circle
-        Positioned(
-          bottom: 0,
-          child: _buildCollageCircle(
-            imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
-            size: size * 0.70,
+          // Bottom Artist Circle
+          Positioned(
+            bottom: 0,
+            child: _buildCollageCircle(
+              imageUrl:
+                  'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+              size: size * 0.70,
+            ),
           ),
-        ),
-        // Left Artist Circle
-        Positioned(
-          left: 0,
-          child: _buildCollageCircle(
-            imageUrl: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
-            size: size * 0.60,
+          // Left Artist Circle
+          Positioned(
+            left: 0,
+            child: _buildCollageCircle(
+              imageUrl:
+                  'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4',
+              size: size * 0.60,
+            ),
           ),
-        ),
-        // Right Artist Circle
-        Positioned(
-          right: 0,
-          child: _buildCollageCircle(
-            imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
-            size: size * 0.60,
+          // Right Artist Circle
+          Positioned(
+            right: 0,
+            child: _buildCollageCircle(
+              imageUrl:
+                  'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
+              size: size * 0.60,
+            ),
           ),
-        ),
           // Center KALĀ Monogram Rounded Square
           Container(
             width: size * 0.35,
             height: size * 0.35,
             decoration: BoxDecoration(
               color: KalaColors.ivory,
-              borderRadius: BorderRadius.circular(size * 0.08), // Rounded square
+              borderRadius: BorderRadius.circular(
+                size * 0.08,
+              ), // Rounded square
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -219,7 +241,8 @@ class SuccessScreen extends StatelessWidget {
             child: Center(
               child: Text(
                 'kā',
-                style: TextStyle(fontFamily: 'ZT_Nature', 
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
                   fontSize: centerTextSize,
                   fontWeight: FontWeight.bold,
                   color: KalaColors.charcoal,

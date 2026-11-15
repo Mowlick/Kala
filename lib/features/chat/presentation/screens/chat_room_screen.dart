@@ -36,7 +36,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void _send() {
     final t = _msgCtrl.text.trim();
     if (t.isEmpty) return;
-    setState(() => _msgs.add(ChatMessage(isMe: true, text: t, time: 'Just now')));
+    setState(
+      () => _msgs.add(ChatMessage(isMe: true, text: t, time: 'Just now')),
+    );
     _msgCtrl.clear();
   }
 
@@ -44,12 +46,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   Widget build(BuildContext context) {
     // If pushed via named route with a map (fallback), extract info.
     // Otherwise use the strongly-typed widget.contact.
-    final argMap = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    
-    final name = widget.contact?.name ?? argMap?['name'] as String? ?? 'Rhea Sharma';
-    final role = widget.contact?.role ?? argMap?['role'] as String? ?? 'Director';
+    final argMap =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    final name =
+        widget.contact?.name ?? argMap?['name'] as String? ?? 'Rhea Sharma';
+    final role =
+        widget.contact?.role ?? argMap?['role'] as String? ?? 'Director';
     final city = widget.contact?.city ?? argMap?['city'] as String? ?? 'Mumbai';
-    final avatar = widget.contact?.avatar ?? argMap?['avatar'] as String? ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200';
+    final avatar =
+        widget.contact?.avatar ??
+        argMap?['avatar'] as String? ??
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200';
     final isVerified = widget.contact?.isVerified ?? (name == 'Rhea Sharma');
 
     return Scaffold(
@@ -59,16 +67,17 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: KalaColors.charcoal, size: 20),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: KalaColors.charcoal,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
         title: Row(
           children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundImage: NetworkImage(avatar),
-            ),
+            CircleAvatar(radius: 18, backgroundImage: NetworkImage(avatar)),
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,26 +86,60 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   children: [
                     Text(
                       name,
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.w700, color: KalaColors.charcoal),
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: KalaColors.charcoal,
+                      ),
                     ),
                     if (isVerified) ...[
                       const SizedBox(width: 3),
-                      const Icon(Icons.verified, size: 13, color: KalaColors.burntOrange),
+                      const Icon(
+                        Icons.verified,
+                        size: 13,
+                        color: KalaColors.burntOrange,
+                      ),
                     ],
                   ],
                 ),
                 Text(
                   '$role • $city',
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 10,
+                    color: KalaColors.mediumGrey,
+                  ),
                 ),
               ],
             ),
           ],
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.call_outlined, color: KalaColors.charcoal, size: 20), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.videocam_outlined, color: KalaColors.charcoal, size: 20), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.info_outline, color: KalaColors.charcoal, size: 20), onPressed: () {}),
+          IconButton(
+            icon: const Icon(
+              Icons.call_outlined,
+              color: KalaColors.charcoal,
+              size: 20,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.videocam_outlined,
+              color: KalaColors.charcoal,
+              size: 20,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.info_outline,
+              color: KalaColors.charcoal,
+              size: 20,
+            ),
+            onPressed: () {},
+          ),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -115,13 +158,23 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFEDE8E0),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Text('Today',
-                            style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey, fontWeight: FontWeight.w600)),
+                        child: Text(
+                          'Today',
+                          style: TextStyle(
+                            fontFamily: 'ZT_Nature',
+                            fontSize: 11,
+                            color: KalaColors.mediumGrey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   );
@@ -129,8 +182,10 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 final msg = _msgs[i - 1];
                 final nextMsg = i < _msgs.length ? _msgs[i] : null;
                 final prevMsg = i > 1 ? _msgs[i - 2] : null;
-                final isLastInGroup = nextMsg == null || nextMsg.isMe != msg.isMe;
-                final isFirstInGroup = prevMsg == null || prevMsg.isMe != msg.isMe;
+                final isLastInGroup =
+                    nextMsg == null || nextMsg.isMe != msg.isMe;
+                final isFirstInGroup =
+                    prevMsg == null || prevMsg.isMe != msg.isMe;
                 return ChatMessageBubble(
                   message: msg,
                   isLastInGroup: isLastInGroup,
@@ -149,7 +204,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.mic_none_outlined, color: KalaColors.mediumGrey, size: 24),
+                  icon: const Icon(
+                    Icons.mic_none_outlined,
+                    color: KalaColors.mediumGrey,
+                    size: 24,
+                  ),
                   onPressed: () {},
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -162,7 +221,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     hintText: 'Type a message...',
                     prefixIcon: null, // No search icon
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.emoji_emotions_outlined, color: KalaColors.mediumGrey, size: 22),
+                      icon: const Icon(
+                        Icons.emoji_emotions_outlined,
+                        color: KalaColors.mediumGrey,
+                        size: 22,
+                      ),
                       onPressed: () {},
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -179,7 +242,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                       shape: BoxShape.circle,
                       color: KalaColors.burntOrange,
                     ),
-                    child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+                    child: const Icon(
+                      Icons.send_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],

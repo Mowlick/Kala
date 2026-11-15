@@ -51,7 +51,12 @@ class ChatMessageBubble extends StatelessWidget {
               children: [
                 Text(
                   message.text,
-                  style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, height: 1.4, color: KalaColors.charcoal),
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 13,
+                    height: 1.4,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -59,13 +64,19 @@ class ChatMessageBubble extends StatelessWidget {
                   children: [
                     Text(
                       message.time,
-                      style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+                      style: TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 10,
+                        color: KalaColors.mediumGrey,
+                      ),
                     ),
                     const SizedBox(width: 3),
                     Icon(
                       Icons.done_all,
                       size: 13,
-                      color: message.isRead ? KalaColors.burntOrange : KalaColors.mediumGrey,
+                      color: message.isRead
+                          ? KalaColors.burntOrange
+                          : KalaColors.mediumGrey,
                     ),
                   ],
                 ),
@@ -74,7 +85,12 @@ class ChatMessageBubble extends StatelessWidget {
           // Incoming: only text inside bubble, time goes below
           : Text(
               message.text,
-              style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, height: 1.4, color: KalaColors.charcoal),
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 13,
+                height: 1.4,
+                color: KalaColors.charcoal,
+              ),
             ),
     );
 
@@ -92,7 +108,11 @@ class ChatMessageBubble extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   child: Text(
                     message.time,
-                    style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 10, color: KalaColors.mediumGrey),
+                    style: TextStyle(
+                      fontFamily: 'ZT_Nature',
+                      fontSize: 10,
+                      color: KalaColors.mediumGrey,
+                    ),
                   ),
                 ),
               ],
@@ -103,7 +123,9 @@ class ChatMessageBubble extends StatelessWidget {
     if (message.hasHeart) {
       content = Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           content,
           const SizedBox(height: 4),
@@ -118,13 +140,11 @@ class ChatMessageBubble extends StatelessWidget {
         top: isFirstInGroup ? 2 : 0,
       ),
       child: Row(
-        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isMe
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          const SizedBox(width: 4),
-          content,
-          const SizedBox(width: 4),
-        ],
+        children: [const SizedBox(width: 4), content, const SizedBox(width: 4)],
       ),
     );
   }

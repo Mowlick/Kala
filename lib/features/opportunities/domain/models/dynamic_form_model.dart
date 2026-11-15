@@ -34,7 +34,8 @@ class DynamicFormModel {
       formId: json['form_id'] ?? '',
       title: json['title'] ?? 'Application Form',
       isTemplate: json['is_template'] ?? false,
-      fields: (json['fields'] as List<dynamic>?)
+      fields:
+          (json['fields'] as List<dynamic>?)
               ?.map((item) => FormFieldSchema.fromJson(item))
               .toList() ??
           [],

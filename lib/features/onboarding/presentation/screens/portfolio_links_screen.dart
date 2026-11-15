@@ -13,10 +13,18 @@ class PortfolioLinksScreen extends StatefulWidget {
 }
 
 class _PortfolioLinksScreenState extends State<PortfolioLinksScreen> {
-  final _instagramController = TextEditingController(text: 'instagram.com/aarav.mehta');
-  final _youtubeController = TextEditingController(text: 'youtube.com/@aaravmehta');
-  final _spotifyController = TextEditingController(text: 'open.spotify.com/artist/aarav');
-  final _websiteController = TextEditingController(text: 'behance.net/aaravmehta');
+  final _instagramController = TextEditingController(
+    text: 'instagram.com/aarav.mehta',
+  );
+  final _youtubeController = TextEditingController(
+    text: 'youtube.com/@aaravmehta',
+  );
+  final _spotifyController = TextEditingController(
+    text: 'open.spotify.com/artist/aarav',
+  );
+  final _websiteController = TextEditingController(
+    text: 'behance.net/aaravmehta',
+  );
 
   @override
   void dispose() {
@@ -56,22 +64,30 @@ class _PortfolioLinksScreenState extends State<PortfolioLinksScreen> {
     );
   }
 
-  Widget _buildLaptopLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildLaptopLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return OnboardingLaptopLayout(
       title: 'Almost there!',
       subtitle: 'Add your portfolio links to help\npeople discover your work.',
       stepNumber: 4,
-      illustration: Image.asset('assets/images/onboarding/illustration_4.png'),
+      illustration: Image.asset('assets/images/onboarding/illustration_4.webp'),
       onBackPressed: () => controller.prevStep(context),
       continueButton: ElevatedButton(
         onPressed: () => _onComplete(controller),
         style: ElevatedButton.styleFrom(
           backgroundColor: KalaColors.burntOrange,
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
           elevation: 0,
         ),
-        child: const Text('Complete Setup', style: TextStyle(fontWeight: FontWeight.bold)),
+        child: const Text(
+          'Complete Setup',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -80,7 +96,10 @@ class _PortfolioLinksScreenState extends State<PortfolioLinksScreen> {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, OnboardingController controller) {
+  Widget _buildMobileLayout(
+    BuildContext context,
+    OnboardingController controller,
+  ) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -96,7 +115,10 @@ class _PortfolioLinksScreenState extends State<PortfolioLinksScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 8.0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -110,8 +132,8 @@ class _PortfolioLinksScreenState extends State<PortfolioLinksScreen> {
                       Text(
                         'Add your portfolio links to help people discover your work.',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: KalaColors.mediumGrey,
-                            ),
+                          color: KalaColors.mediumGrey,
+                        ),
                       ),
                       const SizedBox(height: 28),
                       _buildFormContent(context),
@@ -120,7 +142,9 @@ class _PortfolioLinksScreenState extends State<PortfolioLinksScreen> {
                         onPressed: () => _onComplete(controller),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: const Text('Complete Setup'),
                       ),
@@ -196,10 +220,7 @@ class _PortfolioLinksScreenState extends State<PortfolioLinksScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text(label, style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,

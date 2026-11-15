@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for Supabase auth/DB access; release APKs do not inherit
+         the INTERNET permission that debug builds add automatically. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="kala"
         android:name="${applicationName}"

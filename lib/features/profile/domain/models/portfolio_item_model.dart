@@ -1,8 +1,4 @@
-enum PortfolioVisibility {
-  public,
-  private,
-  unlisted,
-}
+enum PortfolioVisibility { public, private, unlisted }
 
 extension PortfolioVisibilityExtension on PortfolioVisibility {
   String get label {
@@ -22,7 +18,8 @@ class PortfolioItemModel {
   final String title;
   final String description;
   final String mediaUrl;
-  final String category; // project, performance, photo, video, audio, certificate
+  final String
+  category; // project, performance, photo, video, audio, certificate
   final List<String> tags;
   final bool isFeatured;
   final PortfolioVisibility visibility;

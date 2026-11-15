@@ -87,7 +87,7 @@ class _RoleSelectScreenState extends State<RoleSelectScreen> {
       subtitle:
           'This helps us personalize your\nexperience and show you the most\nrelevant opportunities.',
       stepNumber: 1,
-      illustration: Image.asset('assets/images/onboarding/illustration_1.png'),
+      illustration: Image.asset('assets/images/onboarding/illustration_1.webp'),
       onBackPressed: () => controller.prevStep(context),
       continueButton: ElevatedButton(
         onPressed: _selectedRoles!.isEmpty

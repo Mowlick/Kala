@@ -7,7 +7,11 @@ plugins {
 
 android {
     namespace = "com.kala.kala"
-    compileSdk = flutter.compileSdkVersion
+    // Pinned so the produced APK is always compatible across Android versions,
+    // regardless of which Flutter SDK performs the build.
+    // compileSdk 36 is required by current plugin versions (backward compatible);
+    // targetSdk 35 keeps behavior stable across Android 14/15.
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -24,8 +28,11 @@ android {
         applicationId = "com.kala.kala"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // minSdk 21 = Android 5.0 (covers all old devices).
+        // targetSdk 35 = Android 14/15; required for installs on modern Android
+        // (Android 14 blocks APKs targeting API < 23) while staying compatible with older devices.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }

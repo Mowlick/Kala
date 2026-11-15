@@ -44,7 +44,8 @@ class CategoryConfig {
           titleLabel: 'Project Name',
           titleHint: 'e.g. FrameStories Short Film or Synthesizer VST Plugin',
           descLabel: 'Project Pitch & Key Highlights',
-          descHint: 'Describe the objective, your creative role, technologies or tools used...',
+          descHint:
+              'Describe the objective, your creative role, technologies or tools used...',
           extraFieldLabel: 'Repository / Project / Behance Link (Optional)',
           extraFieldHint: 'https://behance.net/gallery/...',
           previewCategoryLabel: 'PROJECT DECK',
@@ -60,7 +61,8 @@ class CategoryConfig {
           titleLabel: 'Performance Title',
           titleHint: 'e.g. Live Acoustic Solo at Mood Indigo 2025',
           descLabel: 'Setlist, Stage Venue & Act Description',
-          descHint: 'Mention venue name, setlist, stage lighting or ensemble partners...',
+          descHint:
+              'Mention venue name, setlist, stage lighting or ensemble partners...',
           extraFieldLabel: 'Event / Festival Reference (Optional)',
           extraFieldHint: 'e.g. Mood Indigo 2025 Cultural Fest',
           previewCategoryLabel: 'LIVE PERFORMANCE',
@@ -74,9 +76,11 @@ class CategoryConfig {
           fileFormatInfo: 'Supports JPG, PNG, WEBP, HEIC up to 25MB',
           icon: Icons.image_outlined,
           titleLabel: 'Photo Shoot Title',
-          titleHint: 'e.g. Editorial Fashion Shoot or Live Stage Concert Stills',
+          titleHint:
+              'e.g. Editorial Fashion Shoot or Live Stage Concert Stills',
           descLabel: 'Photo Story & Creative Concept',
-          descHint: 'Describe the shoot concept, moodboard, lighting setup or theme...',
+          descHint:
+              'Describe the shoot concept, moodboard, lighting setup or theme...',
           extraFieldLabel: 'Photographer / Studio Credits (Optional)',
           extraFieldHint: 'e.g. Captured by @lenscraft_studios',
           previewCategoryLabel: 'PHOTO GALLERY',
@@ -92,7 +96,8 @@ class CategoryConfig {
           titleLabel: 'Video Title / Reel Name',
           titleHint: 'e.g. 2026 Acting Showreel or Classical Dance Cover',
           descLabel: 'Video Description & Timestamp Highlights',
-          descHint: 'Highlight key scenes, monologues or solo choreography timestamps...',
+          descHint:
+              'Highlight key scenes, monologues or solo choreography timestamps...',
           extraFieldLabel: 'Video Type / Category',
           extraFieldHint: 'e.g. Showreel, Monologue, Dance Cover, Music Video',
           previewCategoryLabel: 'VIDEO SHOWREEL',
@@ -106,9 +111,11 @@ class CategoryConfig {
           fileFormatInfo: 'Supports MP3, WAV, AAC, FLAC up to 50MB',
           icon: Icons.music_note_outlined,
           titleLabel: 'Song / Audio Track Title',
-          titleHint: 'e.g. Amber Skies (Acoustic Original) or Classical Raga Demo',
+          titleHint:
+              'e.g. Amber Skies (Acoustic Original) or Classical Raga Demo',
           descLabel: 'Lyrics, Genre & Composition Details',
-          descHint: 'Add genre (e.g., Jazz, Hindustani Vocal), key signature, lyrics...',
+          descHint:
+              'Add genre (e.g., Jazz, Hindustani Vocal), key signature, lyrics...',
           extraFieldLabel: 'Producer / Mixing & Mastering Credits (Optional)',
           extraFieldHint: 'e.g. Mixed by SoundLab Studios',
           previewCategoryLabel: 'AUDIO TRACK',
@@ -124,7 +131,8 @@ class CategoryConfig {
           titleLabel: 'Award / Certificate Title',
           titleHint: 'e.g. Winner - Best Vocalist Trophy, Mood Indigo 2025',
           descLabel: 'Issuing Organization & Citation Summary',
-          descHint: 'Mention issuing academy, competition rank, or honorable mentions...',
+          descHint:
+              'Mention issuing academy, competition rank, or honorable mentions...',
           extraFieldLabel: 'Credential Verification ID / URL (Optional)',
           extraFieldHint: 'e.g. CERT-2025-Vocal-8891',
           previewCategoryLabel: 'OFFICIAL CERTIFICATE',
@@ -150,7 +158,8 @@ class CategoryConfig {
 }
 
 class UnifiedMediaUploadModal extends StatefulWidget {
-  final String category; // project, performance, photo, video, audio, certificate
+  final String
+  category; // project, performance, photo, video, audio, certificate
   final Function(PortfolioItemModel item) onSave;
 
   const UnifiedMediaUploadModal({
@@ -170,16 +179,14 @@ class UnifiedMediaUploadModal extends StatefulWidget {
       backgroundColor: Colors.transparent,
       builder: (ctx) => SizedBox(
         height: MediaQuery.of(context).size.height * 0.88,
-        child: UnifiedMediaUploadModal(
-          category: category,
-          onSave: onSave,
-        ),
+        child: UnifiedMediaUploadModal(category: category, onSave: onSave),
       ),
     );
   }
 
   @override
-  State<UnifiedMediaUploadModal> createState() => _UnifiedMediaUploadModalState();
+  State<UnifiedMediaUploadModal> createState() =>
+      _UnifiedMediaUploadModalState();
 }
 
 class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
@@ -237,7 +244,9 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
       id: 'port_${DateTime.now().millisecondsSinceEpoch}',
       title: _title,
       description: fullDescription,
-      mediaUrl: _mediaUrl.isNotEmpty ? _mediaUrl : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+      mediaUrl: _mediaUrl.isNotEmpty
+          ? _mediaUrl
+          : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
       category: widget.category,
       isFeatured: _isFeatured,
       visibility: _visibility,
@@ -250,7 +259,9 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(isDraft ? 'Saved to Drafts 📝' : 'Published to Public Portfolio! ⭐'),
+        content: Text(
+          isDraft ? 'Saved to Drafts 📝' : 'Published to Public Portfolio! ⭐',
+        ),
         backgroundColor: isDraft ? KalaColors.charcoal : KalaColors.burntOrange,
       ),
     );
@@ -283,12 +294,31 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(_config.title, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 18, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
-                    Text('Step ${_currentStep + 1} of 3 • ${_config.previewCategoryLabel}', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.burntOrange, fontWeight: FontWeight.bold)),
+                    Text(
+                      _config.title,
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: KalaColors.charcoal,
+                      ),
+                    ),
+                    Text(
+                      'Step ${_currentStep + 1} of 3 • ${_config.previewCategoryLabel}',
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 11,
+                        color: KalaColors.burntOrange,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -332,25 +362,51 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: KalaColors.burntOrange.withValues(alpha: 0.4), width: 1.5),
+              border: Border.all(
+                color: KalaColors.burntOrange.withValues(alpha: 0.4),
+                width: 1.5,
+              ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _isUploading
-                    ? const CircularProgressIndicator(color: KalaColors.burntOrange)
+                    ? const CircularProgressIndicator(
+                        color: KalaColors.burntOrange,
+                      )
                     : Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(color: KalaColors.burntOrange.withValues(alpha: 0.1), shape: BoxShape.circle),
-                        child: Icon(_config.icon, size: 38, color: KalaColors.burntOrange),
+                        decoration: BoxDecoration(
+                          color: KalaColors.burntOrange.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          _config.icon,
+                          size: 38,
+                          color: KalaColors.burntOrange,
+                        ),
                       ),
                 const SizedBox(height: 14),
                 Text(
-                  _isUploading ? 'Uploading & Processing Media...' : _config.pickLabel,
-                  style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal),
+                  _isUploading
+                      ? 'Uploading & Processing Media...'
+                      : _config.pickLabel,
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
                 ),
                 const SizedBox(height: 6),
-                Text(_config.fileFormatInfo, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                Text(
+                  _config.fileFormatInfo,
+                  style: const TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 11,
+                    color: KalaColors.mediumGrey,
+                  ),
+                ),
               ],
             ),
           ),
@@ -370,51 +426,99 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
             if (_fileName.isNotEmpty)
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: KalaColors.softBeige, borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: KalaColors.softBeige,
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Row(
                   children: [
                     Icon(_config.icon, color: KalaColors.burntOrange, size: 20),
                     const SizedBox(width: 10),
-                    Expanded(child: Text('File Selected: $_fileName', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 12, fontWeight: FontWeight.bold))),
-                    const Icon(Icons.check_circle, color: KalaColors.accentGreen, size: 18),
+                    Expanded(
+                      child: Text(
+                        'File Selected: $_fileName',
+                        style: const TextStyle(
+                          fontFamily: 'ZT_Nature',
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.check_circle,
+                      color: KalaColors.accentGreen,
+                      size: 18,
+                    ),
                   ],
                 ),
               ),
             const SizedBox(height: 16),
 
             // Tailored Title Field
-            Text(_config.titleLabel, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            Text(
+              _config.titleLabel,
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
+            ),
             const SizedBox(height: 6),
             TextFormField(
               decoration: InputDecoration(
                 hintText: _config.titleHint,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              validator: (val) => (val == null || val.trim().isEmpty) ? 'Please enter a title' : null,
+              validator: (val) => (val == null || val.trim().isEmpty)
+                  ? 'Please enter a title'
+                  : null,
               onSaved: (val) => _title = val?.trim() ?? '',
             ),
             const SizedBox(height: 16),
 
             // Tailored Description Field
-            Text(_config.descLabel, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            Text(
+              _config.descLabel,
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
+            ),
             const SizedBox(height: 6),
             TextFormField(
               maxLines: 3,
               decoration: InputDecoration(
                 hintText: _config.descHint,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onSaved: (val) => _description = val?.trim() ?? '',
             ),
             const SizedBox(height: 16),
 
             // Tailored Extra Field (Credits / Links / References)
-            Text(_config.extraFieldLabel, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            Text(
+              _config.extraFieldLabel,
+              style: const TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
+            ),
             const SizedBox(height: 6),
             TextFormField(
               decoration: InputDecoration(
                 hintText: _config.extraFieldHint,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onSaved: (val) => _extraField = val?.trim() ?? '',
             ),
@@ -422,20 +526,48 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
 
             // ⭐ Featured Toggle
             SwitchListTile(
-              title: const Text('⭐ Feature on Public Profile', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold)),
-              subtitle: const Text('Featured items appear first on your creative profile', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+              title: const Text(
+                '⭐ Feature on Public Profile',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: const Text(
+                'Featured items appear first on your creative profile',
+                style: TextStyle(
+                  fontFamily: 'ZT_Nature',
+                  fontSize: 11,
+                  color: KalaColors.mediumGrey,
+                ),
+              ),
               value: _isFeatured,
               activeTrackColor: KalaColors.burntOrange,
               onChanged: (val) => setState(() => _isFeatured = val),
             ),
 
             // 🔒 Visibility Dropdown
-            const Text('Visibility Setting', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+            const Text(
+              'Visibility Setting',
+              style: TextStyle(
+                fontFamily: 'ZT_Nature',
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: KalaColors.charcoal,
+              ),
+            ),
             const SizedBox(height: 6),
             DropdownButtonFormField<PortfolioVisibility>(
               initialValue: _visibility,
-              decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
-              items: PortfolioVisibility.values.map((v) => DropdownMenuItem(value: v, child: Text(v.label))).toList(),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              items: PortfolioVisibility.values
+                  .map((v) => DropdownMenuItem(value: v, child: Text(v.label)))
+                  .toList(),
               onChanged: (val) {
                 if (val != null) setState(() => _visibility = val);
               },
@@ -447,8 +579,20 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
               height: 48,
               child: ElevatedButton(
                 onPressed: () => _submitForm(false),
-                style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: const Text('Continue to Preview', style: TextStyle(fontFamily: 'ZT_Nature', fontSize: 15, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: KalaColors.burntOrange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Continue to Preview',
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
@@ -462,17 +606,38 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
       key: const ValueKey(2),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('${_config.previewCategoryLabel} Card Preview:', style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 13, fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+        Text(
+          '${_config.previewCategoryLabel} Card Preview:',
+          style: const TextStyle(
+            fontFamily: 'ZT_Nature',
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: KalaColors.charcoal,
+          ),
+        ),
         const SizedBox(height: 12),
 
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: KalaColors.lightGrey)),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: KalaColors.lightGrey),
+          ),
           child: Row(
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Container(width: 70, height: 70, color: KalaColors.softBeige, child: Icon(_config.icon, color: KalaColors.burntOrange, size: 30)),
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  color: KalaColors.softBeige,
+                  child: Icon(
+                    _config.icon,
+                    color: KalaColors.burntOrange,
+                    size: 30,
+                  ),
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -481,27 +646,64 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
                   children: [
                     Row(
                       children: [
-                        if (_isFeatured) const Text('⭐ ', style: TextStyle(fontSize: 12)),
-                        Expanded(child: Text(_title, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 14, fontWeight: FontWeight.bold, color: KalaColors.charcoal))),
+                        if (_isFeatured)
+                          const Text('⭐ ', style: TextStyle(fontSize: 12)),
+                        Expanded(
+                          child: Text(
+                            _title,
+                            style: const TextStyle(
+                              fontFamily: 'ZT_Nature',
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: KalaColors.charcoal,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(_description, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'ZT_Nature', fontSize: 11, color: KalaColors.mediumGrey)),
+                    Text(
+                      _description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontFamily: 'ZT_Nature',
+                        fontSize: 11,
+                        color: KalaColors.mediumGrey,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     Row(
                       children: [
                         Chip(
-                          label: Text(_config.previewCategoryLabel, style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: KalaColors.burntOrange)),
-                          backgroundColor: KalaColors.burntOrange.withValues(alpha: 0.1),
+                          label: Text(
+                            _config.previewCategoryLabel,
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: KalaColors.burntOrange,
+                            ),
+                          ),
+                          backgroundColor: KalaColors.burntOrange.withValues(
+                            alpha: 0.1,
+                          ),
                           padding: EdgeInsets.zero,
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
                         ),
                         const SizedBox(width: 6),
                         Chip(
-                          label: Text(_visibility.label, style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold)),
+                          label: Text(
+                            _visibility.label,
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           backgroundColor: KalaColors.softBeige,
                           padding: EdgeInsets.zero,
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
                         ),
                       ],
                     ),
@@ -518,16 +720,40 @@ class _UnifiedMediaUploadModalState extends State<UnifiedMediaUploadModal> {
             Expanded(
               child: OutlinedButton(
                 onPressed: () => _submitForm(true), // Save Draft
-                style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: const Text('Save as Draft 📝', style: TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold, color: KalaColors.charcoal)),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Save as Draft 📝',
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontWeight: FontWeight.bold,
+                    color: KalaColors.charcoal,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: ElevatedButton(
                 onPressed: () => _submitForm(false), // Publish
-                style: ElevatedButton.styleFrom(backgroundColor: KalaColors.burntOrange, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: const Text('Publish Now ⭐', style: TextStyle(fontFamily: 'ZT_Nature', fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: KalaColors.burntOrange,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Publish Now ⭐',
+                  style: TextStyle(
+                    fontFamily: 'ZT_Nature',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
